@@ -1,0 +1,1824 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MYP Unit Plan Builder — ELA Green School</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:Calibri,"Segoe UI",Arial,sans-serif;background:#F0F4F2;min-height:100vh;}
+input,select,textarea,button{font-family:inherit;}
+textarea{resize:vertical;}
+.hdr{background:linear-gradient(135deg,#1A5C38,#1A7A6E);padding:16px 24px;color:#fff;}
+.hdr h1{font-size:20px;margin-bottom:2px;}
+.hdr p{font-size:12px;opacity:.8;}
+.stepbar{background:#fff;border-bottom:1px solid #E0E0E0;display:flex;overflow-x:auto;padding:0 12px;}
+.stepbar button{padding:11px 12px;border:none;border-bottom:3px solid transparent;background:none;cursor:pointer;font-size:11px;white-space:nowrap;color:#757575;}
+.stepbar button.active{border-bottom-color:#1A5C38;color:#1A5C38;font-weight:700;}
+.wrap{max-width:1100px;margin:0 auto;padding:16px;}
+.card{background:#fff;border-radius:10px;border:1px solid #E0E0E0;padding:18px;margin-bottom:14px;}
+.card h2{font-size:16px;color:#1A5C38;margin-bottom:14px;display:flex;align-items:center;gap:8px;}
+.field{margin-bottom:12px;}
+.field label{display:block;font-size:12px;font-weight:700;color:#1A1A1A;margin-bottom:4px;}
+.field input,.field select,.field textarea{width:100%;border:1.5px solid #E0E0E0;border-radius:7px;padding:8px 11px;font-size:13px;color:#1A1A1A;background:#fff;outline:none;}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#1A5C38;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+.btn{padding:9px 18px;border-radius:7px;border:none;cursor:pointer;font-size:12px;font-weight:700;display:inline-flex;align-items:center;gap:6px;}
+.btn-green{background:linear-gradient(135deg,#1A5C38,#1A7A6E);color:#fff;}
+.btn-out{background:#fff;border:1.5px solid #E0E0E0;color:#333;}
+.btn-teal{background:#E5F4F2;border:1.5px solid #1A7A6E;color:#1A7A6E;}
+.btn-gold{background:#FFF8E7;border:1.5px solid #B8860B;color:#B8860B;}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:16px;padding-top:12px;}
+.dots{display:flex;gap:5px;}
+.dot{height:7px;border-radius:4px;background:#E0E0E0;cursor:pointer;transition:all .2s;}
+.dot.on{width:20px;background:#1A5C38;}.dot:not(.on){width:7px;}
+.ib-toggle{background:none;border:1.5px solid #1A5C38;border-radius:7px;padding:5px 12px;cursor:pointer;color:#1A5C38;font-size:11px;font-weight:700;margin-bottom:8px;}
+.ib-box{background:#F0F7F4;border:1.5px solid #1A5C38;border-radius:9px;padding:14px;margin-bottom:14px;}
+.ib-pt{display:flex;gap:9px;margin-bottom:9px;padding-bottom:9px;border-bottom:1px solid #C8E6D4;font-size:12px;line-height:1.6;}
+.ib-pt:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0;}
+.ib-impl{margin-top:5px;font-size:11px;color:#1A7A6E;font-style:italic;}
+.phase-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:7px;margin-bottom:10px;}
+.phase-chip{padding:8px;border-radius:7px;border:1.5px solid #E0E0E0;cursor:pointer;text-align:left;background:#fff;font-size:11px;}
+.atl-row{display:flex;align-items:flex-start;gap:7px;padding:6px 10px;border-bottom:1px solid #F5F5F5;font-size:12px;cursor:pointer;}
+.atl-row:last-child{border-bottom:none;}
+.badge{display:inline-block;font-size:10px;font-weight:700;padding:1px 6px;border-radius:3px;margin-right:4px;}
+.wk{border-left:4px solid #E0E0E0;padding:14px;margin-bottom:10px;background:#fff;border-radius:0 9px 9px 0;border:1px solid #E0E0E0;border-left-width:4px;}
+.wk-grid{display:grid;grid-template-columns:110px 170px 1fr 1fr;gap:10px;margin-top:10px;}
+.crit-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.crit-card{border:2px solid #E0E0E0;border-radius:9px;overflow:hidden;}
+.crit-hdr{padding:9px 12px;cursor:pointer;font-weight:700;font-size:12px;display:flex;justify-content:space-between;align-items:center;}
+.strand-row{padding:6px 12px;display:flex;flex-wrap:wrap;gap:5px;}
+.s-btn{padding:3px 9px;border-radius:5px;border:1.5px solid #E0E0E0;background:#fff;font-size:11px;cursor:pointer;}
+.done{background:#E8F5EE;color:#1A5C38;font-weight:700;}
+.todo{background:#FEE2E2;color:#B91C1C;}
+.ci{display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:7px;font-size:12px;margin-bottom:6px;}
+.mode-row{display:flex;gap:7px;margin-bottom:14px;flex-wrap:wrap;align-items:center;}
+.m-tab{padding:8px 14px;border-radius:7px;border:2px solid #E0E0E0;background:#fff;cursor:pointer;font-size:12px;font-weight:700;}
+.ai-box{background:#E5F4F2;border:1.5px solid #1A7A6E;border-radius:9px;padding:12px;margin-top:8px;}
+.ai-box h4{font-size:11px;font-weight:700;color:#1A7A6E;margin-bottom:5px;}
+.ai-box pre{font-size:12px;color:#1A1A1A;line-height:1.6;white-space:pre-wrap;font-family:inherit;}
+.ai-acts{display:flex;gap:7px;margin-top:8px;}
+.ref-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;}
+.ref-card{border-radius:9px;padding:12px;}
+.ref-card h3{font-size:13px;font-weight:700;margin-bottom:8px;}
+.ref-card textarea{width:100%;border:1.5px solid rgba(0,0,0,.15);border-radius:7px;padding:9px;font-size:12px;line-height:1.6;background:#fff;}
+.exp-box{border:2px solid #1A5C38;border-radius:11px;overflow:hidden;}
+.exp-pri{padding:18px;background:linear-gradient(135deg,#E8F5EE,#E5F4F2);}
+.exp-sec{padding:18px;background:#fff;border-top:1px solid #E0E0E0;}
+.exp-lbl{font-weight:700;font-size:13px;margin-bottom:5px;display:flex;align-items:center;gap:8px;}
+.exp-desc{font-size:12px;color:#757575;line-height:1.6;margin-bottom:10px;}
+.tag{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;color:#fff;}
+.cg2{display:grid;grid-template-columns:1fr 2fr;gap:16px;}
+@media(max-width:700px){.g2,.g3,.wk-grid,.phase-grid,.ref-grid,.crit-grid,.cg2{grid-template-columns:1fr;}}
+
+/* Settings panel */
+.settings-btn{position:fixed;top:12px;right:16px;z-index:999;background:rgba(255,255,255,0.2);border:1.5px solid rgba(255,255,255,0.5);color:#fff;border-radius:8px;padding:6px 14px;cursor:pointer;font-size:12px;font-weight:700;}
+.settings-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;}
+.settings-overlay.open{display:flex;}
+.settings-box{background:#fff;border-radius:14px;padding:28px;max-width:540px;width:90%;max-height:90vh;overflow-y:auto;}
+.settings-box h2{font-size:18px;color:#1A5C38;margin-bottom:6px;}
+.settings-box p{font-size:13px;color:#757575;line-height:1.6;margin-bottom:16px;}
+.api-status{display:inline-block;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:16px;}
+.api-status.set{background:#E8F5EE;color:#1A5C38;}
+.api-status.notset{background:#FEE2E2;color:#B91C1C;}
+.step-box{background:#F0F7F4;border-left:4px solid #1A5C38;border-radius:0 8px 8px 0;padding:14px;margin-bottom:10px;}
+.step-box h4{font-size:13px;font-weight:700;color:#1A5C38;margin-bottom:4px;}
+.step-box p{font-size:12px;color:#1A1A1A;margin-bottom:0;}
+.step-box a{color:#1A7A6E;font-weight:700;}
+.key-input-row{display:flex;gap:8px;margin-top:8px;}
+.key-input-row input{flex:1;border:1.5px solid #E0E0E0;border-radius:8px;padding:9px 12px;font-size:13px;}
+.key-input-row input:focus{border-color:#1A5C38;outline:none;}
+.settings-close{width:100%;margin-top:16px;padding:11px;background:#F5F5F5;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;color:#757575;}
+.settings-close:hover{background:#E0E0E0;}
+
+
+/* Quick Start */
+.qs-hero{background:linear-gradient(135deg,#1A5C38,#1A7A6E);border-radius:12px;padding:24px;color:#fff;margin-bottom:16px;text-align:center;}
+.qs-hero h2{font-size:22px;margin-bottom:6px;}
+.qs-hero p{font-size:13px;opacity:.85;line-height:1.6;}
+.qs-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.qs-full{grid-column:1/-1;}
+.qs-generate-btn{width:100%;padding:16px;background:linear-gradient(135deg,#1A5C38,#1A7A6E);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:900;cursor:pointer;margin-top:8px;letter-spacing:.3px;}
+.qs-generate-btn:disabled{background:#E0E0E0;color:#757575;cursor:not-allowed;}
+.qs-progress{background:#E8F5EE;border:1.5px solid #1A5C38;border-radius:10px;padding:16px;margin-top:12px;}
+.qs-progress h4{color:#1A5C38;font-size:14px;font-weight:700;margin-bottom:10px;}
+.qs-step-row{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:13px;border-bottom:1px solid #C8E6D4;}
+.qs-step-row:last-child{border-bottom:none;}
+.qs-step-icon{font-size:16px;width:24px;text-align:center;flex-shrink:0;}
+.mode-banner{display:flex;gap:12px;margin-bottom:20px;}
+.mode-card{flex:1;padding:16px;border-radius:10px;border:2px solid #E0E0E0;cursor:pointer;text-align:center;transition:all .2s;}
+.mode-card.active{border-color:#1A5C38;background:#E8F5EE;}
+.mode-card h3{font-size:14px;font-weight:700;margin-bottom:4px;}
+.mode-card p{font-size:12px;color:#757575;line-height:1.5;}
+@media(max-width:600px){.qs-grid{grid-template-columns:1fr;}.mode-banner{flex-direction:column;}}
+
+</style>
+</head>
+<body>
+<div class="hdr">
+  <h1>🏫 MYP Unit Plan Builder — ELA Green School</h1>
+  <p>Murdoch Inquiry Cycle &nbsp;·&nbsp; ATL Smart Mapper &nbsp;·&nbsp; Subject-Specific Criteria &nbsp;·&nbsp; AI-Assisted Planning</p>
+<button class="settings-btn" onclick="openSettings()">⚙️ API Settings</button>
+
+<!-- Settings overlay -->
+<div class="settings-overlay" id="settingsOverlay" onclick="if(event.target===this)closeSettings()">
+  <div class="settings-box">
+    <h2>⚙️ AI Settings</h2>
+    <p>The AI suggestion buttons (✨) use the Anthropic Claude API. Each teacher needs their own free API key.</p>
+    
+    <div id="apiStatusBadge" class="api-status notset">No API key saved</div>
+
+    <h3 style="font-size:14px;font-weight:700;color:#1A1A1A;margin-bottom:12px;">How to get a free API key</h3>
+    
+    <div class="step-box">
+      <h4>Step 1 — Create a free Anthropic account</h4>
+      <p>Go to <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> and click <strong>Sign up</strong>. Use your school email address.</p>
+    </div>
+    <div class="step-box">
+      <h4>Step 2 — Verify your email</h4>
+      <p>Check your email for a verification link from Anthropic and click it to activate your account.</p>
+    </div>
+    <div class="step-box">
+      <h4>Step 3 — Get your API key</h4>
+      <p>Once logged in, click <strong>API Keys</strong> in the left sidebar → click <strong>Create Key</strong> → give it any name (e.g. "MYP Planner") → click <strong>Create</strong>. Copy the key — it starts with <strong>sk-ant-</strong></p>
+    </div>
+    <div class="step-box">
+      <h4>Step 4 — Free credits</h4>
+      <p>New accounts get <strong>free credits</strong> to start with. The AI suggestion feature uses a very small amount per request — free credits will last a long time for unit planning.</p>
+    </div>
+
+    <h3 style="font-size:14px;font-weight:700;color:#1A1A1A;margin:16px 0 8px;">Enter your API key</h3>
+    <p style="margin-bottom:4px;">Your key is saved in your browser and never shared with anyone.</p>
+    <div class="key-input-row">
+      <input type="password" id="apiKeyInput" placeholder="Paste your API key here (sk-ant-...)" />
+      <button class="btn btn-green" onclick="saveApiKey()" style="white-space:nowrap;">Save Key</button>
+    </div>
+    <div id="keyFeedback" style="margin-top:8px;font-size:12px;"></div>
+
+    <div style="margin-top:16px;padding:12px;background:#FFF8E7;border-radius:8px;border:1px solid #B8860B;">
+      <div style="font-size:12px;font-weight:700;color:#B8860B;margin-bottom:4px;">🔒 Privacy note</div>
+      <div style="font-size:12px;color:#757575;line-height:1.5;">Your API key is stored only in your browser's local storage. It never leaves your device except when making AI requests directly to Anthropic's servers. No one else can see it.</div>
+    </div>
+
+    <button class="btn" style="width:100%;margin-top:14px;padding:11px;background:#F5F5F5;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;color:#757575;" onclick="closeSettings()">Close</button>
+  </div>
+</div>
+</div>
+<div class="stepbar" id="sb"></div>
+<div class="wrap">
+  <div id="sc"></div>
+  <div class="nav">
+    <button class="btn btn-out" id="bk" onclick="nav(-1)">← Back</button>
+    <div class="dots" id="dt"></div>
+    <button class="btn btn-green" id="nx" onclick="nav(1)">Next →</button>
+  </div>
+</div>
+<script>
+
+// Global error catcher - shows real errors instead of "Script error"
+window.onerror = function(msg, src, line, col, err) {
+  const div = document.createElement('div');
+  div.style.cssText = 'position:fixed;bottom:0;left:0;right:0;background:#B91C1C;color:#fff;padding:12px;font-size:12px;z-index:9999;font-family:monospace;';
+  div.textContent = 'Error: ' + msg + ' (line ' + line + ')' + (err ? ' ' + err.stack : '');
+  document.body.appendChild(div);
+  return false;
+};
+
+
+// ═══ DATA BLOCKS ═══════════════════════════════════════
+const PHASES = [
+  { id: "tuning", emoji: "🌱", name: "Tuning In", color: "#2E7D32", bg: "#E8F5E9",
+    desc: "Activate prior knowledge. Surface misconceptions. Spark curiosity. Hook students into the inquiry.",
+    tip: "Use provocations, card sorts, 'what do you notice?' activities, or a surprising question. Students connect the new unit to what they already know.",
+    questions: "What do students already know? What misconceptions exist? What will hook them?" },
+  { id: "finding", emoji: "🔍", name: "Finding Out", color: "#1565C0", bg: "#E3F2FD",
+    desc: "Students gather new information through direct instruction, research, experiments, and reading.",
+    tip: "This is where core content knowledge is built. Use 'I do, we do, you do', jigsaw, guided reading, or structured experiments.",
+    questions: "How will students acquire the factual knowledge and skills they need?" },
+  { id: "sorting", emoji: "🗂", name: "Sorting Out", color: "#6A1B9A", bg: "#F3E5F5",
+    desc: "Students organise, classify, and make meaning from information gathered. Consolidation happens here.",
+    tip: "Concept maps, classification activities, graphic organisers, and structured note-taking help students make sense of what they found out.",
+    questions: "How will students organise and make sense of the information they have gathered?" },
+  { id: "connecting", emoji: "🔗", name: "Making Connections", color: "#E65100", bg: "#FFF3E0",
+    desc: "Students connect learning to real-world contexts, other subjects, global issues, and their own lives.",
+    tip: "This is where the Global Context becomes real. Case studies, debates, cross-subject links, and ethics discussions work well here.",
+    questions: "How does this learning connect beyond the classroom?" },
+  { id: "further", emoji: "🚀", name: "Going Further", color: "#AD1457", bg: "#FCE4EC",
+    desc: "Students take personalised pathways — extension, deeper inquiry, or different representations.",
+    tip: "Offer student choice here. Some students design their own inquiry question. Others explore TOK links or cross-disciplinary connections.",
+    questions: "How can students go deeper, apply skills independently, or pursue their own inquiry?" },
+  { id: "action", emoji: "⚡", name: "Taking Action", color: "#00695C", bg: "#E0F2F1",
+    desc: "Students apply learning in a real or authentic context. Summative tasks often sit here.",
+    tip: "This is where summative assessments live. The task should feel authentic — students ARE ecologists / historians / writers, not just students doing a task.",
+    questions: "How will students demonstrate and apply their learning in a meaningful context?" },
+  { id: "reflecting", emoji: "🪞", name: "Reflecting", color: "#4527A0", bg: "#EDE7F6",
+    desc: "Students evaluate their process and product, synthesise learning, and revisit the SOI.",
+    tip: "Science/learning journals, unit reflection walls, metacognitive writing, and revisiting the opening hook all belong here.",
+    questions: "How will students reflect on what AND how they learned? How does the SOI make sense now?" },
+];
+
+const ATL_SKILLS = {
+  "Communication": {
+    color: "#1565C0", icon: "💬",
+    clusters: {
+      "Communication Skills": [
+        { code: "1.1.1", desc: "Give and receive meaningful feedback" },
+        { code: "1.1.2", desc: "Use intercultural understanding to interpret communication" },
+        { code: "1.1.3", desc: "Use a variety of speaking techniques to communicate with different audiences" },
+        { code: "1.1.4", desc: "Use appropriate forms of writing for different purposes and audiences" },
+        { code: "1.1.5", desc: "Organise and depict information logically" },
+        { code: "1.1.6", desc: "Structure information in summaries, essays and reports" },
+      ]
+    }
+  },
+  "Collaboration": {
+    color: "#2E7D32", icon: "🤝",
+    clusters: {
+      "Social Skills": [
+        { code: "2.1.1", desc: "Use social media networks appropriately to build and develop relationships" },
+        { code: "2.1.2", desc: "Practise empathy" },
+        { code: "2.1.3", desc: "Delegate and share responsibility for decision-making" },
+        { code: "2.1.4", desc: "Help others to succeed" },
+        { code: "2.1.5", desc: "Take responsibility for one's own actions" },
+        { code: "2.1.6", desc: "Manage and resolve conflict and work collaboratively in teams" },
+        { code: "2.1.7", desc: "Build consensus" },
+        { code: "2.1.8", desc: "Make fair and equitable decisions" },
+        { code: "2.1.9", desc: "Listen actively to other perspectives and ideas" },
+        { code: "2.1.10", desc: "Negotiate effectively" },
+      ]
+    }
+  },
+  "Organisation": {
+    color: "#E65100", icon: "📋",
+    clusters: {
+      "Self-management – Organisation Skills": [
+        { code: "3.1.1", desc: "Plan short- and long-term assignments; meet deadlines" },
+        { code: "3.1.2", desc: "Create plans to prepare for summative assessments and exams" },
+        { code: "3.1.3", desc: "Keep and use a personal calendar of tasks and homework" },
+        { code: "3.1.4", desc: "Use appropriate strategies for organising complex information" },
+        { code: "3.1.5", desc: "Understand and use sensory learning preferences" },
+        { code: "3.1.6", desc: "Select and use technology to effectively and productively complete tasks" },
+        { code: "3.1.7", desc: "Demonstrate persistence and resilience" },
+        { code: "3.1.8", desc: "Use appropriate strategies for organising complex information" },
+      ]
+    }
+  },
+  "Affective": {
+    color: "#6A1B9A", icon: "🧠",
+    clusters: {
+      "Self-management – Affective Skills": [
+        { code: "3.2.1", desc: "Practise focus and concentration" },
+        { code: "3.2.2", desc: "Practise strategies to overcome distractions" },
+        { code: "3.2.3", desc: "Practise being aware of body–mind connections" },
+        { code: "3.2.4", desc: "Practise positive thinking" },
+        { code: "3.2.5", desc: "Practise mindfulness" },
+        { code: "3.2.6", desc: "Practise perseverance and resilience" },
+        { code: "3.2.7", desc: "Practise dealing with disappointment and unmet expectations" },
+        { code: "3.2.8", desc: "Practise 'bouncing back' after adversity" },
+      ]
+    }
+  },
+  "Reflection": {
+    color: "#4527A0", icon: "🪞",
+    clusters: {
+      "Self-management – Reflection Skills": [
+        { code: "3.3.1", desc: "Develop new skills, techniques and strategies for effective learning" },
+        { code: "3.3.2", desc: "Identify strengths and weaknesses of personal learning strategies" },
+        { code: "3.3.3", desc: "Demonstrate flexibility in selecting and using learning strategies" },
+        { code: "3.3.4", desc: "Focus on the process of creating by imitating the work of others" },
+        { code: "3.3.5", desc: "Consider ethical, cultural and environmental implications" },
+        { code: "3.3.6", desc: "Keep a journal to record reflections" },
+      ]
+    }
+  },
+  "Information Literacy": {
+    color: "#00695C", icon: "🔎",
+    clusters: {
+      "Research – Information Literacy Skills": [
+        { code: "4.1.1", desc: "Collect, record and verify data" },
+        { code: "4.1.2", desc: "Access information to be informed and to inform others" },
+        { code: "4.1.3", desc: "Make connections between various sources of information" },
+        { code: "4.1.4", desc: "Understand and use technology systems" },
+        { code: "4.1.5", desc: "Use critical-literacy skills to analyse and interpret media communications" },
+        { code: "4.1.6", desc: "Identify and analyse the ways in which media messages shape our understanding" },
+        { code: "4.1.7", desc: "Evaluate and select information sources and digital tools" },
+        { code: "4.1.8", desc: "Understand and implement intellectual property rights" },
+        { code: "4.1.9", desc: "Create references and citations, use footnotes/endnotes" },
+        { code: "4.1.10", desc: "Identify primary and secondary sources" },
+      ]
+    }
+  },
+  "Critical Thinking": {
+    color: "#B91C1C", icon: "⚡",
+    clusters: {
+      "Thinking – Critical Thinking Skills": [
+        { code: "5.1.1", desc: "Practise observing carefully to recognise problems" },
+        { code: "5.1.2", desc: "Gather and organise relevant information to formulate an argument" },
+        { code: "5.1.3", desc: "Recognize unstated assumptions and bias" },
+        { code: "5.1.4", desc: "Interpret data" },
+        { code: "5.1.5", desc: "Evaluate evidence and arguments" },
+        { code: "5.1.6", desc: "Recognize and evaluate propositions" },
+        { code: "5.1.7", desc: "Draw reasonable conclusions and generalizations" },
+        { code: "5.1.8", desc: "Test generalizations and conclusions" },
+        { code: "5.1.9", desc: "Revise understanding based on new information and evidence" },
+        { code: "5.1.10", desc: "Evaluate and manage risk" },
+        { code: "5.1.11", desc: "Formulate factual, topical, conceptual and debatable questions" },
+      ]
+    }
+  },
+  "Creative Thinking": {
+    color: "#AD1457", icon: "✨",
+    clusters: {
+      "Thinking – Creative Thinking Skills": [
+        { code: "5.2.1", desc: "Use brainstorming and visual diagrams to generate new ideas" },
+        { code: "5.2.2", desc: "Consider multiple alternatives, including those that might be unlikely or impossible" },
+        { code: "5.2.3", desc: "Create novel solutions to authentic problems" },
+        { code: "5.2.4", desc: "Make unexpected or unusual connections between objects and/or ideas" },
+        { code: "5.2.5", desc: "Design improvements to existing machines, media and technologies" },
+        { code: "5.2.6", desc: "Design new solutions to real or imaginary problems" },
+        { code: "5.2.7", desc: "Make guesses, ask 'what if' questions and generate testable hypotheses" },
+        { code: "5.2.8", desc: "Apply existing knowledge to generate new ideas, products or processes" },
+        { code: "5.2.9", desc: "Create works and ideas using established forms and exploring new ways" },
+      ]
+    }
+  },
+  "Transfer": {
+    color: "#B8860B", icon: "🔁",
+    clusters: {
+      "Thinking – Transfer Skills": [
+        { code: "5.3.1", desc: "Use effective learning strategies in subject groups and disciplines" },
+        { code: "5.3.2", desc: "Apply skills and knowledge in unfamiliar situations" },
+        { code: "5.3.3", desc: "Inquire in different contexts to gain a different perspective" },
+        { code: "5.3.4", desc: "Compare conceptual understanding across multiple subject groups" },
+        { code: "5.3.5", desc: "Make connections between subject groups and disciplines" },
+        { code: "5.3.6", desc: "Combine knowledge, understanding and skills to create products or solutions" },
+        { code: "5.3.7", desc: "Transfer current knowledge to learning of new technologies" },
+      ]
+    }
+  },
+};
+
+const KEY_CONCEPTS = ["Aesthetics","Change","Communication","Communities","Connections","Creativity","Culture","Development","Form","Global Interactions","Identity","Logic","Perspective","Relationships","Systems","Time, Place & Space"];
+const GLOBAL_CONTEXTS = [
+  "Identities & Relationships","Orientation in Space & Time","Personal & Cultural Expression",
+  "Scientific & Technical Innovation","Globalization & Sustainability","Fairness & Development"
+];
+const MYP_YEARS = ["MYP 1","MYP 2","MYP 3","MYP 4","MYP 5"];
+const SUBJECT_GROUPS = ["Sciences","Mathematics","Language & Literature","Language Acquisition","Individuals & Societies","Arts","Physical & Health Education","Design"];
+// ── SUBJECT GROUP → ATL MAP KEY (explicit lookup, no fuzzy matching) ─────────
+const SUBJECT_TO_MAP_KEY = {
+  "Sciences": "Sciences",
+  "Mathematics": "Mathematics",
+  "Language & Literature": "Language & Literature",
+  "Language Acquisition": "Language Acquisition",
+  "Individuals & Societies": "Individuals & Societies",
+  "Arts": "Arts",
+  "Physical & Health Education": "Physical & Health Education",
+  "Design": "Design",
+};
+const SUBJECT_ATL_MAP = {
+  "Sciences": {
+    label: "Sciences", criteria: { A:"Knowing & Understanding", B:"Inquiring & Designing", C:"Processing & Evaluating", D:"Reflecting on Impacts" },
+    strands: {
+      "A:i":  { desc:"Explain scientific knowledge", atl:[{code:"C1.4",cluster:"Communication",skill:"Use appropriate forms of writing for different purposes and audiences"},{code:"C1.11",cluster:"Communication",skill:"Use and interpret discipline-specific terms and symbols"},{code:"C1.13",cluster:"Communication",skill:"Paraphrase accurately and concisely"},{code:"C3.8",cluster:"Self-Management",skill:"Use appropriate strategies for organising complex information"},{code:"C8.5",cluster:"Thinking",skill:"Evaluate evidence and arguments"},{code:"C8.4",cluster:"Thinking",skill:"Interpret data"}]},
+      "A:ii": { desc:"Apply scientific knowledge to solve problems", atl:[{code:"C8.3",cluster:"Thinking",skill:"Recognise unstated assumptions and bias"},{code:"C8.4",cluster:"Thinking",skill:"Interpret data"},{code:"C8.5",cluster:"Thinking",skill:"Evaluate evidence and arguments"}]},
+      "A:iii":{ desc:"Analyse and evaluate information to make scientifically supported judgements", atl:[{code:"C6.9",cluster:"Research",skill:"Evaluate and select information sources and digital tools"},{code:"C6.11",cluster:"Research",skill:"Use critical-literacy skills to analyse and interpret media communications"}]},
+      "B:i":  { desc:"Explain a problem or question to be tested", atl:[{code:"C1.4",cluster:"Communication",skill:"Use appropriate forms of writing for different purposes"},{code:"C1.11",cluster:"Communication",skill:"Use and interpret discipline-specific terms and symbols"},{code:"C6.6",cluster:"Research",skill:"Present information in a variety of formats"},{code:"C10.2",cluster:"Thinking",skill:"Apply skills and knowledge in unfamiliar situations"}]},
+      "B:ii": { desc:"Formulate a testable hypothesis using scientific reasoning", atl:[{code:"C1.4",cluster:"Communication",skill:"Use appropriate forms of writing for different purposes"},{code:"C1.10",cluster:"Communication",skill:"Make inferences and draw conclusions"},{code:"C8.2",cluster:"Thinking",skill:"Gather and organise relevant information to formulate an argument"},{code:"C8.5",cluster:"Thinking",skill:"Evaluate evidence and arguments"},{code:"C9.7",cluster:"Thinking",skill:"Make guesses, ask 'what if' questions and generate testable hypotheses"}]},
+      "B:iii":{ desc:"Explain how to manipulate variables and collect data", atl:[{code:"C1.17",cluster:"Communication",skill:"Use a variety of organizers for academic writing tasks"},{code:"C6.1",cluster:"Research",skill:"Collect, record and verify data"},{code:"C6.7",cluster:"Research",skill:"Collect and analyse data to identify solutions"},{code:"C10.2",cluster:"Thinking",skill:"Apply skills and knowledge in unfamiliar situations"}]},
+      "B:iv": { desc:"Design scientific investigations", atl:[{code:"C1.10",cluster:"Communication",skill:"Make inferences and draw conclusions"},{code:"C1.19",cluster:"Communication",skill:"Organise and depict information logically"},{code:"C8.15",cluster:"Thinking",skill:"Propose and evaluate a variety of solutions"}]},
+      "C:i":  { desc:"Present collected and transformed data", atl:[{code:"C3.8",cluster:"Self-Management",skill:"Use appropriate strategies for organising complex information"},{code:"C6.8",cluster:"Research",skill:"Process data and report results"},{code:"C6.9",cluster:"Research",skill:"Evaluate and select information sources and digital tools"}]},
+      "C:ii": { desc:"Interpret data and explain results using scientific reasoning", atl:[{code:"C1.12",cluster:"Communication",skill:"Write for different purposes"},{code:"C6.7",cluster:"Research",skill:"Collect and analyse data to identify solutions"},{code:"C8.4",cluster:"Thinking",skill:"Interpret data"},{code:"C8.7",cluster:"Thinking",skill:"Draw reasonable conclusions and generalisations"},{code:"C8.18",cluster:"Thinking",skill:"Identify trends and forecast possibilities"}]},
+      "C:iii":{ desc:"Evaluate the validity of a hypothesis", atl:[{code:"C8.5",cluster:"Thinking",skill:"Evaluate evidence and arguments"},{code:"C8.7",cluster:"Thinking",skill:"Draw reasonable conclusions and generalisations"}]},
+      "C:iv": { desc:"Evaluate the validity of the method", atl:[{code:"C8.5",cluster:"Thinking",skill:"Evaluate evidence and arguments"},{code:"C8.7",cluster:"Thinking",skill:"Draw reasonable conclusions and generalisations"}]},
+      "C:v":  { desc:"Explain improvements or extensions to the method", atl:[{code:"C8.19",cluster:"Thinking",skill:"Troubleshoot systems and applications"},{code:"C9.5",cluster:"Thinking",skill:"Design improvements to existing machines, media and technologies"}]},
+      "D:i":  { desc:"Explain how science addresses a specific problem", atl:[{code:"C2.1",cluster:"Social",skill:"Practise empathy"},{code:"C2.8",cluster:"Social",skill:"Listen actively to other perspectives"},{code:"C10.2",cluster:"Thinking",skill:"Apply skills and knowledge in unfamiliar situations"},{code:"C10.3",cluster:"Thinking",skill:"Inquire in different contexts to gain a different perspective"}]},
+      "D:ii": { desc:"Discuss and evaluate implications of science", atl:[{code:"C4.1",cluster:"Self-Management",skill:"Practise focus and concentration"},{code:"C6.7",cluster:"Research",skill:"Collect and analyse data"},{code:"C9.1",cluster:"Thinking",skill:"Use brainstorming and visual diagrams to generate new ideas"},{code:"C9.2",cluster:"Thinking",skill:"Consider multiple alternatives"}]},
+      "D:iii":{ desc:"Apply scientific language effectively", atl:[{code:"C1.11",cluster:"Communication",skill:"Use and interpret discipline-specific terms and symbols"},{code:"C1.12",cluster:"Communication",skill:"Write for different purposes"}]},
+      "D:iv": { desc:"Document the work of others and sources of information used", atl:[{code:"C6.13",cluster:"Research",skill:"Create references and citations; construct a bibliography"}]},
+    }
+  },
+  "Mathematics": {
+    label: "Mathematics", criteria: { A:"Knowing & Understanding", B:"Investigating Patterns", C:"Communicating", D:"Applying Mathematics in Real Life" },
+    strands: {
+      "A:i":  { desc:"Select appropriate mathematics when solving problems", atl:[{code:"C1.6",cluster:"Communication",skill:"Interpret and use effectively modes of non-verbal communication"},{code:"C2.8",cluster:"Social",skill:"Listen actively to other perspectives"},{code:"C3.8",cluster:"Self-Management",skill:"Use appropriate strategies for organising complex information"},{code:"C6.3",cluster:"Research",skill:"Make connections between various sources of information"},{code:"C8.2",cluster:"Thinking",skill:"Gather and organise relevant information to formulate an argument"}]},
+      "A:ii": { desc:"Apply selected mathematics successfully when solving problems", atl:[{code:"C1.11",cluster:"Communication",skill:"Use and interpret mathematical notation and symbols"},{code:"C3.5",cluster:"Self-Management",skill:"Plan strategies and take action to achieve goals"},{code:"C4.5",cluster:"Self-Management",skill:"Demonstrate persistence and perseverance"},{code:"C8.15",cluster:"Thinking",skill:"Propose and evaluate a variety of solutions"}]},
+      "A:iii":{ desc:"Solve problems correctly in a variety of contexts", atl:[{code:"C1.10",cluster:"Communication",skill:"Make inferences and draw conclusions"},{code:"C3.8",cluster:"Self-Management",skill:"Use appropriate strategies for organising complex information"},{code:"C6.7",cluster:"Research",skill:"Collect and analyse data to identify solutions"}]},
+      "B:i":  { desc:"Select and apply problem-solving techniques to discover complex patterns", atl:[{code:"C1.10",cluster:"Communication",skill:"Make inferences and draw conclusions"},{code:"C8.4",cluster:"Thinking",skill:"Interpret data"},{code:"C8.14",cluster:"Thinking",skill:"Analyse complex concepts into their constituent parts"},{code:"C9.7",cluster:"Thinking",skill:"Make guesses, ask 'what if' questions and generate testable hypotheses"}]},
+      "B:ii": { desc:"Describe patterns as relationships and/or general rules", atl:[{code:"C1.11",cluster:"Communication",skill:"Use and interpret mathematical notation and symbols"},{code:"C8.7",cluster:"Thinking",skill:"Draw reasonable conclusions and generalisations"},{code:"C8.12",cluster:"Thinking",skill:"Consider ideas from multiple perspectives"}]},
+      "B:iii":{ desc:"Verify and justify a general rule", atl:[{code:"C8.2",cluster:"Thinking",skill:"Gather and organise relevant information to formulate an argument"},{code:"C8.5",cluster:"Thinking",skill:"Evaluate evidence and arguments"},{code:"C8.7",cluster:"Thinking",skill:"Draw reasonable conclusions and generalisations"}]},
+      "C:i":  { desc:"Use appropriate mathematical language in written and oral explanations", atl:[{code:"C1.4",cluster:"Communication",skill:"Use appropriate forms of writing for different purposes"},{code:"C1.11",cluster:"Communication",skill:"Use and interpret mathematical notation and symbols"},{code:"C1.19",cluster:"Communication",skill:"Organise and depict information logically"}]},
+      "C:ii": { desc:"Use appropriate forms of mathematical representation", atl:[{code:"C1.5",cluster:"Communication",skill:"Use a variety of media to communicate"},{code:"C1.6",cluster:"Communication",skill:"Interpret and use effectively modes of non-verbal communication"},{code:"C6.6",cluster:"Research",skill:"Present information in a variety of formats and platforms"}]},
+      "C:iii":{ desc:"Move between different forms of mathematical representation", atl:[{code:"C1.19",cluster:"Communication",skill:"Organise and depict information logically"},{code:"C10.4",cluster:"Thinking",skill:"Compare conceptual understanding across multiple subject groups"}]},
+      "D:i":  { desc:"Identify relevant elements of authentic real-life situations", atl:[{code:"C2.8",cluster:"Social",skill:"Listen actively to other perspectives"},{code:"C8.1",cluster:"Thinking",skill:"Practise observing carefully to recognise problems"},{code:"C10.2",cluster:"Thinking",skill:"Apply skills and knowledge in unfamiliar situations"}]},
+      "D:ii": { desc:"Select appropriate mathematics when solving authentic problems", atl:[{code:"C3.5",cluster:"Self-Management",skill:"Plan strategies and take action to achieve goals"},{code:"C8.2",cluster:"Thinking",skill:"Gather and organise relevant information"},{code:"C9.3",cluster:"Thinking",skill:"Create novel solutions to authentic problems"}]},
+      "D:iii":{ desc:"Apply the selected mathematics successfully to reach a solution", atl:[{code:"C4.5",cluster:"Self-Management",skill:"Demonstrate persistence and perseverance"},{code:"C8.15",cluster:"Thinking",skill:"Propose and evaluate a variety of solutions"}]},
+      "D:iv": { desc:"Justify the degree of accuracy of a solution; describe whether it makes sense", atl:[{code:"C8.5",cluster:"Thinking",skill:"Evaluate evidence and arguments"},{code:"C8.7",cluster:"Thinking",skill:"Draw reasonable conclusions and generalisations"}]},
+    }
+  },
+  "Language & Literature": {
+    label: "Language & Literature", criteria: { A:"Analysing", B:"Organising", C:"Producing Text", D:"Using Language" },
+    strands: {
+      "A:i":  { desc:"Analyse content, context, language, structure, technique and style of texts", atl:[{code:"C1.8",cluster:"Communication",skill:"Read critically and for comprehension"},{code:"C1.10",cluster:"Communication",skill:"Make inferences and draw conclusions"},{code:"C6.7",cluster:"Research",skill:"Collect and analyse data to identify solutions"},{code:"C8.12",cluster:"Thinking",skill:"Consider ideas from multiple perspectives"},{code:"C8.4",cluster:"Thinking",skill:"Interpret data"}]},
+      "A:ii": { desc:"Analyse the effects of the creator's choices on an audience", atl:[{code:"C1.10",cluster:"Communication",skill:"Make inferences and draw conclusions"},{code:"C8.12",cluster:"Thinking",skill:"Consider ideas from multiple perspectives"},{code:"C8.6",cluster:"Thinking",skill:"Recognise and evaluate propositions"}]},
+      "A:iii":{ desc:"Justify opinions; evaluate similarities and differences across genres", atl:[{code:"C1.10",cluster:"Communication",skill:"Make inferences and draw conclusions"},{code:"C8.2",cluster:"Thinking",skill:"Gather and organise relevant information to formulate an argument"},{code:"C8.7",cluster:"Thinking",skill:"Draw reasonable conclusions and generalisations"},{code:"C10.4",cluster:"Thinking",skill:"Compare conceptual understanding across multiple subject groups"}]},
+      "B:i":  { desc:"Employ organisational structures that serve context and intention", atl:[{code:"C1.20",cluster:"Communication",skill:"Structure information in summaries, essays and reports"},{code:"C1.19",cluster:"Communication",skill:"Organise and depict information logically"}]},
+      "B:ii": { desc:"Organise opinions and ideas in a sustained, coherent and logical manner", atl:[{code:"C1.20",cluster:"Communication",skill:"Structure information in summaries, essays and reports"},{code:"C8.2",cluster:"Thinking",skill:"Gather and organise relevant information to formulate an argument"}]},
+      "B:iii":{ desc:"Use referencing and formatting tools to create a suitable presentation style", atl:[{code:"C6.13",cluster:"Research",skill:"Create references and citations; construct a bibliography"},{code:"C9.9",cluster:"Thinking",skill:"Create original works and ideas; use existing works in new ways"}]},
+      "C:i":  { desc:"Produce texts that demonstrate insight, imagination and sensitivity", atl:[{code:"C1.4",cluster:"Communication",skill:"Use appropriate forms of writing for different purposes"},{code:"C9.1",cluster:"Thinking",skill:"Use brainstorming and visual diagrams to generate new ideas"},{code:"C9.9",cluster:"Thinking",skill:"Create original works and ideas; use existing works in new ways"},{code:"C8.12",cluster:"Thinking",skill:"Consider ideas from multiple perspectives"}]},
+      "C:ii": { desc:"Make stylistic choices demonstrating awareness of impact on an audience", atl:[{code:"C1.4",cluster:"Communication",skill:"Use appropriate forms of writing for different purposes"},{code:"C1.5",cluster:"Communication",skill:"Use a variety of media to communicate"},{code:"C8.6",cluster:"Thinking",skill:"Recognise and evaluate propositions"}]},
+      "C:iii":{ desc:"Select relevant details and examples to develop ideas", atl:[{code:"C1.9",cluster:"Communication",skill:"Read a variety of sources for information and pleasure"},{code:"C6.3",cluster:"Research",skill:"Make connections between various sources of information"}]},
+      "D:i":  { desc:"Use appropriate and varied vocabulary, sentence structure and forms of expression", atl:[{code:"C1.3",cluster:"Communication",skill:"Use a variety of speaking techniques for different audiences"},{code:"C1.12",cluster:"Communication",skill:"Write for different purposes"},{code:"C1.20",cluster:"Communication",skill:"Structure information in summaries, essays and reports"}]},
+      "D:ii": { desc:"Write and speak in a register and style that serve the context and intention", atl:[{code:"C1.3",cluster:"Communication",skill:"Use a variety of speaking techniques for different audiences"}]},
+      "D:iii":{ desc:"Use correct grammar, syntax and punctuation", atl:[{code:"C1.11",cluster:"Communication",skill:"Use and interpret discipline-specific terms and symbols"},{code:"C1.12",cluster:"Communication",skill:"Write for different purposes"}]},
+    }
+  },
+  "Language Acquisition": {
+    label: "Language Acquisition", criteria: { A:"Listening", B:"Reading", C:"Speaking", D:"Writing" },
+    strands: {
+      "A:i":  { desc:"Identify explicit and implicit information; state main idea and supporting details", atl:[{code:"C1.6",cluster:"Communication",skill:"Interpret and use effectively modes of non-verbal communication"},{code:"C1.19",cluster:"Communication",skill:"Organise and depict information logically"},{code:"C8.12",cluster:"Thinking",skill:"Consider ideas from multiple perspectives"}]},
+      "A:ii": { desc:"Analyse conventions used for different text types", atl:[{code:"C2.8",cluster:"Social",skill:"Listen actively to other perspectives and ideas"},{code:"C2.10",cluster:"Social",skill:"Encourage others to contribute"}]},
+      "A:iii":{ desc:"Analyse similarities and differences between connected texts", atl:[{code:"C6.3",cluster:"Research",skill:"Make connections between various sources of information"},{code:"C8.4",cluster:"Thinking",skill:"Interpret data"}]},
+      "B:i":  { desc:"Identify explicit and implicit information; identify main idea and supporting details", atl:[{code:"C1.8",cluster:"Communication",skill:"Read critically and for comprehension"},{code:"C1.9",cluster:"Communication",skill:"Read a variety of sources for information and pleasure"},{code:"C6.3",cluster:"Research",skill:"Make connections between various sources of information"}]},
+      "B:ii": { desc:"Analyse conventions used for different text types", atl:[{code:"C8.7",cluster:"Thinking",skill:"Draw reasonable conclusions and generalisations"},{code:"C8.12",cluster:"Thinking",skill:"Consider ideas from multiple perspectives"}]},
+      "B:iii":{ desc:"Analyse similarities and differences between connected texts", atl:[{code:"C3.1",cluster:"Self-Management",skill:"Plan short- and long-term assignments; meet deadlines"},{code:"C5.1",cluster:"Self-Management",skill:"Develop new skills, techniques and strategies for effective learning"}]},
+      "C:i":  { desc:"Use a wide range of vocabulary in a variety of contexts", atl:[{code:"C1.3",cluster:"Communication",skill:"Use a variety of speaking techniques for different audiences"}]},
+      "C:ii": { desc:"Use a wide range of grammatical structures accurately", atl:[{code:"C6.6",cluster:"Research",skill:"Present information in a variety of formats and platforms"}]},
+      "C:iii":{ desc:"Use clear pronunciation and intonation", atl:[{code:"C2.12",cluster:"Social",skill:"Give and receive meaningful feedback"},{code:"C2.10",cluster:"Social",skill:"Encourage others to contribute"}]},
+      "C:iv": { desc:"Communicate required information clearly and effectively", atl:[{code:"C1.1",cluster:"Communication",skill:"Give and receive meaningful feedback"},{code:"C1.13",cluster:"Communication",skill:"Paraphrase accurately and concisely"}]},
+      "D:i":  { desc:"Use a wide range of vocabulary in a variety of contexts (writing)", atl:[{code:"C1.12",cluster:"Communication",skill:"Write for different purposes"},{code:"C1.14",cluster:"Communication",skill:"Preview and skim texts to build understanding"}]},
+      "D:iii":{ desc:"Organise information effectively using appropriate cohesive devices", atl:[{code:"C1.13",cluster:"Communication",skill:"Paraphrase accurately and concisely"},{code:"C6.1",cluster:"Research",skill:"Collect, record and verify data"}]},
+      "D:iv": { desc:"Communicate required information with a clear sense of audience and purpose", atl:[{code:"C1.1",cluster:"Communication",skill:"Give and receive meaningful feedback"},{code:"C1.19",cluster:"Communication",skill:"Organise and depict information logically"},{code:"C8.7",cluster:"Thinking",skill:"Draw reasonable conclusions and generalisations"}]},
+    }
+  },
+  "Individuals & Societies": {
+    label: "Individuals & Societies", criteria: { A:"Knowing & Understanding", B:"Investigating", C:"Communicating", D:"Thinking Critically" },
+    strands: {
+      "A:i":  { desc:"Use terminology in context", atl:[{code:"C1.4",cluster:"Communication",skill:"Use appropriate forms of writing for different purposes"},{code:"C1.11",cluster:"Communication",skill:"Use and interpret discipline-specific terms and symbols"},{code:"C6.3",cluster:"Research",skill:"Make connections between various sources of information"},{code:"C8.2",cluster:"Thinking",skill:"Gather and organise relevant information to formulate an argument"}]},
+      "A:ii": { desc:"Demonstrate knowledge and understanding through descriptions, explanations and examples", atl:[{code:"C3.8",cluster:"Self-Management",skill:"Use appropriate strategies for organising complex information"},{code:"C6.8",cluster:"Research",skill:"Process data and report results"},{code:"C6.9",cluster:"Research",skill:"Evaluate and select information sources and digital tools"},{code:"C8.4",cluster:"Thinking",skill:"Interpret data"}]},
+      "B:i":  { desc:"Formulate a clear and focused research question", atl:[{code:"C6.1",cluster:"Research",skill:"Collect, record and verify data"},{code:"C8.2",cluster:"Thinking",skill:"Gather and organise relevant information to formulate an argument"},{code:"C8.11",cluster:"Thinking",skill:"Formulate factual, topical, conceptual and debatable questions"}]},
+      "B:ii": { desc:"Formulate and follow an action plan to investigate a research question", atl:[{code:"C6.3",cluster:"Research",skill:"Make connections between various sources of information"},{code:"C6.7",cluster:"Research",skill:"Collect and analyse data"},{code:"C6.11",cluster:"Research",skill:"Use critical-literacy skills to analyse and interpret media communications"}]},
+      "B:iii":{ desc:"Use search methods to collect and record relevant information", atl:[{code:"C6.7",cluster:"Research",skill:"Collect and analyse data"},{code:"C6.12",cluster:"Research",skill:"Understand and implement intellectual property rights"},{code:"C6.13",cluster:"Research",skill:"Create references and citations; construct a bibliography"}]},
+      "B:iv": { desc:"Evaluate the process and results of the investigation", atl:[{code:"C6.6",cluster:"Research",skill:"Present information in a variety of formats and platforms"},{code:"C6.8",cluster:"Research",skill:"Process data and report results"},{code:"C7.1",cluster:"Research",skill:"Locate, organise, analyse and ethically use information from varied sources"}]},
+      "C:i":  { desc:"Communicate information and ideas using appropriate style for audience and purpose", atl:[{code:"C1.3",cluster:"Communication",skill:"Use a variety of speaking techniques for different audiences"},{code:"C1.4",cluster:"Communication",skill:"Use appropriate forms of writing for different purposes"},{code:"C1.5",cluster:"Communication",skill:"Use a variety of media to communicate"}]},
+      "C:ii": { desc:"Structure information and ideas appropriately for specified format", atl:[{code:"C1.17",cluster:"Communication",skill:"Use a variety of organizers for academic writing"},{code:"C1.19",cluster:"Communication",skill:"Organise and depict information logically"}]},
+      "C:iii":{ desc:"Document sources of information using a recognised convention", atl:[{code:"C1.13",cluster:"Communication",skill:"Paraphrase accurately and concisely"},{code:"C1.19",cluster:"Communication",skill:"Organise and depict information logically"},{code:"C1.20",cluster:"Communication",skill:"Structure information in summaries, essays and reports"}]},
+      "D:i":  { desc:"Discuss concepts, issues, models, visual representations and theories", atl:[{code:"C8.9",cluster:"Thinking",skill:"Revise understanding based on new information and evidence"},{code:"C9.1",cluster:"Thinking",skill:"Use brainstorming and visual diagrams"},{code:"C9.2",cluster:"Thinking",skill:"Consider multiple alternatives"},{code:"C10.3",cluster:"Thinking",skill:"Inquire in different contexts to gain a different perspective"}]},
+      "D:ii": { desc:"Synthesise information to make valid arguments", atl:[{code:"C8.2",cluster:"Thinking",skill:"Gather and organise relevant information to formulate an argument"},{code:"C8.5",cluster:"Thinking",skill:"Evaluate evidence and arguments"},{code:"C8.6",cluster:"Thinking",skill:"Recognise and evaluate propositions"},{code:"C8.13",cluster:"Thinking",skill:"Develop contrary or opposing arguments"}]},
+      "D:iii":{ desc:"Analyse and evaluate sources/data in terms of origin and purpose", atl:[{code:"C8.3",cluster:"Thinking",skill:"Recognise unstated assumptions and bias"},{code:"C10.3",cluster:"Thinking",skill:"Inquire in different contexts to gain a different perspective"}]},
+      "D:iv": { desc:"Interpret different perspectives and their implications", atl:[{code:"C8.4",cluster:"Thinking",skill:"Interpret data"},{code:"C8.7",cluster:"Thinking",skill:"Draw reasonable conclusions and generalisations"},{code:"C10.3",cluster:"Thinking",skill:"Inquire in different contexts to gain a different perspective"}]},
+    }
+  },
+  "Arts": {
+    label: "Arts", criteria: { A:"Investigating", B:"Developing", C:"Creating / Performing", D:"Evaluating" },
+    strands: {
+      "A:i":  { desc:"Investigate a movement or genre in the chosen arts discipline", atl:[{code:"C6.2",cluster:"Research",skill:"Access information to be informed and inform others"},{code:"C6.3",cluster:"Research",skill:"Make connections between various sources of information"},{code:"C6.9",cluster:"Research",skill:"Evaluate and select information sources"},{code:"C8.12",cluster:"Thinking",skill:"Consider ideas from multiple perspectives"}]},
+      "A:ii": { desc:"Describe, analyse or critique an artwork or performance", atl:[{code:"C1.1",cluster:"Communication",skill:"Give and receive meaningful feedback"},{code:"C8.5",cluster:"Thinking",skill:"Evaluate evidence and arguments"},{code:"C8.6",cluster:"Thinking",skill:"Recognise and evaluate propositions"},{code:"C5.5",cluster:"Self-Management",skill:"Reflect on content: What did I learn?"}]},
+      "B:i":  { desc:"Practically explore ideas to inform development of a final artwork or performance", atl:[{code:"C3.4",cluster:"Self-Management",skill:"Set goals that are challenging and realistic"},{code:"C4.1",cluster:"Self-Management",skill:"Practise focus and concentration"},{code:"C9.1",cluster:"Thinking",skill:"Use brainstorming and visual diagrams"},{code:"C9.2",cluster:"Thinking",skill:"Consider multiple alternatives"},{code:"C9.3",cluster:"Thinking",skill:"Create novel solutions to authentic problems"}]},
+      "B:ii": { desc:"Present a clear artistic intention for the final artwork or performance", atl:[{code:"C1.4",cluster:"Communication",skill:"Use appropriate forms of writing for different purposes"},{code:"C1.19",cluster:"Communication",skill:"Organise and depict information logically"},{code:"C9.7",cluster:"Thinking",skill:"Make guesses, ask 'what if' questions"}]},
+      "C:i":  { desc:"Create or perform an artwork demonstrating skills and techniques", atl:[{code:"C3.4",cluster:"Self-Management",skill:"Set goals that are challenging and realistic"},{code:"C4.5",cluster:"Self-Management",skill:"Demonstrate persistence and perseverance"},{code:"C9.9",cluster:"Thinking",skill:"Create original works and ideas"},{code:"C10.6",cluster:"Thinking",skill:"Combine knowledge, understanding and skills to create products or solutions"}]},
+      "D:i":  { desc:"Appraise own artwork or performance", atl:[{code:"C5.5",cluster:"Self-Management",skill:"Reflect on content: What did I learn?"},{code:"C5.6",cluster:"Self-Management",skill:"Reflect on ATL development: What can I do?"},{code:"C8.5",cluster:"Thinking",skill:"Evaluate evidence and arguments"},{code:"C8.7",cluster:"Thinking",skill:"Draw reasonable conclusions and generalisations"}]},
+      "D:ii": { desc:"Reflect on development as an artist", atl:[{code:"C5.1",cluster:"Self-Management",skill:"Develop new skills, techniques and strategies for effective learning"},{code:"C5.2",cluster:"Self-Management",skill:"Identify strengths and weaknesses of personal learning strategies"},{code:"C10.1",cluster:"Thinking",skill:"Use effective learning strategies across subject groups"},{code:"C2.12",cluster:"Social",skill:"Give and receive meaningful feedback"}]},
+    }
+  },
+  "Physical & Health Education": {
+    label: "PHE", criteria: { A:"Knowing & Understanding", B:"Planning for Performance", C:"Applying & Performing", D:"Reflecting & Improving" },
+    strands: {
+      "A:i":  { desc:"Explain physical and health education factual, procedural and conceptual knowledge", atl:[{code:"C1.5",cluster:"Communication",skill:"Use a variety of media to communicate"},{code:"C1.11",cluster:"Communication",skill:"Use and interpret discipline-specific terms and symbols"},{code:"C3.4",cluster:"Self-Management",skill:"Set goals that are challenging and realistic"}]},
+      "A:ii": { desc:"Apply knowledge to explain issues and solve problems", atl:[{code:"C6.9",cluster:"Research",skill:"Evaluate and select information sources"},{code:"C8.1",cluster:"Thinking",skill:"Practise observing carefully to recognise problems"},{code:"C8.16",cluster:"Thinking",skill:"Identify obstacles and challenges"}]},
+      "A:iii":{ desc:"Apply terminology effectively to communicate understanding", atl:[{code:"C1.3",cluster:"Communication",skill:"Use a variety of speaking techniques for different audiences"},{code:"C1.11",cluster:"Communication",skill:"Use and interpret discipline-specific terms and symbols"}]},
+      "B:i":  { desc:"Develop goals to enhance performance", atl:[{code:"C1.19",cluster:"Communication",skill:"Organise and depict information logically"},{code:"C3.4",cluster:"Self-Management",skill:"Set goals that are challenging and realistic"},{code:"C8.16",cluster:"Thinking",skill:"Identify obstacles and challenges"}]},
+      "B:ii": { desc:"Design and explain a plan for improving physical performance and health", atl:[{code:"C1.12",cluster:"Communication",skill:"Write for different purposes"},{code:"C3.4",cluster:"Self-Management",skill:"Set goals that are challenging and realistic"},{code:"C6.7",cluster:"Research",skill:"Collect and analyse data to identify solutions"}]},
+      "C:i":  { desc:"Demonstrate and apply a range of skills and techniques effectively", atl:[{code:"C2.3",cluster:"Social",skill:"Help others to succeed"},{code:"C2.12",cluster:"Social",skill:"Give and receive meaningful feedback"},{code:"C4.5",cluster:"Self-Management",skill:"Demonstrate persistence and perseverance"}]},
+      "C:ii": { desc:"Demonstrate and apply a range of strategies and movement concepts", atl:[{code:"C2.5",cluster:"Social",skill:"Manage and resolve conflict; work collaboratively in teams"},{code:"C2.11",cluster:"Social",skill:"Exercise leadership and take on a variety of roles"},{code:"C4.5",cluster:"Self-Management",skill:"Demonstrate persistence and perseverance"}]},
+      "C:iii":{ desc:"Analyse and apply information to perform effectively", atl:[{code:"C6.7",cluster:"Research",skill:"Collect and analyse data"},{code:"C8.1",cluster:"Thinking",skill:"Practise observing carefully to recognise problems"},{code:"C10.2",cluster:"Thinking",skill:"Apply skills and knowledge in unfamiliar situations"}]},
+      "D:i":  { desc:"Explain and demonstrate strategies to enhance interpersonal skills", atl:[{code:"C2.1",cluster:"Social",skill:"Practise empathy"},{code:"C2.8",cluster:"Social",skill:"Listen actively to other perspectives"},{code:"C5.6",cluster:"Self-Management",skill:"Reflect on ATL development: What can I do?"}]},
+      "D:ii": { desc:"Analyse and evaluate the effectiveness of a plan based on the outcome", atl:[{code:"C5.2",cluster:"Self-Management",skill:"Identify strengths and weaknesses of personal learning strategies"},{code:"C5.5",cluster:"Self-Management",skill:"Reflect on content: What did I learn?"},{code:"C8.5",cluster:"Thinking",skill:"Evaluate evidence and arguments"}]},
+      "D:iii":{ desc:"Analyse and evaluate performance", atl:[{code:"C2.12",cluster:"Social",skill:"Give and receive meaningful feedback"},{code:"C5.2",cluster:"Self-Management",skill:"Identify strengths and weaknesses of personal learning strategies"},{code:"C3.4",cluster:"Self-Management",skill:"Set goals that are challenging and realistic"}]},
+    }
+  },
+  "Design": {
+    label: "Design", criteria: { A:"Inquiring & Analysing", B:"Developing Ideas", C:"Creating the Solution", D:"Evaluating" },
+    strands: {
+      "A:i":  { desc:"Explain and justify the need for a solution to a problem", atl:[{code:"C1.10",cluster:"Communication",skill:"Make inferences and draw conclusions"},{code:"C1.19",cluster:"Communication",skill:"Organise and depict information logically"},{code:"C2.1",cluster:"Social",skill:"Practise empathy"},{code:"C8.1",cluster:"Thinking",skill:"Practise observing carefully to recognise problems"}]},
+      "A:ii": { desc:"Identify and prioritise the primary and secondary research needed", atl:[{code:"C3.8",cluster:"Self-Management",skill:"Use appropriate strategies for organising complex information"},{code:"C6.3",cluster:"Research",skill:"Make connections between various sources of information"},{code:"C6.9",cluster:"Research",skill:"Evaluate and select information sources"},{code:"C8.12",cluster:"Thinking",skill:"Consider ideas from multiple perspectives"}]},
+      "A:iii":{ desc:"Analyse a range of existing products that inspire a solution", atl:[{code:"C5.8",cluster:"Self-Management",skill:"Focus on the process of creating by imitating the work of an expert"},{code:"C6.7",cluster:"Research",skill:"Collect and analyse data"},{code:"C7.4",cluster:"Research",skill:"Seek a range of perspectives from multiple and varied sources"},{code:"C9.11",cluster:"Thinking",skill:"Practise visible thinking strategies and techniques"}]},
+      "A:iv": { desc:"Develop a detailed design brief summarising analysis of relevant research", atl:[{code:"C1.13",cluster:"Communication",skill:"Paraphrase accurately and concisely"},{code:"C1.19",cluster:"Communication",skill:"Organise and depict information logically"},{code:"C8.2",cluster:"Thinking",skill:"Gather and organise relevant information to formulate an argument"}]},
+      "B:i":  { desc:"Develop a design specification with clear success criteria", atl:[{code:"C1.19",cluster:"Communication",skill:"Organise and depict information logically"},{code:"C6.8",cluster:"Research",skill:"Process data and report results"},{code:"C8.4",cluster:"Thinking",skill:"Interpret data"},{code:"C8.7",cluster:"Thinking",skill:"Draw reasonable conclusions and generalisations"}]},
+      "B:ii": { desc:"Develop a range of feasible design ideas", atl:[{code:"C8.15",cluster:"Thinking",skill:"Propose and evaluate a variety of solutions"},{code:"C9.3",cluster:"Thinking",skill:"Create novel solutions to authentic problems"},{code:"C9.8",cluster:"Thinking",skill:"Apply existing knowledge to generate new ideas"},{code:"C9.9",cluster:"Thinking",skill:"Create original works and ideas"}]},
+      "B:iii":{ desc:"Present the final chosen design and justify its selection", atl:[{code:"C2.7",cluster:"Social",skill:"Make fair and equitable decisions"},{code:"C8.15",cluster:"Thinking",skill:"Propose and evaluate a variety of solutions"}]},
+      "C:i":  { desc:"Construct a logical plan which describes efficient use of time and resources", atl:[{code:"C1.19",cluster:"Communication",skill:"Organise and depict information logically"},{code:"C6.6",cluster:"Research",skill:"Present information in a variety of formats"}]},
+      "C:iii":{ desc:"Follow the plan to create the solution, which functions as intended", atl:[{code:"C10.6",cluster:"Thinking",skill:"Combine knowledge, understanding and skills to create products or solutions"}]},
+      "C:iv": { desc:"Justify changes made to the chosen design and plan when making the solution", atl:[{code:"C5.8",cluster:"Self-Management",skill:"Focus on the process of creating by imitating the work of an expert"},{code:"C8.6",cluster:"Thinking",skill:"Recognise and evaluate propositions"}]},
+      "D:i":  { desc:"Design detailed and relevant testing methods to measure the success of the solution", atl:[{code:"C6.7",cluster:"Research",skill:"Collect and analyse data"},{code:"C9.7",cluster:"Thinking",skill:"Make guesses, ask 'what if' questions and generate testable hypotheses"}]},
+      "D:ii": { desc:"Critically evaluate the success of the solution against the design specification", atl:[{code:"C4.9",cluster:"Self-Management",skill:"Practise analysing and attributing causes for failure"},{code:"C8.18",cluster:"Thinking",skill:"Identify trends and forecast possibilities"}]},
+      "D:iii":{ desc:"Explain how the solution could be improved", atl:[{code:"C1.19",cluster:"Communication",skill:"Organise and depict information logically"},{code:"C4.12",cluster:"Self-Management",skill:"Practise bouncing back after adversity, mistakes and failure"}]},
+    }
+  },
+};
+
+const CLUSTER_COLORS = {
+  "Communication":"#1565C0","Social":"#2E7D32","Self-Management":"#E65100",
+  "Research":"#006B5C","Thinking":"#6A1B9A"
+};
+// ── SUBJECT-SPECIFIC CRITERIA ─────────────────────────────────────────────────
+const SUBJECT_CRITERIA = {
+  "Sciences": [
+    { id:"A", label:"A: Knowing & Understanding", color:"#1565C0", strands:["i","ii","iii"] },
+    { id:"B", label:"B: Inquiring & Designing", color:"#2E7D32", strands:["i","ii","iii","iv"] },
+    { id:"C", label:"C: Processing & Evaluating", color:"#6A1B9A", strands:["i","ii","iii","iv","v"] },
+    { id:"D", label:"D: Reflecting on Impacts", color:"#AD1457", strands:["i","ii","iii","iv"] },
+  ],
+  "Mathematics": [
+    { id:"A", label:"A: Knowing & Understanding", color:"#1565C0", strands:["i","ii","iii"] },
+    { id:"B", label:"B: Investigating Patterns", color:"#2E7D32", strands:["i","ii","iii"] },
+    { id:"C", label:"C: Communicating", color:"#6A1B9A", strands:["i","ii","iii"] },
+    { id:"D", label:"D: Applying in Real Life", color:"#AD1457", strands:["i","ii","iii","iv"] },
+  ],
+  "Language & Literature": [
+    { id:"A", label:"A: Analysing", color:"#1565C0", strands:["i","ii","iii-iv"] },
+    { id:"B", label:"B: Organising", color:"#2E7D32", strands:["i","ii","iii"] },
+    { id:"C", label:"C: Producing Text", color:"#6A1B9A", strands:["i","ii","iii"] },
+    { id:"D", label:"D: Using Language", color:"#AD1457", strands:["i","ii","iii","iv","v"] },
+  ],
+  "Language Acquisition": [
+    { id:"A", label:"A: Listening", color:"#1565C0", strands:["i","ii","iii"] },
+    { id:"B", label:"B: Reading", color:"#2E7D32", strands:["i","ii","iii"] },
+    { id:"C", label:"C: Speaking", color:"#6A1B9A", strands:["i","ii","iii","iv"] },
+    { id:"D", label:"D: Writing", color:"#AD1457", strands:["i","ii","iii","iv"] },
+  ],
+  "Individuals & Societies": [
+    { id:"A", label:"A: Knowing & Understanding", color:"#1565C0", strands:["i","ii"] },
+    { id:"B", label:"B: Investigating", color:"#2E7D32", strands:["i","ii","iii","iv"] },
+    { id:"C", label:"C: Communicating", color:"#6A1B9A", strands:["i","ii","iii"] },
+    { id:"D", label:"D: Thinking Critically", color:"#AD1457", strands:["i","ii","iii","iv"] },
+  ],
+  "Arts": [
+    { id:"A", label:"A: Investigating", color:"#1565C0", strands:["i","ii"] },
+    { id:"B", label:"B: Developing", color:"#2E7D32", strands:["i","ii"] },
+    { id:"C", label:"C: Creating / Performing", color:"#6A1B9A", strands:["i"] },
+    { id:"D", label:"D: Evaluating", color:"#AD1457", strands:["i","ii"] },
+  ],
+  "Physical & Health Education": [
+    { id:"A", label:"A: Knowing & Understanding", color:"#1565C0", strands:["i","ii","iii"] },
+    { id:"B", label:"B: Planning for Performance", color:"#2E7D32", strands:["i","ii"] },
+    { id:"C", label:"C: Applying & Performing", color:"#6A1B9A", strands:["i","ii","iii"] },
+    { id:"D", label:"D: Reflecting & Improving", color:"#AD1457", strands:["i","ii","iii"] },
+  ],
+  "Design": [
+    { id:"A", label:"A: Inquiring & Analysing", color:"#1565C0", strands:["i","ii","iii","iv"] },
+    { id:"B", label:"B: Developing Ideas", color:"#2E7D32", strands:["i","ii","iii","iv"] },
+    { id:"C", label:"C: Creating the Solution", color:"#6A1B9A", strands:["i","ii","iii","iv"] },
+    { id:"D", label:"D: Evaluating", color:"#AD1457", strands:["i","ii","iii"] },
+  ],
+};
+const DEFAULT_CRITERIA = [
+  { id:"A", label:"Criterion A", color:"#1565C0", strands:["i","ii","iii"] },
+  { id:"B", label:"Criterion B", color:"#2E7D32", strands:["i","ii","iii","iv"] },
+  { id:"C", label:"Criterion C", color:"#6A1B9A", strands:["i","ii","iii","iv","v"] },
+  { id:"D", label:"Criterion D", color:"#AD1457", strands:["i","ii","iii"] },
+];
+
+
+
+// ═══ STATE ════════════════════════════════════════════════
+let D={weeks:[1,2,3,4,5,6].map(n=>({week:n,phase:"",topic:"",strategy:"",experience:""})),criteria:[],strands:{},atlSkills:[]};
+let IB={};       // which IB panels are open
+let atlMode="mapped";
+let openCrit=null, openAtlCat=null, phaseInfo=null;
+let AI={};       // {id: {loading, result}}
+let copied=false;
+
+// ═══ HELPERS ═════════════════════════════════════════════
+function el(tag,attrs,...kids){
+  const e=document.createElement(tag);
+  if(attrs)Object.entries(attrs).forEach(([k,v])=>{
+    if(k==="cls")e.className=v;
+    else if(k==="css")e.style.cssText=v;
+    else if(k.startsWith("on"))e.addEventListener(k.slice(2).toLowerCase(),v);
+    else e.setAttribute(k,v);
+  });
+  kids.flat(5).forEach(k=>{if(k==null||k===false||k===''||k===0||k===undefined)return;e.appendChild(typeof k==="string"||typeof k==="number"?document.createTextNode(String(k)):k);});
+  return e;
+}
+const div=(c,a,...k)=>{
+  if(a&&typeof a==='object'&&!(a instanceof Node)&&!Array.isArray(a)&&a.constructor===Object){
+    return el("div",{cls:c,...a},...k);
+  }
+  return el("div",{cls:c},a,...k);
+};
+function set(k,v){D[k]=v;render();}
+function inp(val,onch,ph="",rows=0){
+  if(rows>0) return el("textarea",{rows,placeholder:ph,onInput:e=>onch(e.target.value)},val||"");
+  const i=el("input",{type:"text",placeholder:ph,onInput:e=>onch(e.target.value)});
+  i.value=val||""; return i;
+}
+function sel(val,opts,onch){
+  const s=el("select",{onChange:e=>onch(e.target.value)},el("option",{value:""},"Select..."),
+    ...opts.map(o=>{const op=el("option",{value:o},o);if(o===val)op.selected=true;return op;}));
+  return s;
+}
+function fld(label,widget,color="#1A1A1A"){
+  return div("field",el("label",{css:`color:${color};`},label),widget);
+}
+function ibPanel(id,pts){
+  const open=IB[id];
+  const tog=el("button",{cls:"ib-toggle",onClick:()=>{IB[id]=!IB[id];render();}},"📖 "+(open?"Hide IB Guide Rationale":"Show IB Guide Rationale — Why does this section matter?"));
+  if(!open)return tog;
+  return div("ib-box",tog,div("ib-box",
+    ...pts.map(p=>div("ib-pt",
+      el("span",{css:"font-size:16px;flex-shrink:0;margin-top:2px;"},p.icon||"📌"),
+      div("",
+        p.label?el("div",{css:"font-size:12px;font-weight:700;color:#1A5C38;margin-bottom:3px;"},p.label):"",
+        el("span",{},p.text),
+        p.impl?el("div",{cls:"ib-impl"},"→ What this means: "+p.impl):"",
+      )
+    ))
+  ));
+}
+
+// ═══ AI ══════════════════════════════════════════════════
+// ═══ SETTINGS PANEL ══════════════════════════════════════
+function openSettings(){
+  const overlay=document.getElementById("settingsOverlay");
+  overlay.classList.add("open");
+  const key=localStorage.getItem("anthropic_key")||"";
+  const badge=document.getElementById("apiStatusBadge");
+  const input=document.getElementById("apiKeyInput");
+  if(key){
+    badge.textContent="✅ API key saved";
+    badge.className="api-status set";
+    input.placeholder="Key saved — paste a new one to update";
+  } else {
+    badge.textContent="No API key saved";
+    badge.className="api-status notset";
+  }
+}
+function closeSettings(){
+  document.getElementById("settingsOverlay").classList.remove("open");
+}
+function saveApiKey(){
+  const input=document.getElementById("apiKeyInput");
+  const feedback=document.getElementById("keyFeedback");
+  const key=input.value.trim();
+  if(!key){feedback.style.color="#B91C1C";feedback.textContent="Please paste your API key first.";return;}
+  if(!key.startsWith("sk-ant-")){feedback.style.color="#B8860B";feedback.textContent="⚠️ Key should start with sk-ant- — double check you copied it correctly.";}
+  else{feedback.style.color="#1A5C38";feedback.textContent="✅ API key saved! You can now use AI suggestions.";}
+  localStorage.setItem("anthropic_key",key);
+  window.__KEY__=key;
+  const badge=document.getElementById("apiStatusBadge");
+  badge.textContent="✅ API key saved";
+  badge.className="api-status set";
+  input.value="";
+  input.placeholder="Key saved — paste a new one to update";
+}
+
+async function ask(prompt,id){
+  // Get key from localStorage first, then session, then ask
+  const key=window.__KEY__||localStorage.getItem("anthropic_key")||sessionStorage.getItem("ak");
+  if(!key){
+    AI[id]={r:"No API key found. Click ⚙️ API Settings (top right) to add your Anthropic API key."};
+    render();
+    return;
+  }
+  window.__KEY__=key;
+  AI[id]={loading:true};render();
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
+      headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:700,
+        system:"You are an expert MYP curriculum planner at ELA Green School. Be concise, IB-accurate. Plain text only.",
+        messages:[{role:"user",content:prompt}]})});
+    const d=await res.json();
+    if(d.error){AI[id]={r:"API error: "+d.error.message+". Check your key in ⚙️ API Settings."};render();return;}
+    AI[id]={r:d.content?.map(b=>b.text||"").join("")||"No response."};
+  }catch(e){AI[id]={r:"Could not reach AI: "+e.message};}
+  render();
+}
+function aiBox(id,onUse){
+  const a=AI[id]; if(!a)return null;
+  if(a.loading)return div("ai-box",el("p",{},"⏳ Thinking..."));
+  return div("ai-box",el("h4",{},"✨ AI Suggestion"),el("pre",{},a.r),
+    div("ai-acts",
+      el("button",{cls:"btn btn-teal",onClick:()=>{onUse(a.r);delete AI[id];render();}},"Use This"),
+      el("button",{cls:"btn btn-out",onClick:()=>{delete AI[id];render();}},"Dismiss")));
+}
+function aiBtn(label,id,prompt){
+  return el("button",{cls:"btn btn-teal",css:"margin-top:8px;",onClick:()=>ask(prompt,id)},"✨ "+label);
+}
+
+// ═══ STEP 1: IDENTITY ════════════════════════════════════
+function s1(){
+  return div("card",
+    el("h2",{},"🏫 Unit Identity"),
+    div("g2",
+      fld("Teacher Name",inp(D.teacher,v=>set("teacher",v),"Your full name")),
+      fld("Academic Year",inp(D.year,v=>set("year",v),"e.g. 2026-27")),
+      fld("Unit Title",inp(D.title,v=>set("title",v),"e.g. How Can We Study the Living World?")),
+      fld("Unit Duration",inp(D.duration,v=>set("duration",v),"e.g. 21 hours / 7 weeks")),
+      fld("Subject Group",sel(D.subject,SUBJECT_GROUPS,v=>set("subject",v))),
+      fld("Discipline",inp(D.discipline,v=>set("discipline",v),"e.g. Chemistry, Ecology")),
+      fld("MYP Year",sel(D.myp,MYP_YEARS,v=>set("myp",v))),
+    )
+  );
+}
+
+// ═══ STEP 2: CONCEPTS ════════════════════════════════════
+function s2(){
+  const prompt=`MYP ${D.myp||"1"} ${D.subject||"Science"} unit: "${D.title}". KC: "${D.keyConcept||""}". GC: "${D.globalContext||""}". Suggest 2 related concepts with definitions, a GC exploration focus, and why KC+RC+GC works together. Be brief.`;
+  return div("",
+    ibPanel("c2",[
+      {icon:"🔑",label:"Key Concepts",text:"Broad, organising ideas that transcend subjects. ONE key concept drives the unit.",impl:"Choose the KC that genuinely drives your unit — not the most obvious one."},
+      {icon:"🔗",label:"Related Concepts",text:"Subject-specific concepts from the MYP subject guide that add depth.",impl:"Use 1-2 from your subject guide appendix. Bridge the KC to your specific content."},
+      {icon:"🌍",label:"Global Context",text:"Frames WHY this learning matters in the world. The context should be meaningful to learners.",impl:"Add a specific exploration focus — this shapes how you teach and what examples you use."},
+    ]),
+    div("card",
+      el("h2",{},"💡 Concepts & Context"),
+      div("g3",
+        div("",
+          fld("Key Concept",sel(D.keyConcept,KEY_CONCEPTS,v=>set("keyConcept",v))),
+          fld("KC Definition / relevance",inp(D.keyConceptDef,v=>set("keyConceptDef",v),"How does this KC drive your unit?",3)),
+        ),
+        div("",
+          fld("Related Concepts",inp(D.relatedConcepts,v=>set("relatedConcepts",v),"e.g. Balance, Interaction",2)),
+          fld("RC Definitions",inp(D.relatedConceptsDef,v=>set("relatedConceptsDef",v),"Definitions from subject guide",2)),
+        ),
+        div("",
+          fld("Global Context",sel(D.globalContext,GLOBAL_CONTEXTS,v=>set("globalContext",v))),
+          fld("Exploration Focus",inp(D.globalContextFocus,v=>set("globalContextFocus",v),"e.g. Adaptation, Ingenuity and Progress",2)),
+        ),
+      ),
+      aiBtn("Get AI Suggestions","c2ai",prompt),
+      aiBox("c2ai",v=>{set("aiConceptNotes",v);}),
+      D.aiConceptNotes?el("div",{css:"margin-top:8px;font-size:12px;color:#1A5C38;background:#E8F5EE;padding:10px;border-radius:8px;"},"💡 Saved: "+D.aiConceptNotes):null,
+    )
+  );
+}
+
+// ═══ STEP 3: INQUIRY ════════════════════════════════════
+function s3(){
+  const soiP=`Generate a Statement of Inquiry for MYP ${D.myp||"1"} ${D.subject||"Science"} unit "${D.title}". KC: ${D.keyConcept}. RC: ${D.relatedConcepts}. GC: ${D.globalContext} — ${D.globalContextFocus||""}. Output ONLY the SOI sentence. Must be conceptual, transferable, provocative.`;
+  const iqP=`Generate inquiry questions for MYP ${D.myp||"1"} ${D.subject||"Science"}. SOI: "${D.soi||D.title}". Output exactly: FACTUAL: (3 questions) CONCEPTUAL: (3 questions) DEBATABLE: (2 questions)`;
+  return div("",
+    ibPanel("c3",[
+      {icon:"💬",label:"SOI",text:"Combines KC+RC+GC into a transferable conceptual statement. Summative tasks must link directly to the SOI.",impl:"Should feel like a claim worth investigating — not a fact and not a question."},
+      {icon:"❓",label:"Factual",text:"Knowledge-based, content-driven, encourage recall. Can be answered from sources.",impl:"Students answer these in the Finding Out phase."},
+      {icon:"🔍",label:"Conceptual",text:"Enable exploration of big ideas connecting facts. Promote transfer and analysis.",impl:"Require thinking — not just recall. They bridge facts to the SOI."},
+      {icon:"⚖️",label:"Debatable",text:"Enable debate. Have tension. Can be contested. No single right answer.",impl:"Connect to the Global Context. Reasonable people should disagree."},
+    ]),
+    div("card",
+      el("h2",{},"🔬 Inquiry Design"),
+      fld("Conceptual Understanding",inp(D.cu,v=>set("cu",v),"Synthesise KC + RC + GC into one enduring understanding sentence…",2)),
+      fld("Statement of Inquiry",inp(D.soi,v=>set("soi",v),"Write or generate the SOI…",2)),
+      aiBtn("Generate SOI","soi",soiP),
+      aiBox("soi",v=>set("soi",v)),
+      el("div",{css:"height:12px;"}),
+      div("g3",
+        fld("Factual Questions",inp(D.iqFactual,v=>set("iqFactual",v),"What is...? How does...?",5),"#1C4E7A"),
+        fld("Conceptual Questions",inp(D.iqConceptual,v=>set("iqConceptual",v),"How do...? Why does...? What is the relationship between...?",5),"#5B2D8E"),
+        fld("Debatable Questions",inp(D.iqDebatable,v=>set("iqDebatable",v),"Is it...? Should we...? To what extent...?",5),"#B91C1C"),
+      ),
+      aiBtn("Generate All 3 Question Types","iq",iqP),
+      aiBox("iq",v=>{
+        const lines=v.split("\n");
+        const fi=lines.findIndex(l=>l.startsWith("FACTUAL")),ci=lines.findIndex(l=>l.startsWith("CONCEPTUAL")),di=lines.findIndex(l=>l.startsWith("DEBATABLE"));
+        if(fi>=0)D.iqFactual=lines.slice(fi+1,ci>fi?ci:undefined).join("\n").replace(/^FACTUAL:/,"").trim()||lines[fi].replace("FACTUAL:","").trim();
+        if(ci>=0)D.iqConceptual=lines.slice(ci+1,di>ci?di:undefined).join("\n").replace(/^CONCEPTUAL:/,"").trim()||lines[ci].replace("CONCEPTUAL:","").trim();
+        if(di>=0)D.iqDebatable=lines.slice(di+1).join("\n").replace(/^DEBATABLE:/,"").trim()||lines[di].replace("DEBATABLE:","").trim();
+        render();
+      }),
+    )
+  );
+}
+
+// ═══ STEP 4: ASSESSMENT ══════════════════════════════════
+function s4(){
+  const criteria=SUBJECT_CRITERIA[D.subject]||DEFAULT_CRITERIA;
+  const selected=D.criteria||[];
+  const sStrands=D.strands||{};
+  const taskP=`Suggest summative assessment for MYP ${D.myp||"1"} ${D.subject||"Science"}. SOI: "${D.soi}". Criteria: ${selected.map(id=>criteria.find(c=>c.id===id)?.label||id).join(", ")}. Duration: ${D.duration||"6 weeks"}. 1-2 authentic tasks. For each: title, criterion, what students produce, SOI connection, week. No markdown.`;
+
+  const critCards=criteria.map(c=>{
+    const isSel=selected.includes(c.id);
+    const cSt=sStrands[c.id]||[];
+    const hdr=el("div",{cls:"crit-hdr",
+      css:`background:${isSel?c.color+"18":"#F5F5F5"};color:${isSel?c.color:"#757575"};`,
+      onClick:()=>{D.criteria=isSel?selected.filter(x=>x!==c.id):[...selected,c.id];render();}},
+      el("span",{},c.label),el("span",{css:"font-size:11px;"},isSel?"✓ selected":"click"));
+    const strands=isSel?div("strand-row",
+      el("div",{css:"width:100%;font-size:10px;color:#757575;margin-bottom:3px;"},"Select strands:"),
+      ...c.strands.map(s=>{
+        const isSS=cSt.includes(s);
+        return el("button",{cls:"s-btn",
+          css:`border-color:${isSS?c.color:"#E0E0E0"};background:${isSS?c.color:"#fff"};color:${isSS?"#fff":"#757575"};font-weight:${isSS?700:400};`,
+          onClick:()=>{D.strands={...(D.strands||{})};const cur=D.strands[c.id]||[];D.strands[c.id]=cur.includes(s)?cur.filter(x=>x!==s):[...cur,s];render();}},s);
+      })):null;
+    const card=div("crit-card",{css:`border-color:${isSel?c.color:"#E0E0E0"};`},hdr,strands);
+    return card;
+  });
+
+  return div("",
+    ibPanel("c4",[
+      {icon:"🎯",label:"Objectives & Strands",text:"Each objective has strands — aspects of the learning expectation. All strands addressed determine achievement level.",impl:"Select only strands you genuinely teach in this unit."},
+      {icon:"📝",label:"Summative Assessment",text:"Tasks link to the SOI. Open-ended tasks allow genuine performance of understanding.",impl:"Students need to engage with the SOI conceptually — not just recall content."},
+    ]),
+    div("card",
+      el("h2",{},"📊 Objectives & Summative Assessment"),
+      D.subject?div("",
+        el("div",{css:"font-weight:700;font-size:12px;color:#1C4E7A;margin-bottom:8px;"},D.subject+" — Select Criteria and Strands to Assess"),
+        div("crit-grid",...critCards)
+      ):el("div",{css:"padding:10px;background:#F5F5F5;border-radius:7px;font-size:12px;color:#757575;margin-bottom:10px;"},"Select your subject in Step 1 to see subject-specific criteria."),
+      fld("Additional notes on strands",inp(D.objectives,v=>set("objectives",v),"Any additional strand notes…",1)),
+      div("g2",
+        div("",{css:"border:1.5px solid #E0E0E0;border-radius:9px;padding:12px;"},
+          fld("Summative Task 1",inp(D.task1Title,v=>set("task1Title",v),"Task 1 — Criterion __ (Week __)",""),"#1C4E7A"),
+          fld("Description",inp(D.task1Desc,v=>set("task1Desc",v),"What students produce and how it connects to the SOI…",4)),
+        ),
+        div("",{css:"border:1.5px solid #E0E0E0;border-radius:9px;padding:12px;"},
+          fld("Summative Task 2",inp(D.task2Title,v=>set("task2Title",v),"Task 2 — Criterion __ (Week __)",""),"#1C4E7A"),
+          fld("Description",inp(D.task2Desc,v=>set("task2Desc",v),"What students produce and how it connects to the SOI…",4)),
+        ),
+      ),
+      fld("Connection to Statement of Inquiry",inp(D.saSOILink,v=>set("saSOILink",v),"How does completing the task require students to demonstrate the conceptual understanding in the SOI?",3)),
+      aiBtn("Suggest Summative Tasks","tasks",taskP),
+      aiBox("tasks",v=>set("aiTaskNotes",v)),
+    )
+  );
+}
+
+// ═══ STEP 5: ATL ═════════════════════════════════════════
+function s5(){
+  const subjectKey=SUBJECT_TO_MAP_KEY[D.subject]||null;
+  const subjectMap=subjectKey?SUBJECT_ATL_MAP[subjectKey]:null;
+  const selCrit=D.criteria||[];
+  const atl=D.atlSkills||[];
+  const cc={A:"#1565C0",B:"#2E7D32",C:"#6A1B9A",D:"#AD1457"};
+
+  function addAtl(sk,code,skill,cluster,obj){
+    if(atl.length>=6){alert("Max 6 ATL skills");return;}
+    if(atl.find(a=>a.code===code&&a.strandKey===sk))return;
+    D.atlSkills=[...atl,{strandKey:sk,code,desc:skill,cat:cluster,objective:obj,experience:"",formative:""}];render();
+  }
+  function removeAtl(idx){D.atlSkills=atl.filter((_,i)=>i!==idx);render();}
+  function updAtl(idx,f,v){D.atlSkills=atl.map((a,i)=>i===idx?{...a,[f]:v}:a);render();}
+
+  const atlP=`For MYP ${D.myp||"1"} ${D.subject||"Science"} unit "${D.title}". SOI: "${D.soi}". Criteria: ${selCrit.join(",")}. Recommend 2-3 ATL skills most needed (not just used). For each: cluster, code, skill description, which criterion it supports, one explicit teaching activity, one formative assessment. No markdown.`;
+
+  // Left: mapped or browse
+  let left;
+  if(atlMode==="mapped"){
+    if(!subjectMap){
+      left=div("",{css:"padding:14px;background:#FFF8E7;border-radius:9px;border:1.5px dashed #B8860B;"},
+        el("div",{css:"font-weight:700;color:#B8860B;margin-bottom:6px;"},D.subject?`No pre-mapped data for "${D.subject}"`:"No subject selected"),
+        el("p",{css:"font-size:12px;color:#757575;line-height:1.5;"},D.subject?"Use Browse All ATL Skills tab instead.":"Go to Step 1 and select your subject first."),
+        el("p",{css:"font-size:11px;color:#757575;margin-top:8px;"},"Available: Sciences · Mathematics · Language & Literature · Language Acquisition · Individuals & Societies · Arts · PHE · Design")
+      );
+    } else {
+      left=div("",
+        el("div",{css:"font-size:11px;font-weight:700;color:#757575;letter-spacing:1px;margin-bottom:8px;"},"PRE-MAPPED ATL FOR "+subjectMap.label.toUpperCase()),
+        ...["A","B","C","D"].map(crit=>{
+          const cn=subjectMap.criteria[crit],critColor=cc[crit]||"#1A5C38";
+          const sks=Object.keys(subjectMap.strands).filter(k=>k.startsWith(crit+":"));
+          const isSel=selCrit.includes(crit),isOpen=openCrit===crit;
+          const hdr=el("button",{
+            css:`width:100%;display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:${isOpen?critColor+"18":"#F5F5F5"};border:1.5px solid ${isOpen?critColor:"#E0E0E0"};border-radius:7px;cursor:pointer;font-size:12px;font-weight:700;color:${critColor};opacity:${isSel||!selCrit.length?1:.4};margin-bottom:${isOpen?0:5}px;`,
+            onClick:()=>{openCrit=openCrit===crit?null:crit;render();}},
+            el("span",{},"Criterion "+crit+": "+cn),el("span",{css:"font-size:10px;"},isOpen?"▲":"▼"));
+          if(!isOpen)return div("",{css:"margin-bottom:5px;"},hdr);
+          const strandBlocks=sks.map(sk=>{
+            const strand=subjectMap.strands[sk],sl=sk.split(":")[1];
+            return div("",{css:"margin-left:6px;margin-top:3px;border:1px solid #E0E0E0;border-radius:7px;overflow:hidden;margin-bottom:3px;"},
+              div("",{css:`padding:6px 10px;background:${critColor}0D;border-bottom:1px solid #E0E0E0;`},
+                el("span",{css:`font-size:11px;font-weight:700;color:${critColor};`},"Strand "+sl+": "),
+                el("span",{css:"font-size:11px;"},strand.desc)),
+              ...strand.atl.map(a=>{
+                const isSA=atl.find(x=>x.code===a.code&&x.strandKey===sk);
+                const aColor=CLUSTER_COLORS[a.cluster]||"#757575";
+                return div("atl-row",{css:`background:${isSA?"#E8F5EE":"#fff"};`,
+                  onClick:()=>{if(isSA){D.atlSkills=atl.filter(x=>!(x.code===a.code&&x.strandKey===sk));render();}else addAtl(sk,a.code,a.skill,a.cluster,"Criterion "+crit+" ("+sl+")");}},
+                  el("input",{type:"checkbox",checked:!!isSA,onChange:()=>{}}),
+                  div("",
+                    el("span",{cls:"badge",css:`background:${aColor}18;color:${aColor};`},a.cluster),
+                    el("span",{css:"font-size:10px;font-weight:700;color:#757575;"},a.code),
+                    el("div",{css:`font-size:11px;color:${isSA?"#1A1A1A":"#757575"};margin-top:2px;font-weight:${isSA?700:400};`},a.skill)
+                  )
+                );
+              })
+            );
+          });
+          return div("",{css:"margin-bottom:5px;"},hdr,...strandBlocks);
+        })
+      );
+    }
+  } else {
+    // Browse all
+    left=div("",
+      el("div",{css:"font-size:11px;font-weight:700;color:#757575;letter-spacing:1px;margin-bottom:8px;"},"BROWSE ALL ATL SKILLS"),
+      ...Object.entries(ATL_SKILLS).map(([cat,info])=>{
+        const isOpen=openAtlCat===cat,count=atl.filter(a=>a.cat===cat).length;
+        const hdr=el("button",{css:`width:100%;display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:${isOpen?info.color+"18":"#F5F5F5"};border:1.5px solid ${isOpen?info.color:"#E0E0E0"};border-radius:7px;cursor:pointer;font-size:12px;font-weight:700;color:${info.color};margin-bottom:${isOpen?0:5}px;`,
+          onClick:()=>{openAtlCat=openAtlCat===cat?null:cat;render();}},
+          el("span",{},info.icon+" "+cat),el("span",{css:"font-size:10px;color:#757575;"},count>0?"✓"+count:"▼"));
+        if(!isOpen)return div("",{css:"margin-bottom:5px;"},hdr);
+        const strands=Object.values(info.clusters).flat();
+        return div("",{css:"margin-bottom:5px;"},hdr,
+          div("",{css:"border:1px solid #E0E0E0;border-top:none;border-radius:0 0 7px 7px;padding:6px;background:#fff;"},
+            ...strands.map(s=>{
+              const isSA=atl.find(a=>a.code===s.code&&!a.strandKey);
+              return div("atl-row",{
+                onClick:()=>{if(isSA){D.atlSkills=atl.filter(a=>!(a.code===s.code&&!a.strandKey));render();}
+                  else if(atl.length<6){D.atlSkills=[...atl,{code:s.code,desc:s.desc,cat,objective:"",experience:"",formative:""}];render();}}},
+                el("input",{type:"checkbox",checked:!!isSA,onChange:()=>{}}),
+                el("span",{css:`font-size:11px;color:${isSA?info.color:"#1A1A1A"};font-weight:${isSA?700:400};`},
+                  el("strong",{},s.code)," — ",s.desc)
+              );
+            })
+          )
+        );
+      })
+    );
+  }
+
+  // Right: selected ATL skill detail
+  const right=div("",
+    el("div",{css:"font-size:11px;font-weight:700;color:#757575;letter-spacing:1px;margin-bottom:8px;"},"SELECTED ATL SKILLS — "+atl.length+"/6 MAX"),
+    atl.length===0?div("",{css:"padding:16px;text-align:center;border:1.5px dashed #E0E0E0;border-radius:9px;font-size:12px;color:#757575;"},
+      "Select ATL skills from the left panel.\n\n💡 Smart Mapper shows skills pre-mapped to your subject's objectives."):
+    div("",
+      ...atl.map((a,idx)=>{
+        const aColor=CLUSTER_COLORS[a.cat]||"#757575";
+        return div("",{css:`border:1.5px solid ${aColor};border-radius:9px;padding:12px;margin-bottom:10px;`},
+          div("",{css:"display:flex;justify-content:space-between;margin-bottom:8px;"},
+            div("",
+              el("span",{cls:"badge",css:`background:${aColor}18;color:${aColor};`},a.cat),
+              a.strandKey?el("span",{css:"font-size:10px;color:#757575;margin-left:5px;"},"→ "+a.objective):"",
+              el("div",{css:"font-weight:700;font-size:12px;margin-top:3px;"},a.code+" — "+a.desc)),
+            el("button",{css:"background:none;border:none;color:#757575;cursor:pointer;font-size:14px;",
+              onClick:()=>removeAtl(idx)},"✕")),
+          ...[
+            {k:"objective",l:"Objective Targeted",p:"Which criterion strand does this support?"},
+            {k:"experience",l:"Learning Experience (explicitly taught)",p:"Describe the specific activity where students will be explicitly taught this skill…"},
+            {k:"formative",l:"Formative Assessment",p:"How will you assess that students have developed this skill?"},
+          ].map(f=>div("field",{css:"margin-bottom:6px;"},
+            el("label",{css:`font-size:11px;color:${aColor};`},f.l),
+            inp(a[f.k],v=>updAtl(idx,f.k,v),f.p,2)
+          ))
+        );
+      })
+    )
+  );
+
+  return div("",
+    ibPanel("c5",[
+      {icon:"🧠",label:"What ATL skills are for",text:"ATL skills empower students to meet MYP objectives. All teachers explicitly teach ATL skills — not just use them.",impl:"Choose skills students genuinely need to succeed in the summative task."},
+      {icon:"🔗",label:"The formula",text:"'In order for students to [objective strand], students must [ATL skill].' This makes explicit why the skill matters.",impl:"If you can't complete this sentence for a skill, reconsider the selection."},
+    ]),
+    div("card",
+      el("h2",{css:"color:#B8860B;"},"🎯 Approaches to Learning (ATL)"),
+      div("mode-row",
+        el("button",{cls:"m-tab",
+          css:`border-color:${atlMode==="mapped"?"#1A5C38":"#E0E0E0"};background:${atlMode==="mapped"?"#E8F5EE":"#fff"};color:${atlMode==="mapped"?"#1A5C38":"#757575"};`,
+          onClick:()=>{atlMode="mapped";render();}},
+          "📋 Smart Mapper "+(subjectMap?"✓ "+subjectMap.label:D.subject?`(no map for "${D.subject}")`:"(select subject first)")),
+        el("button",{cls:"m-tab",
+          css:`border-color:${atlMode==="browse"?"#1A7A6E":"#E0E0E0"};background:${atlMode==="browse"?"#E5F4F2":"#fff"};color:${atlMode==="browse"?"#1A7A6E":"#757575"};`,
+          onClick:()=>{atlMode="browse";render();}},"🔍 Browse All ATL Skills"),
+        aiBtn("AI Suggestions","atl5",atlP),
+      ),
+      aiBox("atl5",v=>set("aiATLNotes",v)),
+      div("cg2",left,right)
+    )
+  );
+}
+
+// ═══ STEP 6: TEACHING ════════════════════════════════════
+function s6(){
+  const weeks=D.weeks||[];
+  const pColors={"Tuning In":"#2E7D32","Finding Out":"#1565C0","Sorting Out":"#6A1B9A","Making Connections":"#E65100","Going Further":"#AD1457","Taking Action":"#00695C","Reflecting":"#4527A0"};
+  const pBgs={"Tuning In":"#E8F5E9","Finding Out":"#E3F2FD","Sorting Out":"#F3E5F5","Making Connections":"#FFF3E0","Going Further":"#FCE4EC","Taking Action":"#E0F2F1","Reflecting":"#EDE7F6"};
+
+  function updWk(i,f,v){D.weeks=weeks.map((w,idx)=>idx===i?{...w,[f]:v}:w);render();}
+
+  return div("",
+    ibPanel("c6",[
+      {icon:"🔄",label:"Dual focus: content AND process",text:"Every lesson needs a content goal (what students know) AND a process goal (how they develop as learners).",impl:"The Murdoch phase helps you plan which type of experience is appropriate each week."},
+      {icon:"📊",label:"Formative Assessment",text:"Plan formative tasks from the start. They should rehearse the summative performance and provide specific ATL skill feedback.",impl:"Plan at least 2 tasks — one early (check prior knowledge/ATL) and one mid-unit (rehearse the summative)."},
+      {icon:"🌱",label:"Differentiation",text:"Plan scaffolding from the start — don't wait until a student struggles. Extension tasks should deepen inquiry, not just add more.",impl:"Identify the zone of proximal development for your learners before teaching begins."},
+    ]),
+
+    // Phase guide
+    div("card",
+      el("h2",{},"📅 Teaching & Learning Through Inquiry"),
+      el("div",{css:"font-size:12px;font-weight:700;color:#1A5C38;margin-bottom:8px;"},"Click a Murdoch Phase to see guidance:"),
+      div("phase-grid",
+        ...PHASES.map(p=>{
+          const isActive=phaseInfo&&phaseInfo.id===p.id;
+          return el("button",{cls:"phase-chip",
+            css:`border-color:${isActive?p.color:"#E0E0E0"};background:${isActive?p.bg:"#fff"};`,
+            onClick:()=>{phaseInfo=isActive?null:p;render();}},
+            el("div",{css:"font-size:14px;"},p.emoji),
+            el("div",{css:`font-size:11px;font-weight:700;color:${p.color};`},p.name),
+            el("div",{css:"font-size:10px;color:#757575;margin-top:2px;"},p.desc.slice(0,45)+"…")
+          );
+        })
+      ),
+      phaseInfo?div("",{css:`background:${phaseInfo.bg};border:2px solid ${phaseInfo.color};border-radius:9px;padding:12px;margin-top:8px;`},
+        el("div",{css:`font-weight:700;color:${phaseInfo.color};margin-bottom:5px;`},phaseInfo.emoji+" "+phaseInfo.name),
+        el("div",{css:"font-size:13px;margin-bottom:5px;"},phaseInfo.desc),
+        el("div",{css:"font-size:12px;color:#757575;font-style:italic;margin-bottom:5px;"},"💡 "+phaseInfo.tip),
+        el("div",{css:`font-size:11px;font-weight:700;color:${phaseInfo.color};`},"Ask: "+phaseInfo.questions)
+      ):null,
+    ),
+
+    // Week cards
+    ...weeks.map((w,i)=>{
+      const pc=pColors[w.phase]||"#757575",pb=pBgs[w.phase]||"#F5F5F5";
+      return div("wk",{css:`border-left-color:${pc};`},
+        div("",{css:"display:flex;justify-content:space-between;align-items:center;"},
+          el("div",{css:"font-weight:700;color:#1A5C38;font-size:15px;"},"Week "+w.week),
+          div("",
+            w.phase?el("span",{cls:"badge",css:`background:${pb};color:${pc};padding:4px 9px;font-size:11px;`},w.phase):"",
+            weeks.length>1?el("button",{css:"background:none;border:none;color:#757575;cursor:pointer;margin-left:8px;font-size:14px;",
+              onClick:()=>{D.weeks=weeks.filter((_,idx)=>idx!==i);render();}},"✕"):"",
+          )
+        ),
+        div("wk-grid",
+          fld("Murdoch Phase",el("select",{css:`border-color:${pc};background:${pb};color:${pc};font-weight:700;`,onChange:e=>updWk(i,"phase",e.target.value)},
+            el("option",{value:""},"Select phase…"),
+            ...PHASES.map(p=>{const o=el("option",{value:p.name},p.emoji+" "+p.name);if(p.name===w.phase)o.selected=true;return o;})
+          )),
+          fld("Topic / Content",inp(w.topic,v=>updWk(i,"topic",v),"Topic name…")),
+          fld("Teaching Strategy",inp(w.strategy,v=>updWk(i,"strategy",v),"What will YOU do? e.g. Jigsaw, concept attainment, guided inquiry…",3)),
+          fld("Learning Experience",inp(w.experience,v=>updWk(i,"experience",v),"What will STUDENTS do? Include LO and connections to KC/ATL/Objectives…",3)),
+        )
+      );
+    }),
+    el("button",{cls:"btn",css:"width:100%;padding:12px;border:2px dashed #1A5C38;color:#1A5C38;background:#E8F5EE;font-size:13px;margin-bottom:14px;",
+      onClick:()=>{D.weeks=[...weeks,{week:weeks.length+1,phase:"",topic:"",strategy:"",experience:""}];render();}},"+ Add Week"),
+
+    // Formative Assessment
+    div("card",
+      el("h2",{css:"color:#1C4E7A;"},"📊 Formative Assessment"),
+      div("",{css:"background:#EBF2FA;border:1.5px solid #1C4E7A;border-radius:7px;padding:10px;margin-bottom:12px;font-size:12px;"},
+        el("strong",{css:"color:#1C4E7A;"},"IB Guidance: "),"Plan formative tasks from the start. They should rehearse the summative and provide specific ATL skill feedback."),
+      ...[1,2,3].map(n=>div("",{css:"border:1.5px solid #E0E0E0;border-radius:9px;padding:12px;margin-bottom:8px;"},
+        el("div",{css:"font-weight:700;color:#1C4E7A;font-size:12px;margin-bottom:8px;"},"Formative Assessment "+n),
+        div("g3",
+          fld("Title & Week",inp(D["fa"+n+"Title"],v=>set("fa"+n+"Title",v),"e.g. Variables quiz — Week 2")),
+          fld("Criterion / ATL Targeted",inp(D["fa"+n+"Criteria"],v=>set("fa"+n+"Criteria",v),"e.g. Criterion B (ii) · ATL 3.1.8")),
+          fld("Feedback Method",inp(D["fa"+n+"Feedback"],v=>set("fa"+n+"Feedback",v),"e.g. Written comments, exit ticket…")),
+        )
+      ))
+    ),
+
+    // Differentiation
+    div("card",
+      el("h2",{css:"color:#5B2D8E;"},"🌱 Differentiation"),
+      div("g3",
+        ...[
+          {k:"diffScaffold",l:"🔵 Scaffolding (Support)",c:"#1C4E7A",bg:"#EBF2FA",p:"Sentence frames, pre-filled templates, graphic organisers, reduced tasks, visual aids, peer partnerships…"},
+          {k:"diffCore",l:"⚪ Core (All Students)",c:"#1A1A1A",bg:"#F5F5F5",p:"The non-negotiable learning experience all students engage with…"},
+          {k:"diffExtension",l:"🟡 Extension (Stretch)",c:"#B8860B",bg:"#FFF8E7",p:"TOK links, student-designed inquiry, additional experiments, cross-subject connections…"},
+        ].map(f=>div("",{css:`background:${f.bg};border-radius:9px;padding:12px;`},
+          el("div",{css:`font-weight:700;color:${f.c};font-size:12px;margin-bottom:7px;`},f.l),
+          inp(D[f.k],v=>set(f.k,v),f.p,5)
+        ))
+      )
+    ),
+
+    // Reflection
+    div("card",{css:"border-top:5px solid #5B2D8E;"},
+      el("h2",{css:"color:#5B2D8E;"},"🪞 Reflection on the Unit"),
+      div("",{css:"background:#F3E8FF;border:1.5px solid #5B2D8E;border-radius:7px;padding:10px;margin-bottom:12px;font-size:12px;"},
+        el("strong",{css:"color:#5B2D8E;"},"IB Guidance: "),"Structured around three moments — before, during, and after teaching. Choose the most meaningful prompts for your context."),
+      div("ref-grid",
+        ...[
+          {k:"refBefore",l:"🌱 Prior to Teaching",c:"#1A5C38",bg:"#E8F5EE",p:"Why will this unit be interesting?\nWhat prior knowledge do you expect?\nWhat learner profile attributes does this develop?\nWhat interdisciplinary connections are possible?"},
+          {k:"refDuring",l:"⏳ During Teaching",c:"#1A7A6E",bg:"#E5F4F2",p:"What adjustments did you make and why?\nWhat student inquiries emerged?\nWhat surprised you?\nHow engaged were students with each Murdoch phase?"},
+          {k:"refAfter",l:"✅ After Teaching",c:"#5B2D8E",bg:"#F3E8FF",p:"Did students achieve the conceptual understanding?\nWhich strategies worked best?\nWas the summative task appropriately complex?\nWhat would you change next time?"},
+        ].map(f=>div("ref-card",{css:`background:${f.bg};`},
+          el("h3",{css:`color:${f.c};`},f.l),
+          inp(D[f.k],v=>set(f.k,v),f.p,8)
+        ))
+      )
+    )
+  );
+}
+
+// ═══ STEP 7: DOWNLOAD ════════════════════════════════════
+
+function generateAndDownloadDoc(data) {
+  return new Promise((resolve, reject) => {
+  const weeks = data.weeks || [];
+  const atl = data.atlSkills || [];
+  const criteria = SUBJECT_CRITERIA[data.subject] || DEFAULT_CRITERIA;
+  const selectedStrands = data.strands || {};
+
+  // Build criteria summary string
+  const critSummary = (data.criteria||[]).map(id => {
+    const c = criteria.find(x=>x.id===id);
+    const strands = selectedStrands[id] || [];
+    return `${c?.label || id}${strands.length ? " — strands: " + strands.join(", ") : ""}`;
+  }).join("\n");
+
+  // Phase colour map for table cells
+  const phaseColors = {
+    "Tuning In":"#E8F5E9","Finding Out":"#E3F2FD","Sorting Out":"#F3E5F5",
+    "Making Connections":"#FFF3E0","Going Further":"#FCE4EC",
+    "Taking Action":"#E0F2F1","Reflecting":"#EDE7F6",
+  };
+
+  const cell = (text, bg="#FFFFFF", bold=false, color="#000000") =>
+    `<td style="border:1px solid #CCCCCC;padding:8px 10px;background:${bg};font-weight:${bold?"bold":"normal"};color:${color};font-size:11pt;vertical-align:top;">${(text||"").replace(/\n/g,"<br/>")}</td>`;
+
+  const hdrCell = (text, bg="#1A5C38") =>
+    `<td style="border:1px solid ${bg};padding:8px 10px;background:${bg};font-weight:bold;color:#FFFFFF;font-size:11pt;">${text}</td>`;
+
+  const sectionTitle = (text, bg="#1A5C38") =>
+    `<table width="100%" style="margin:20px 0 6px 0;border-collapse:collapse;">
+      <tr><td style="background:${bg};color:#FFFFFF;font-weight:bold;font-size:13pt;padding:10px 14px;">${text}</td></tr>
+    </table>`;
+
+  const weekRows = weeks.map(w => {
+    const bg = phaseColors[w.phase] || "#F5F5F5";
+    return `<tr>
+      ${cell(`Week ${w.week}`, "#E8F5EE", true, "#1A5C38")}
+      ${cell(w.phase||"—", bg, true)}
+      ${cell(w.topic||"—")}
+      ${cell(w.strategy||"—")}
+      ${cell(w.experience||"—")}
+    </tr>`;
+  }).join("");
+
+  const atlRows = atl.length ? atl.map(a =>
+    `<tr>
+      ${cell(`${a.cat}\n${a.code}`, "#FFF8E7", true, "#B8860B")}
+      ${cell(a.desc||"—")}
+      ${cell(a.objective||"—")}
+      ${cell(a.experience||"—")}
+      ${cell(a.formative||"—")}
+    </tr>`
+  ).join("") : `<tr>${cell("No ATL skills recorded.", "#F5F5F5", false, "#757575")}</tr>`;
+
+  const html = `
+<html xmlns:o="urn:schemas-microsoft-com:office:office"
+      xmlns:w="urn:schemas-microsoft-com:office:word"
+      xmlns="http://www.w3.org/TR/REC-html40">
+<head>
+<meta charset="UTF-8"/>
+<style>
+  body { font-family: Calibri, Arial, sans-serif; font-size: 11pt; color: #1A1A1A; margin: 2cm; }
+  table { border-collapse: collapse; width: 100%; margin-bottom: 12px; }
+  h1 { font-size: 22pt; color: #1A5C38; margin: 0 0 4px 0; }
+  h2 { font-size: 14pt; color: #1A5C38; margin: 16px 0 6px 0; }
+  .label { font-weight: bold; color: #1A5C38; }
+  .note { font-style: italic; color: #757575; font-size: 10pt; }
+  p { margin: 4px 0; }
+
+/* Settings panel */
+.settings-btn{position:fixed;top:12px;right:16px;z-index:999;background:rgba(255,255,255,0.2);border:1.5px solid rgba(255,255,255,0.5);color:#fff;border-radius:8px;padding:6px 14px;cursor:pointer;font-size:12px;font-weight:700;}
+.settings-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;}
+.settings-overlay.open{display:flex;}
+.settings-box{background:#fff;border-radius:14px;padding:28px;max-width:540px;width:90%;max-height:90vh;overflow-y:auto;}
+.settings-box h2{font-size:18px;color:#1A5C38;margin-bottom:6px;}
+.settings-box p{font-size:13px;color:#757575;line-height:1.6;margin-bottom:16px;}
+.api-status{display:inline-block;font-size:12px;font-weight:700;padding:4px 12px;border-radius:20px;margin-bottom:16px;}
+.api-status.set{background:#E8F5EE;color:#1A5C38;}
+.api-status.notset{background:#FEE2E2;color:#B91C1C;}
+.step-box{background:#F0F7F4;border-left:4px solid #1A5C38;border-radius:0 8px 8px 0;padding:14px;margin-bottom:10px;}
+.step-box h4{font-size:13px;font-weight:700;color:#1A5C38;margin-bottom:4px;}
+.step-box p{font-size:12px;color:#1A1A1A;margin-bottom:0;}
+.step-box a{color:#1A7A6E;font-weight:700;}
+.key-input-row{display:flex;gap:8px;margin-top:8px;}
+.key-input-row input{flex:1;border:1.5px solid #E0E0E0;border-radius:8px;padding:9px 12px;font-size:13px;}
+.key-input-row input:focus{border-color:#1A5C38;outline:none;}
+.settings-close{width:100%;margin-top:16px;padding:11px;background:#F5F5F5;border:none;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;color:#757575;}
+.settings-close:hover{background:#E0E0E0;}
+
+
+/* Quick Start */
+.qs-hero{background:linear-gradient(135deg,#1A5C38,#1A7A6E);border-radius:12px;padding:24px;color:#fff;margin-bottom:16px;text-align:center;}
+.qs-hero h2{font-size:22px;margin-bottom:6px;}
+.qs-hero p{font-size:13px;opacity:.85;line-height:1.6;}
+.qs-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;}
+.qs-full{grid-column:1/-1;}
+.qs-generate-btn{width:100%;padding:16px;background:linear-gradient(135deg,#1A5C38,#1A7A6E);color:#fff;border:none;border-radius:10px;font-size:16px;font-weight:900;cursor:pointer;margin-top:8px;letter-spacing:.3px;}
+.qs-generate-btn:disabled{background:#E0E0E0;color:#757575;cursor:not-allowed;}
+.qs-progress{background:#E8F5EE;border:1.5px solid #1A5C38;border-radius:10px;padding:16px;margin-top:12px;}
+.qs-progress h4{color:#1A5C38;font-size:14px;font-weight:700;margin-bottom:10px;}
+.qs-step-row{display:flex;align-items:center;gap:10px;padding:6px 0;font-size:13px;border-bottom:1px solid #C8E6D4;}
+.qs-step-row:last-child{border-bottom:none;}
+.qs-step-icon{font-size:16px;width:24px;text-align:center;flex-shrink:0;}
+.mode-banner{display:flex;gap:12px;margin-bottom:20px;}
+.mode-card{flex:1;padding:16px;border-radius:10px;border:2px solid #E0E0E0;cursor:pointer;text-align:center;transition:all .2s;}
+.mode-card.active{border-color:#1A5C38;background:#E8F5EE;}
+.mode-card h3{font-size:14px;font-weight:700;margin-bottom:4px;}
+.mode-card p{font-size:12px;color:#757575;line-height:1.5;}
+@media(max-width:600px){.qs-grid{grid-template-columns:1fr;}.mode-banner{flex-direction:column;}}
+
+</style>
+</head>
+<body>
+
+<table style="border-collapse:collapse;width:100%;margin-bottom:20px;">
+  <tr>
+    <td style="background:#1A5C38;padding:16px 20px;">
+      <h1 style="color:#FFFFFF;font-size:24pt;margin:0;">ELA Green School</h1>
+      <div style="color:#AADDC0;font-size:14pt;margin-top:4px;">MYP Unit Plan</div>
+    </td>
+    <td style="background:#1A7A6E;padding:16px 20px;text-align:right;vertical-align:middle;">
+      <div style="color:#FFFFFF;font-size:12pt;">${data.subject||""} ${data.discipline ? "— "+data.discipline : ""}</div>
+      <div style="color:#AADDC0;font-size:11pt;">${data.myp||""} &nbsp;|&nbsp; ${data.year||""}</div>
+    </td>
+  </tr>
+</table>
+
+${sectionTitle("UNIT IDENTITY")}
+<table>
+  <tr>
+    <td style="width:15%;background:#E8F5EE;font-weight:bold;color:#1A5C38;padding:7px 10px;border:1px solid #CCCCCC;">Teacher</td>
+    <td style="padding:7px 10px;border:1px solid #CCCCCC;">${data.teacher||""}</td>
+    <td style="width:15%;background:#E8F5EE;font-weight:bold;color:#1A5C38;padding:7px 10px;border:1px solid #CCCCCC;">Unit Title</td>
+    <td style="padding:7px 10px;border:1px solid #CCCCCC;">${data.title||""}</td>
+  </tr>
+  <tr>
+    <td style="background:#E8F5EE;font-weight:bold;color:#1A5C38;padding:7px 10px;border:1px solid #CCCCCC;">MYP Year</td>
+    <td style="padding:7px 10px;border:1px solid #CCCCCC;">${data.myp||""}</td>
+    <td style="background:#E8F5EE;font-weight:bold;color:#1A5C38;padding:7px 10px;border:1px solid #CCCCCC;">Duration</td>
+    <td style="padding:7px 10px;border:1px solid #CCCCCC;">${data.duration||""}</td>
+  </tr>
+</table>
+
+${sectionTitle("INQUIRY: ESTABLISHING THE PURPOSE OF THE UNIT")}
+<table>
+  <tr>
+    ${hdrCell("Key Concept")} ${hdrCell("Related Concepts")} ${hdrCell("Global Context")}
+  </tr>
+  <tr>
+    ${cell(`${data.keyConcept||"—"}\n\n${data.keyConceptDef||""}`)}
+    ${cell(`${data.relatedConcepts||"—"}\n\n${data.relatedConceptsDef||""}`)}
+    ${cell(`${data.globalContext||"—"}\n${data.globalContextFocus||""}`)}
+  </tr>
+</table>
+<table>
+  <tr>
+    <td style="background:#E8F5EE;padding:10px 14px;border:1px solid #CCCCCC;">
+      <div style="font-weight:bold;color:#1A5C38;margin-bottom:6px;">Conceptual Understanding</div>
+      <div>${data.cu||"—"}</div>
+      <div style="font-weight:bold;color:#1A5C38;margin:12px 0 6px;">Statement of Inquiry</div>
+      <div style="font-style:italic;">${data.soi||"—"}</div>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:10px 14px;border:1px solid #CCCCCC;">
+      <div style="font-weight:bold;color:#1A5C38;margin-bottom:8px;">Inquiry Questions</div>
+      <div><strong style="color:#1C4E7A;">Factual:</strong> ${(data.iqFactual||"—").replace(/\n/g,"<br/>")}</div>
+      <div style="margin-top:8px;"><strong style="color:#5B2D8E;">Conceptual:</strong> ${(data.iqConceptual||"—").replace(/\n/g,"<br/>")}</div>
+      <div style="margin-top:8px;"><strong style="color:#B91C1C;">Debatable:</strong> ${(data.iqDebatable||"—").replace(/\n/g,"<br/>")}</div>
+    </td>
+  </tr>
+</table>
+
+${sectionTitle("OBJECTIVES & SUMMATIVE ASSESSMENT")}
+<table>
+  <tr>
+    ${hdrCell("Criteria &amp; Strands Addressed", "#1C4E7A")}
+    ${hdrCell("Summative Assessment Tasks", "#1C4E7A")}
+    ${hdrCell("Connection to SOI", "#1C4E7A")}
+  </tr>
+  <tr>
+    ${cell(critSummary || "—", "#EBF2FA")}
+    ${cell(`Task 1: ${data.task1Title||"—"}\n${data.task1Desc||""}\n\nTask 2: ${data.task2Title||"—"}\n${data.task2Desc||""}`)}
+    ${cell(data.saSOILink||"—")}
+  </tr>
+</table>
+
+${sectionTitle("APPROACHES TO LEARNING (ATL)", "#B8860B")}
+<table>
+  <tr>
+    ${hdrCell("Skill Cluster &amp; Code", "#B8860B")}
+    ${hdrCell("ATL Skill Description", "#B8860B")}
+    ${hdrCell("Objective Targeted", "#B8860B")}
+    ${hdrCell("Learning Experience", "#B8860B")}
+    ${hdrCell("Formative Assessment", "#B8860B")}
+  </tr>
+  ${atlRows}
+</table>
+
+${sectionTitle("ACTION: TEACHING &amp; LEARNING THROUGH INQUIRY")}
+<table>
+  <tr>
+    ${hdrCell("Week")} ${hdrCell("Murdoch Phase", "#1A7A6E")}
+    ${hdrCell("Topic / Content")} ${hdrCell("Teaching Strategy")} ${hdrCell("Learning Experience")}
+  </tr>
+  ${weekRows}
+</table>
+
+${sectionTitle("FORMATIVE ASSESSMENT", "#1C4E7A")}
+<table>
+  <tr>
+    ${hdrCell("Task &amp; Week","#1C4E7A")} ${hdrCell("Criterion / ATL Targeted","#1C4E7A")} ${hdrCell("Feedback Method","#1C4E7A")}
+  </tr>
+  ${[1,2,3].map(n=>`<tr>${cell(data[`fa${n}Title`]||"—")}${cell(data[`fa${n}Criteria`]||"—")}${cell(data[`fa${n}Feedback`]||"—")}</tr>`).join("")}
+</table>
+
+${sectionTitle("DIFFERENTIATION")}
+<table>
+  <tr>
+    ${hdrCell("🔵 Scaffolding (Support)","#1C4E7A")}
+    ${hdrCell("⚪ Core (All Students)")}
+    ${hdrCell("🟡 Extension (Stretch)","#B8860B")}
+  </tr>
+  <tr>
+    ${cell(data.diffScaffold||"—", "#EBF2FA")}
+    ${cell(data.diffCore||"—")}
+    ${cell(data.diffExtension||"—", "#FFF8E7")}
+  </tr>
+</table>
+
+${sectionTitle("REFLECTION ON THE UNIT", "#5B2D8E")}
+<table>
+  <tr>
+    ${hdrCell("🌱 Prior to Teaching","#1A5C38")}
+    ${hdrCell("⏳ During Teaching","#1A7A6E")}
+    ${hdrCell("✅ After Teaching","#5B2D8E")}
+  </tr>
+  <tr>
+    ${cell(data.refBefore||" ", "#E8F5EE")}
+    ${cell(data.refDuring||" ", "#E5F4F2")}
+    ${cell(data.refAfter||" ", "#F3E8FF")}
+  </tr>
+</table>
+
+<div style="margin-top:24px;padding:10px 14px;background:#F5F5F5;color:#757575;font-size:10pt;text-align:center;">
+  ELA Green School — MYP Unit Planner &nbsp;|&nbsp; ${data.subject||""} &nbsp;|&nbsp; ${data.title||""} &nbsp;|&nbsp; ${data.teacher||""} &nbsp;|&nbsp; ${data.year||""}
+</div>
+
+</body>
+</html>`;
+
+  const blob = new Blob([html], { type: "application/msword;charset=utf-8" });
+  const safeName = (data.title||"Unit_Plan").replace(/[^a-zA-Z0-9_\- ]/g,"").replace(/ /g,"_");
+
+  // Use FileReader to convert blob → base64 data URI (works in sandboxed iframes)
+  const reader = new FileReader();
+  reader.onload = function() {
+    try {
+      const a = document.createElement("a");
+      a.href = reader.result;
+      a.download = `MYP_Unit_Plan_${safeName}.doc`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      resolve();
+    } catch(e) { reject(e); }
+  };
+  reader.onerror = () => reject(new Error("FileReader failed"));
+  reader.readAsDataURL(blob);
+  });
+}
+
+function handleCopy(){
+  const criteria=SUBJECT_CRITERIA[D.subject]||DEFAULT_CRITERIA;
+  const sStrands=D.strands||{};
+  const critSummary=(D.criteria||[]).map(id=>{const c=criteria.find(x=>x.id===id);const st=sStrands[id]||[];return(c?.label||id)+(st.length?" — strands: "+st.join(", "):"");}).join("\n");
+  const phBgs={"Tuning In":"#E8F5E9","Finding Out":"#E3F2FD","Sorting Out":"#F3E5F5","Making Connections":"#FFF3E0","Going Further":"#FCE4EC","Taking Action":"#E0F2F1","Reflecting":"#EDE7F6"};
+  const weeks=D.weeks||[],atl=D.atlSkills||[];
+  const c=(t,bg="#fff",bold=false,color="#000")=>`<td style="border:1px solid #ccc;padding:7px 10px;background:${bg};font-weight:${bold?"bold":"normal"};color:${color};font-size:11pt;vertical-align:top;">${(t||"—").replace(/\n/g,"<br/>")}</td>`;
+  const hc=(t,bg="#1A5C38")=>`<td style="border:1px solid ${bg};padding:7px 10px;background:${bg};font-weight:bold;color:#fff;font-size:11pt;">${t}</td>`;
+  const s=(t,bg="#1A5C38")=>`<table width="100%"><tr><td style="background:${bg};color:#fff;font-weight:bold;font-size:13pt;padding:10px 14px;">${t}</td></tr></table>`;
+  const html=`<html><body style="font-family:Calibri,Arial,sans-serif;font-size:11pt;margin:2cm;">
+<h1 style="color:#1A5C38;">${D.title||"MYP Unit Plan"}</h1>
+<p><b>Teacher:</b> ${D.teacher||""} | <b>Subject:</b> ${D.subject||""} ${D.discipline||""} | <b>Year:</b> ${D.myp||""} | <b>Duration:</b> ${D.duration||""}</p>
+${s("INQUIRY")}
+<table width="100%"><tr>${hc("Key Concept")}${hc("Related Concepts")}${hc("Global Context")}</tr>
+<tr>${c((D.keyConcept||"—")+"\n"+(D.keyConceptDef||""))}${c((D.relatedConcepts||"—")+"\n"+(D.relatedConceptsDef||""))}${c((D.globalContext||"—")+"\n"+(D.globalContextFocus||""))}</tr></table>
+<table width="100%"><tr><td style="padding:10px;border:1px solid #ccc;background:#E8F5EE;">
+<b style="color:#1A5C38;">Conceptual Understanding:</b> ${D.cu||"—"}<br/><br/>
+<b style="color:#1A5C38;">SOI:</b> <i>${D.soi||"—"}</i></td></tr>
+<tr><td style="padding:10px;border:1px solid #ccc;">
+<b style="color:#1C4E7A;">Factual:</b> ${(D.iqFactual||"—").replace(/\n/g,"<br/>")} &nbsp;
+<b style="color:#5B2D8E;">Conceptual:</b> ${(D.iqConceptual||"—").replace(/\n/g,"<br/>")} &nbsp;
+<b style="color:#B91C1C;">Debatable:</b> ${(D.iqDebatable||"—").replace(/\n/g,"<br/>")}</td></tr></table>
+${s("OBJECTIVES & SUMMATIVE ASSESSMENT","#1C4E7A")}
+<table width="100%"><tr>${hc("Criteria & Strands","#1C4E7A")}${hc("Task 1","#1C4E7A")}${hc("Task 2","#1C4E7A")}${hc("SOI Connection","#1C4E7A")}</tr>
+<tr>${c(critSummary||"—","#EBF2FA")}${c((D.task1Title||"—")+"\n"+(D.task1Desc||""))}${c((D.task2Title||"—")+"\n"+(D.task2Desc||""))}${c(D.saSOILink||"—")}</tr></table>
+${s("ATL SKILLS","#B8860B")}
+<table width="100%"><tr>${hc("Cluster & Code","#B8860B")}${hc("Skill","#B8860B")}${hc("Objective","#B8860B")}${hc("Learning Experience","#B8860B")}${hc("Formative Assessment","#B8860B")}</tr>
+${atl.map(a=>`<tr>${c(a.cat+"\n"+a.code,"#FFF8E7",true,"#B8860B")}${c(a.desc||"—")}${c(a.objective||"—")}${c(a.experience||"—")}${c(a.formative||"—")}</tr>`).join("")||`<tr>${c("None recorded.","#F5F5F5",false,"#757575")}</tr>`}
+</table>
+${s("TEACHING & LEARNING")}
+<table width="100%"><tr>${hc("Week")}${hc("Phase","#1A7A6E")}${hc("Topic")}${hc("Strategy")}${hc("Learning Experience")}</tr>
+${weeks.map(w=>`<tr>${c("Week "+w.week,"#E8F5EE",true,"#1A5C38")}${c(w.phase||"—",phBgs[w.phase]||"#F5F5F5",true)}${c(w.topic||"—")}${c(w.strategy||"—")}${c(w.experience||"—")}</tr>`).join("")}
+</table>
+${s("FORMATIVE ASSESSMENT","#1C4E7A")}
+<table width="100%"><tr>${hc("Task & Week","#1C4E7A")}${hc("Criterion / ATL","#1C4E7A")}${hc("Feedback","#1C4E7A")}</tr>
+${[1,2,3].map(n=>`<tr>${c(D["fa"+n+"Title"]||"—")}${c(D["fa"+n+"Criteria"]||"—")}${c(D["fa"+n+"Feedback"]||"—")}</tr>`).join("")}
+</table>
+${s("DIFFERENTIATION")}
+<table width="100%"><tr>${hc("Scaffolding","#1C4E7A")}${hc("Core (All Students)")}${hc("Extension","#B8860B")}</tr>
+<tr>${c(D.diffScaffold||"—","#EBF2FA")}${c(D.diffCore||"—")}${c(D.diffExtension||"—","#FFF8E7")}</tr></table>
+${s("REFLECTION","#5B2D8E")}
+<table width="100%"><tr>${hc("Prior to Teaching","#1A5C38")}${hc("During Teaching","#1A7A6E")}${hc("After Teaching","#5B2D8E")}</tr>
+<tr>${c(D.refBefore||" ","#E8F5EE")}${c(D.refDuring||" ","#E5F4F2")}${c(D.refAfter||" ","#EDE7F6")}</tr></table>
+</body></html>`;
+  try{
+    navigator.clipboard.write([new ClipboardItem({"text/html":new Blob([html],{type:"text/html"}),"text/plain":new Blob([html],{type:"text/plain"})})]).then(()=>{copied=true;render();setTimeout(()=>{copied=false;render();},3000);});
+  }catch(e){navigator.clipboard.writeText(html).then(()=>{copied=true;render();setTimeout(()=>{copied=false;render();},3000);});}
+}
+
+function s7(){
+  const comps=[
+    {l:"Unit Identity",d:!!(D.teacher&&D.title&&D.subject&&D.myp)},
+    {l:"Key Concept",d:!!D.keyConcept},{l:"Related Concepts",d:!!D.relatedConcepts},
+    {l:"Global Context",d:!!D.globalContext},{l:"Statement of Inquiry",d:!!D.soi},
+    {l:"Inquiry Questions (all 3)",d:!!(D.iqFactual&&D.iqConceptual&&D.iqDebatable)},
+    {l:"Objectives & Criteria",d:!!(D.criteria&&D.criteria.length>0)},
+    {l:"Summative Assessment",d:!!(D.task1Title||D.task1Desc)},
+    {l:"ATL Skills",d:!!(D.atlSkills&&D.atlSkills.length>0)},
+    {l:"Weekly Plan",d:!!(D.weeks&&D.weeks.some(w=>w.phase&&w.topic))},
+    {l:"Formative Assessment",d:!!D.fa1Title},
+    {l:"Differentiation",d:!!(D.diffScaffold||D.diffCore)},
+    {l:"Reflection",d:!!D.refBefore},
+  ];
+  const score=comps.filter(c=>c.d).length;
+  return div("",
+    div("card",
+      el("h2",{},"✅ Unit Plan Completeness"),
+      div("g2",...comps.map(c=>div("ci "+(c.d?"done":"todo"),el("span",{},c.d?"✅":"⬜"),el("span",{},c.l)))),
+      div("",{css:`text-align:center;padding:14px;background:#F5F5F5;border-radius:9px;margin-top:14px;`},
+        el("div",{css:`font-size:28px;font-weight:900;color:${score>=10?"#1A5C38":score>=6?"#B8860B":"#B91C1C"};`},score+"/"+comps.length),
+        el("div",{css:"font-size:12px;color:#757575;margin-top:3px;"},score>=10?"Ready to export!":score>=6?"Good progress — keep completing sections.":"More sections needed."))
+    ),
+    div("exp-box",
+      div("exp-pri",
+        div("",{css:"display:flex;align-items:flex-start;gap:12px;"},
+          el("span",{css:"font-size:26px;"},"📋"),
+          div("",
+            div("exp-lbl",{},"Copy & Paste into Word ",el("span",{cls:"tag",css:"background:#1A5C38;"},"WORKS NOW")),
+            div("exp-desc",{},"Copies your full formatted unit plan. Open a blank Word document → Ctrl+V (Windows) or Cmd+V (Mac). All colour-coded tables appear instantly. Google Docs works too."),
+            el("button",{cls:"btn btn-green",css:"font-size:13px;padding:11px 22px;",onClick:handleCopy},
+              copied?"✅ Copied! Now paste into Word or Google Docs":"📋 Copy Unit Plan (paste into Word)"),
+            copied?el("div",{css:"margin-top:8px;font-size:12px;color:#1A5C38;font-weight:700;"},"✅ Open Word → Ctrl+V to paste. Google Docs: New document → Ctrl+V"):null
+          )
+        )
+      ),
+      div("exp-sec",
+        div("",{css:"display:flex;align-items:flex-start;gap:12px;"},
+          el("span",{css:"font-size:26px;"},"⬇️"),
+          div("",
+            div("exp-lbl",{css:"color:#757575;"},"Download as Word (.doc) ",el("span",{cls:"tag",css:"background:#B8860B;"},"WHEN HOSTED")),
+            div("exp-desc",{},"Direct download works when this file is hosted on GitHub Pages or a web server. Try below — it may work depending on your browser."),
+            el("button",{cls:"btn btn-out",onClick:()=>generateAndDownloadDoc(D)},"⬇ Download as Word (.doc)")
+          )
+        )
+      )
+    )
+  );
+}
+
+
+// ═══ STEP 0: QUICK START ════════════════════════════════
+let QS = { title:'', subject:'', myp:'', duration:'', teacher:'', keyConcept:'', relatedConcepts:'', globalContext:'', globalContextFocus:'', topics:'', subtopics:'' };
+let qsProgress = []; // track generation progress
+let qsRunning = false;
+
+async function runQuickStart() {
+  const key = window.__KEY__ || localStorage.getItem("anthropic_key");
+  if (!key) {
+    alert("Please add your API key first — click ⚙️ API Settings in the top right.");
+    return;
+  }
+  if (!QS.title || !QS.subject || !QS.keyConcept) {
+    alert("Please fill in at least: Unit Title, Subject, and Key Concept.");
+    return;
+  }
+
+  qsRunning = true;
+  qsProgress = [];
+  render();
+
+  const context = `Subject: ${QS.subject} | MYP Year: ${QS.myp||"1"} | Unit: "${QS.title}" | Duration: ${QS.duration||"6 weeks"} | Key Concept: ${QS.keyConcept} | Related Concepts: ${QS.relatedConcepts} | Global Context: ${QS.globalContext} — ${QS.globalContextFocus} | Topics: ${QS.topics} | Subtopics: ${QS.subtopics}`;
+
+  async function callAI(prompt, systemMsg) {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+      body: JSON.stringify({model:"claude-sonnet-4-20250514", max_tokens:900,
+        system: systemMsg || "You are an expert MYP curriculum planner at ELA Green School. Be concise, IB-accurate. Plain text only, no markdown, no bullet points unless asked.",
+        messages:[{role:"user", content:prompt}]})
+    });
+    const d = await res.json();
+    if (d.error) throw new Error(d.error.message);
+    return d.content?.map(b=>b.text||"").join("") || "";
+  }
+
+  function addProgress(icon, label, status) {
+    qsProgress.push({icon, label, status});
+    render();
+  }
+  function updateProgress(label, status) {
+    const p = qsProgress.find(x=>x.label===label);
+    if(p) { p.status=status; render(); }
+  }
+
+  try {
+    // Copy basic identity
+    D.title = QS.title; D.subject = QS.subject; D.myp = QS.myp;
+    D.duration = QS.duration; D.teacher = QS.teacher; D.discipline = '';
+
+    // 1. Conceptual Understanding + SOI
+    addProgress('⏳','Conceptual Understanding & SOI','running');
+    const soi = await callAI(`${context}
+
+Generate:
+1. CONCEPTUAL UNDERSTANDING: One sentence synthesising KC+RC+GC into an enduring understanding.
+2. STATEMENT OF INQUIRY: One student-facing conceptual statement (transferable, provocative, not a question, not content-specific).
+
+Output exactly:
+CU: [sentence]
+SOI: [sentence]`);
+    const cuLine = soi.split(String.fromCharCode(10)).find(l=>l.startsWith('CU:'));
+    const soiLine = soi.split(String.fromCharCode(10)).find(l=>l.startsWith('SOI:'));
+    D.cu = cuLine ? cuLine.replace('CU:','').trim() : '';
+    D.soi = soiLine ? soiLine.replace('SOI:','').trim() : soi.trim();
+    D.keyConcept = QS.keyConcept;
+    D.relatedConcepts = QS.relatedConcepts;
+    D.globalContext = QS.globalContext;
+    D.globalContextFocus = QS.globalContextFocus;
+    updateProgress('Conceptual Understanding & SOI','✅');
+
+    // 2. Inquiry Questions
+    addProgress('⏳','Inquiry Questions','running');
+    const iq = await callAI(`${context}
+SOI: "${D.soi}"
+
+Generate inquiry questions. Output exactly:
+FACTUAL: Q1 | Q2 | Q3
+CONCEPTUAL: Q1 | Q2 | Q3
+DEBATABLE: Q1 | Q2`);
+    const fLine = iq.split(String.fromCharCode(10)).find(l=>l.startsWith('FACTUAL:'));
+    const cLine = iq.split(String.fromCharCode(10)).find(l=>l.startsWith('CONCEPTUAL:'));
+    const dLine = iq.split(String.fromCharCode(10)).find(l=>l.startsWith('DEBATABLE:'));
+    D.iqFactual = fLine ? fLine.replace('FACTUAL:','').trim().split('|').map(s=>s.trim()).join(String.fromCharCode(10)) : '';
+    D.iqConceptual = cLine ? cLine.replace('CONCEPTUAL:','').trim().split('|').map(s=>s.trim()).join(String.fromCharCode(10)) : '';
+    D.iqDebatable = dLine ? dLine.replace('DEBATABLE:','').trim().split('|').map(s=>s.trim()).join(String.fromCharCode(10)) : '';
+    updateProgress('Inquiry Questions','✅');
+
+    // 3. Assessment
+    addProgress('⏳','Summative Assessment Tasks','running');
+    const subjectCritMap = {Sciences:['B','C'], Mathematics:['A','B'], 'Language & Literature':['A','B','C'], 'Language Acquisition':['C','D'], 'Individuals & Societies':['B','C'], Arts:['A','C'], 'Physical & Health Education':['B','C'], Design:['A','B']};
+    const suggestedCrit = subjectCritMap[QS.subject] || ['B','C'];
+    D.criteria = suggestedCrit;
+    const assess = await callAI(`${context}
+SOI: "${D.soi}"
+Criteria to address: ${suggestedCrit.join(' and ')}
+
+Suggest 2 summative assessment tasks. Output:
+TASK1_TITLE: [title] (Criterion ${suggestedCrit[0]}, Week __)
+TASK1_DESC: [2-3 sentences: what students produce, how it connects to SOI]
+TASK2_TITLE: [title] (Criterion ${suggestedCrit[1]||suggestedCrit[0]}, Week __)
+TASK2_DESC: [2-3 sentences]
+SOI_LINK: [1 sentence explaining how both tasks require students to engage with the SOI]`);
+    const t1t = assess.split(String.fromCharCode(10)).find(l=>l.startsWith('TASK1_TITLE:'));
+    const t1d = assess.split(String.fromCharCode(10)).find(l=>l.startsWith('TASK1_DESC:'));
+    const t2t = assess.split(String.fromCharCode(10)).find(l=>l.startsWith('TASK2_TITLE:'));
+    const t2d = assess.split(String.fromCharCode(10)).find(l=>l.startsWith('TASK2_DESC:'));
+    const sl = assess.split(String.fromCharCode(10)).find(l=>l.startsWith('SOI_LINK:'));
+    D.task1Title = t1t ? t1t.replace('TASK1_TITLE:','').trim() : '';
+    D.task1Desc = t1d ? t1d.replace('TASK1_DESC:','').trim() : '';
+    D.task2Title = t2t ? t2t.replace('TASK2_TITLE:','').trim() : '';
+    D.task2Desc = t2d ? t2d.replace('TASK2_DESC:','').trim() : '';
+    D.saSOILink = sl ? sl.replace('SOI_LINK:','').trim() : '';
+    updateProgress('Summative Assessment Tasks','✅');
+
+    // 4. ATL Skills
+    addProgress('⏳','ATL Skills','running');
+    const atlRes = await callAI(`${context}
+SOI: "${D.soi}"
+Criteria: ${suggestedCrit.join(', ')}
+
+Recommend 2 ATL skills most needed for this unit. Output:
+ATL1_CLUSTER: [cluster name e.g. Thinking]
+ATL1_CODE: [code e.g. C8.2]
+ATL1_SKILL: [skill description]
+ATL1_OBJ: [which criterion strand it supports]
+ATL1_ACTIVITY: [one specific activity where it will be explicitly taught]
+ATL1_FORMATIVE: [one formative task that provides evidence]
+ATL2_CLUSTER: ...
+ATL2_CODE: ...
+ATL2_SKILL: ...
+ATL2_OBJ: ...
+ATL2_ACTIVITY: ...
+ATL2_FORMATIVE: ...`);
+    const atlLines = atlRes.split(String.fromCharCode(10));
+    const getATL = (n,k) => { const l=atlLines.find(x=>x.startsWith(`ATL${n}_${k}:`)); return l?l.replace(`ATL${n}_${k}:`,'').trim():''; };
+    D.atlSkills = [1,2].map(n=>({
+      cat: getATL(n,'CLUSTER'), code: getATL(n,'CODE'), desc: getATL(n,'SKILL'),
+      objective: getATL(n,'OBJ'), experience: getATL(n,'ACTIVITY'), formative: getATL(n,'FORMATIVE')
+    })).filter(a=>a.code);
+    updateProgress('ATL Skills','✅');
+
+    // 5. Weekly Teaching Plan
+    addProgress('⏳','Weekly Teaching Plan','running');
+    const numWeeks = parseInt(QS.duration) || 6;
+    const phases = ["Tuning In","Finding Out","Sorting Out","Making Connections","Going Further","Taking Action","Reflecting"];
+    const weekRes = await callAI(`${context}
+SOI: "${D.soi}"
+Topics: ${QS.topics}
+Subtopics: ${QS.subtopics}
+Number of weeks: ${numWeeks}
+
+Create a ${numWeeks}-week teaching plan. For each week output:
+WEEK_N_PHASE: [one of: Tuning In, Finding Out, Sorting Out, Making Connections, Going Further, Taking Action, Reflecting]
+WEEK_N_TOPIC: [topic name]
+WEEK_N_STRATEGY: [teaching strategy — what the teacher does]
+WEEK_N_EXPERIENCE: [learning experience — what students do, include learning objective]
+
+Replace N with 1,2,3 etc. Be specific and practical.`);
+    const wLines = weekRes.split(String.fromCharCode(10));
+    D.weeks = Array.from({length:numWeeks},(_,i)=>{
+      const n=i+1;
+      const get=(k)=>{const l=wLines.find(x=>x.startsWith(`WEEK_${n}_${k}:`));return l?l.replace(`WEEK_${n}_${k}:`,'').trim():'';};
+      return {week:n, phase:get('PHASE'), topic:get('TOPIC'), strategy:get('STRATEGY'), experience:get('EXPERIENCE')};
+    });
+    updateProgress('Weekly Teaching Plan','✅');
+
+    // 6. Formative Assessments
+    addProgress('⏳','Formative Assessments','running');
+    const faRes = await callAI(`${context}
+SOI: "${D.soi}"
+Summative tasks: ${D.task1Title}, ${D.task2Title}
+
+Suggest 2 formative assessments that rehearse the summative tasks. Output:
+FA1_TITLE: [title and week, e.g. Hypothesis writing practice — Week 2]
+FA1_CRITERIA: [criterion/ATL strand targeted]
+FA1_FEEDBACK: [feedback method]
+FA2_TITLE: ...
+FA2_CRITERIA: ...
+FA2_FEEDBACK: ...`);
+    const faLines = faRes.split(String.fromCharCode(10));
+    const getFA=(n,k)=>{const l=faLines.find(x=>x.startsWith(`FA${n}_${k}:`));return l?l.replace(`FA${n}_${k}:`,'').trim():'';};
+    D.fa1Title=getFA(1,'TITLE'); D.fa1Criteria=getFA(1,'CRITERIA'); D.fa1Feedback=getFA(1,'FEEDBACK');
+    D.fa2Title=getFA(2,'TITLE'); D.fa2Criteria=getFA(2,'CRITERIA'); D.fa2Feedback=getFA(2,'FEEDBACK');
+    updateProgress('Formative Assessments','✅');
+
+    // 7. Differentiation
+    addProgress('⏳','Differentiation','running');
+    const diffRes = await callAI(`${context}
+SOI: "${D.soi}"
+
+Suggest differentiation strategies. Output:
+SCAFFOLD: [2-3 specific scaffolding strategies for students who need support]
+CORE: [the non-negotiable learning experience all students engage with]
+EXTENSION: [2-3 extension tasks for students ready to go further]`);
+    const diffLines = diffRes.split(String.fromCharCode(10));
+    D.diffScaffold = (diffLines.find(l=>l.startsWith('SCAFFOLD:'))||'').replace('SCAFFOLD:','').trim();
+    D.diffCore = (diffLines.find(l=>l.startsWith('CORE:'))||'').replace('CORE:','').trim();
+    D.diffExtension = (diffLines.find(l=>l.startsWith('EXTENSION:'))||'').replace('EXTENSION:','').trim();
+    updateProgress('Differentiation','✅');
+
+    addProgress('🎉','Unit plan draft complete!','done');
+    qsRunning = false;
+    render();
+
+    // Auto-advance to step 1 after 2 seconds
+    setTimeout(()=>{ step=1; window.scrollTo(0,0); render(); }, 2000);
+
+  } catch(e) {
+    qsRunning = false;
+    qsProgress.push({icon:'❌', label:'Error: '+e.message, status:'error'});
+    render();
+  }
+}
+
+function s0() {
+  const hasDraft = D.soi && D.title;
+  return div("",
+    div("qs-hero",
+      el("h2",{},"🚀 Quick Start — AI Unit Plan Draft"),
+      el("p",{},"Fill in the basics below and click Generate. The AI will create a complete unit plan draft — SOI, inquiry questions, assessments, ATL skills, weekly plan, and differentiation. You then review and refine in the steps that follow.")
+    ),
+
+    // Mode cards
+    div("mode-banner",
+      div("mode-card active",
+        el("h3",{css:"color:#1A5C38;"},"🚀 Quick Start (AI Draft)"),
+        el("p",{},"Fill basics → AI generates full draft → you review and refine")
+      ),
+      div("mode-card",{css:"cursor:pointer;",onClick:()=>{step=1;render();}},
+        el("h3",{css:"color:#1C4E7A;"},"✏️ Manual Step-by-Step"),
+        el("p",{},"Fill in each section yourself, with individual AI buttons for help")
+      )
+    ),
+
+    div("card",
+      el("h2",{},"📋 Unit Basics"),
+      div("qs-grid",
+        fld("Teacher Name", el("input",{type:"text",placeholder:"Your full name",value:QS.teacher||"",onInput:e=>{QS.teacher=e.target.value;}})),
+        fld("Unit Title *", el("input",{type:"text",placeholder:"e.g. How Can We Study the Living World?",value:QS.title||"",onInput:e=>{QS.title=e.target.value;}})),
+        fld("Subject Group *", sel(QS.subject, SUBJECT_GROUPS, v=>{QS.subject=v; D.subject=v;})),
+        fld("MYP Year", sel(QS.myp, MYP_YEARS, v=>{QS.myp=v; D.myp=v;})),
+        fld("Unit Duration", el("input",{type:"text",placeholder:"e.g. 6 weeks / 18 hours",value:QS.duration||"",onInput:e=>{QS.duration=e.target.value;}})),
+      ),
+    ),
+
+    div("card",
+      el("h2",{},"💡 Concepts & Context"),
+      div("qs-grid",
+        fld("Key Concept *", sel(QS.keyConcept, KEY_CONCEPTS, v=>{QS.keyConcept=v;})),
+        fld("Global Context", sel(QS.globalContext, GLOBAL_CONTEXTS, v=>{QS.globalContext=v;})),
+        div("qs-full field",
+          el("label",{},"Related Concepts (from subject guide)"),
+          el("input",{type:"text",placeholder:"e.g. Balance, Interaction — list 1-2 from your subject guide",value:QS.relatedConcepts||"",onInput:e=>{QS.relatedConcepts=e.target.value;}})
+        ),
+        div("qs-full field",
+          el("label",{},"Global Context Exploration Focus"),
+          el("input",{type:"text",placeholder:"e.g. Adaptation, Ingenuity and Progress",value:QS.globalContextFocus||"",onInput:e=>{QS.globalContextFocus=e.target.value;}})
+        ),
+      )
+    ),
+
+    div("card",
+      el("h2",{},"📚 Content"),
+      div("field",
+        el("label",{},"Main Topics"),
+        el("textarea",{rows:2,placeholder:"What are the main topics of this unit? e.g. States of matter, Physical and chemical changes, Mixtures and solutions",onInput:e=>{QS.topics=e.target.value;}},QS.topics||"")
+      ),
+      div("field",
+        el("label",{},"Subtopics / Key Content"),
+        el("textarea",{rows:3,placeholder:"List the key content, skills or subtopics students will learn. e.g. Solubility, Particle theory, Separating mixtures, Acids and bases",onInput:e=>{QS.subtopics=e.target.value;}},QS.subtopics||"")
+      )
+    ),
+
+    // Generate button
+    el("button",{cls:"qs-generate-btn", disabled:qsRunning,
+      onClick:()=>runQuickStart()},
+      qsRunning ? "⏳ Generating your unit plan..." : "✨ Generate Complete Unit Plan Draft"
+    ),
+
+    // Progress tracker
+    qsProgress.length > 0 ? div("qs-progress",
+      el("h4",{},"Generation Progress"),
+      ...qsProgress.map(p => div("qs-step-row",
+        el("span",{cls:"qs-step-icon"},p.icon),
+        el("span",{css:`color:${p.status==='error'?'#B91C1C':p.status==='done'?'#1A5C38':'#1A1A1A'};font-weight:${p.status==='done'||p.status==='error'?700:400};`},p.label)
+      )),
+      qsProgress.some(p=>p.label==="Unit plan draft complete!") ?
+        div("",{css:"margin-top:14px;text-align:center;"},
+          el("div",{css:"font-size:15px;font-weight:700;color:#1A5C38;margin-bottom:8px;"},"🎉 Your draft is ready!"),
+          el("div",{css:"font-size:13px;color:#757575;margin-bottom:12px;"},"Taking you to the unit plan now... or click below to go straight there."),
+          el("button",{cls:"btn btn-green",css:"font-size:14px;padding:12px 28px;",
+            onClick:()=>{step=1;window.scrollTo(0,0);render();}},
+            "Review & Refine My Unit Plan →")
+        ) : null
+    ) : null,
+
+    // If draft already exists, show link
+    hasDraft && !qsRunning && qsProgress.length===0 ? div("",{css:"margin-top:14px;background:#E8F5EE;border:1.5px solid #1A5C38;border-radius:10px;padding:16px;text-align:center;"},
+      el("div",{css:"font-weight:700;color:#1A5C38;margin-bottom:6px;"},"✅ You already have a unit plan draft"),
+      el("div",{css:"font-size:13px;color:#757575;margin-bottom:10px;"},"Unit: "+D.title+" — "+D.subject),
+      el("button",{cls:"btn btn-green",onClick:()=>{step=1;render();}},"Continue Editing →")
+    ) : null
+  );
+}
+
+// ═══ RENDER ENGINE ═══════════════════════════════════════
+const STEPS=[
+  {l:"✨ Quick Start (AI Draft)",i:"🚀"},{l:"Unit Identity",i:"🏫"},{l:"Concepts & Context",i:"💡"},
+  {l:"Inquiry Design",i:"🔬"},{l:"Assessment",i:"📊"},{l:"ATL Skills",i:"🎯"},
+  {l:"Teaching, FA & Diff",i:"📅"},{l:"Reflect & Download",i:"⬇️"}
+];
+const RENDERERS=[s0,s1,s2,s3,s4,s5,s6,s7];
+let step=0;
+function nav(d){step=Math.max(0,Math.min(STEPS.length-1,step+d));window.scrollTo(0,0);render();}
+function render(){
+  // stepbar
+  const sb=document.getElementById("sb"); sb.innerHTML="";
+  STEPS.forEach((s,i)=>{const b=document.createElement("button");b.textContent=s.i+" "+s.l;if(i===step)b.className="active";b.onclick=()=>{step=i;window.scrollTo(0,0);render();};sb.appendChild(b);});
+  // dots
+  const dt=document.getElementById("dt"); dt.innerHTML="";
+  STEPS.forEach((_,i)=>{const d=document.createElement("div");d.className="dot"+(i===step?" on":"");d.onclick=()=>{step=i;window.scrollTo(0,0);render();};dt.appendChild(d);});
+  // nav buttons
+  const bk=document.getElementById("bk"),nx=document.getElementById("nx");
+  bk.style.opacity=step===0?".3":"1"; bk.disabled=step===0;
+  nx.textContent=step===STEPS.length-2?"Reflect & Download →":"Next →";
+  nx.style.display=step===STEPS.length-1?"none":"";
+  // content
+  const sc=document.getElementById("sc"); sc.innerHTML="";
+  try {
+    const el=RENDERERS[step](); 
+    if(el)sc.appendChild(el);
+  } catch(e) {
+    const errDiv = document.createElement('div');
+    errDiv.style.cssText = 'padding:20px;background:#FEE2E2;border:2px solid #B91C1C;border-radius:8px;color:#B91C1C;font-family:monospace;font-size:13px;margin:16px;';
+    errDiv.textContent = 'Step ' + (step+1) + ' Error: ' + e.message + '\n' + (e.stack||'').split(String.fromCharCode(10)).slice(0,3).join(String.fromCharCode(10));
+    sc.appendChild(errDiv);
+    console.error('Step render error:', e);
+  }
+}
+render();
+</script>
+</body>
+</html>
