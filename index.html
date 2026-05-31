@@ -113,6 +113,52 @@ textarea{resize:vertical;}
 .mode-card p{font-size:12px;color:#757575;line-height:1.5;}
 @media(max-width:600px){.qs-grid{grid-template-columns:1fr;}.mode-banner{flex-direction:column;}}
 
+
+/* Teaching Strategies */
+.ts-cat-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+.ts-cat-tab{padding:7px 12px;border-radius:7px;border:1.5px solid #E0E0E0;background:#fff;cursor:pointer;font-size:11px;font-weight:700;color:#757575;display:flex;align-items:center;gap:4px;}
+.ts-cat-tab.active{font-weight:700;}
+.ts-cat-header{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:8px;margin-bottom:8px;}
+.ts-card{background:#fff;border-radius:9px;border:1px solid #E0E0E0;margin-bottom:8px;overflow:hidden;}
+.ts-card-header{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 14px;cursor:pointer;gap:10px;}
+.ts-card-header:hover{background:#F9F9F9;}
+.ts-phases{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;}
+.ts-phase-tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;}
+.ts-card-body{padding:12px 14px;border-top:1px solid #E0E0E0;background:#FAFAFA;}
+.ts-detail-row{margin-bottom:10px;}
+.ts-detail-row:last-child{margin-bottom:0;}
+.ts-detail-label{font-size:11px;font-weight:700;color:#1A5C38;margin-bottom:3px;}
+.ts-detail-text{font-size:12px;color:#1A1A1A;line-height:1.6;}
+/* Strategy picker overlay */
+.strat-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;display:flex;align-items:flex-end;justify-content:center;}
+.strat-picker-box{background:#fff;border-radius:14px 14px 0 0;width:100%;max-width:700px;max-height:85vh;display:flex;flex-direction:column;position:relative;}
+.strat-picker-header{padding:16px 16px 12px;border-bottom:1px solid #E0E0E0;}
+.strat-picker-list{overflow-y:auto;padding:12px;flex:1;}
+.strat-pick-item{padding:10px 12px;border:1.5px solid #E0E0E0;border-radius:8px;margin-bottom:7px;cursor:pointer;transition:all .15s;}
+.strat-pick-item:hover{border-color:#1A5C38;background:#E8F5EE;}
+/* Add strategy button on week cards */
+.add-strat-btn{font-size:11px;padding:5px 10px;background:#F3E8FF;border:1px solid #5B2D8E;color:#5B2D8E;border-radius:6px;cursor:pointer;font-weight:700;white-space:nowrap;}
+
+
+/* Assessment Bank */
+.ab-subject-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-bottom:4px;}
+.ab-subj-btn{padding:10px 6px;border-radius:9px;border:1.5px solid #E0E0E0;background:#fff;cursor:pointer;text-align:center;font-family:inherit;}
+.ab-subj-btn.active{font-weight:700;}
+.ab-subj-btn:hover{background:#F5F5F5;}
+.ab-filter-btn{padding:6px 14px;border-radius:7px;border:1.5px solid #E0E0E0;background:#fff;cursor:pointer;font-size:12px;font-weight:700;color:#757575;}
+.ab-crit-header{padding:10px 14px;border-radius:8px;margin-bottom:8px;margin-top:12px;}
+.ab-strand-label{font-size:12px;font-weight:700;color:#757575;padding:6px 0;margin-bottom:4px;}
+.ab-formative-header{font-size:13px;font-weight:700;color:#1A7A6E;padding:8px 0 4px;margin-top:4px;}
+.ab-task-card{background:#fff;border-radius:9px;border:1px solid #E0E0E0;margin-bottom:7px;overflow:hidden;}
+.ab-task-header{display:flex;justify-content:space-between;align-items:flex-start;padding:11px 13px;cursor:pointer;gap:10px;}
+.ab-task-header:hover{background:#F9F9F9;}
+.ab-task-body{padding:11px 13px;border-top:1px solid #E0E0E0;background:#FAFAFA;}
+.ab-detail{margin-bottom:9px;}
+.ab-detail:last-child{margin-bottom:0;}
+.ab-detail-label{font-size:11px;font-weight:700;color:#1A5C38;margin-bottom:3px;}
+.ab-detail-text{font-size:12px;color:#1A1A1A;line-height:1.6;}
+@media(max-width:600px){.ab-subject-grid{grid-template-columns:repeat(4,1fr);}}
+
 </style>
 </head>
 <body>
@@ -841,6 +887,7 @@ function s4(){
         ),
       ),
       fld("Connection to Statement of Inquiry",inp(D.saSOILink,v=>set("saSOILink",v),"How does completing the task require students to demonstrate the conceptual understanding in the SOI?",3)),
+      assessmentSuggestions(D.subject, D.criteria||[]),
       aiBtn("Suggest Summative Tasks","tasks",taskP),
       aiBox("tasks",v=>set("aiTaskNotes",v)),
     )
@@ -1049,7 +1096,10 @@ function s6(){
             ...PHASES.map(p=>{const o=el("option",{value:p.name},p.emoji+" "+p.name);if(p.name===w.phase)o.selected=true;return o;})
           )),
           fld("Topic / Content",inp(w.topic,v=>updWk(i,"topic",v),"Topic name…")),
-          fld("Teaching Strategy",inp(w.strategy,v=>updWk(i,"strategy",v),"What will YOU do? e.g. Jigsaw, concept attainment, guided inquiry…",3)),
+          div("",
+            fld("Teaching Strategy",inp(w.strategy,v=>updWk(i,"strategy",v),"What will YOU do? e.g. Jigsaw, concept attainment, guided inquiry…",3)),
+            el("button",{cls:"add-strat-btn",css:"margin-top:4px;",onClick:()=>openStratPicker(i)},"🎓 Browse Strategy Guide")
+          ),
           fld("Learning Experience",inp(w.experience,v=>updWk(i,"experience",v),"What will STUDENTS do? Include LO and connections to KC/ATL/Objectives…",3)),
         )
       );
@@ -1216,6 +1266,52 @@ function generateAndDownloadDoc(data) {
 .mode-card h3{font-size:14px;font-weight:700;margin-bottom:4px;}
 .mode-card p{font-size:12px;color:#757575;line-height:1.5;}
 @media(max-width:600px){.qs-grid{grid-template-columns:1fr;}.mode-banner{flex-direction:column;}}
+
+
+/* Teaching Strategies */
+.ts-cat-tabs{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px;}
+.ts-cat-tab{padding:7px 12px;border-radius:7px;border:1.5px solid #E0E0E0;background:#fff;cursor:pointer;font-size:11px;font-weight:700;color:#757575;display:flex;align-items:center;gap:4px;}
+.ts-cat-tab.active{font-weight:700;}
+.ts-cat-header{display:flex;align-items:flex-start;gap:10px;padding:12px 14px;border-radius:8px;margin-bottom:8px;}
+.ts-card{background:#fff;border-radius:9px;border:1px solid #E0E0E0;margin-bottom:8px;overflow:hidden;}
+.ts-card-header{display:flex;justify-content:space-between;align-items:flex-start;padding:12px 14px;cursor:pointer;gap:10px;}
+.ts-card-header:hover{background:#F9F9F9;}
+.ts-phases{display:flex;flex-wrap:wrap;gap:4px;margin-top:5px;}
+.ts-phase-tag{font-size:10px;font-weight:700;padding:2px 7px;border-radius:5px;}
+.ts-card-body{padding:12px 14px;border-top:1px solid #E0E0E0;background:#FAFAFA;}
+.ts-detail-row{margin-bottom:10px;}
+.ts-detail-row:last-child{margin-bottom:0;}
+.ts-detail-label{font-size:11px;font-weight:700;color:#1A5C38;margin-bottom:3px;}
+.ts-detail-text{font-size:12px;color:#1A1A1A;line-height:1.6;}
+/* Strategy picker overlay */
+.strat-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.5);z-index:500;display:flex;align-items:flex-end;justify-content:center;}
+.strat-picker-box{background:#fff;border-radius:14px 14px 0 0;width:100%;max-width:700px;max-height:85vh;display:flex;flex-direction:column;position:relative;}
+.strat-picker-header{padding:16px 16px 12px;border-bottom:1px solid #E0E0E0;}
+.strat-picker-list{overflow-y:auto;padding:12px;flex:1;}
+.strat-pick-item{padding:10px 12px;border:1.5px solid #E0E0E0;border-radius:8px;margin-bottom:7px;cursor:pointer;transition:all .15s;}
+.strat-pick-item:hover{border-color:#1A5C38;background:#E8F5EE;}
+/* Add strategy button on week cards */
+.add-strat-btn{font-size:11px;padding:5px 10px;background:#F3E8FF;border:1px solid #5B2D8E;color:#5B2D8E;border-radius:6px;cursor:pointer;font-weight:700;white-space:nowrap;}
+
+
+/* Assessment Bank */
+.ab-subject-grid{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-bottom:4px;}
+.ab-subj-btn{padding:10px 6px;border-radius:9px;border:1.5px solid #E0E0E0;background:#fff;cursor:pointer;text-align:center;font-family:inherit;}
+.ab-subj-btn.active{font-weight:700;}
+.ab-subj-btn:hover{background:#F5F5F5;}
+.ab-filter-btn{padding:6px 14px;border-radius:7px;border:1.5px solid #E0E0E0;background:#fff;cursor:pointer;font-size:12px;font-weight:700;color:#757575;}
+.ab-crit-header{padding:10px 14px;border-radius:8px;margin-bottom:8px;margin-top:12px;}
+.ab-strand-label{font-size:12px;font-weight:700;color:#757575;padding:6px 0;margin-bottom:4px;}
+.ab-formative-header{font-size:13px;font-weight:700;color:#1A7A6E;padding:8px 0 4px;margin-top:4px;}
+.ab-task-card{background:#fff;border-radius:9px;border:1px solid #E0E0E0;margin-bottom:7px;overflow:hidden;}
+.ab-task-header{display:flex;justify-content:space-between;align-items:flex-start;padding:11px 13px;cursor:pointer;gap:10px;}
+.ab-task-header:hover{background:#F9F9F9;}
+.ab-task-body{padding:11px 13px;border-top:1px solid #E0E0E0;background:#FAFAFA;}
+.ab-detail{margin-bottom:9px;}
+.ab-detail:last-child{margin-bottom:0;}
+.ab-detail-label{font-size:11px;font-weight:700;color:#1A5C38;margin-bottom:3px;}
+.ab-detail-text{font-size:12px;color:#1A1A1A;line-height:1.6;}
+@media(max-width:600px){.ab-subject-grid{grid-template-columns:repeat(4,1fr);}}
 
 </style>
 </head>
@@ -1784,13 +1880,897 @@ function s0() {
   );
 }
 
+// ═══ TEACHING STRATEGIES DATA ════════════════════════════
+const TEACHING_STRATEGIES = {
+  "Visible Thinking Routines": {
+    color: "#5B2D8E", bg: "#F3E8FF", icon: "👁️",
+    desc: "Protocols that make student thinking visible, discussable and transferable. Developed by Project Zero, Harvard.",
+    strategies: [
+      { name: "See-Think-Wonder", phases: ["Tuning In"], time: "10-15 min",
+        desc: "Students observe an image/object/text: What do you SEE? What do you THINK about that? What does it make you WONDER?",
+        example: "Show a coral reef before/after photo. Students notice, interpret and generate inquiry questions.",
+        purpose: "Activates prior knowledge, generates curiosity, surfaces misconceptions." },
+      { name: "Think-Pair-Share", phases: ["Tuning In","Sorting Out"], time: "5-10 min",
+        desc: "Individual thinking → pair discussion → share with class. Simple but powerful for checking understanding.",
+        example: "After a reading: think 2 mins, discuss with partner, share one idea with class.",
+        purpose: "Low-risk participation, deepens understanding through talk." },
+      { name: "Claim-Support-Question", phases: ["Sorting Out","Making Connections"], time: "15-20 min",
+        desc: "Students make a CLAIM based on evidence, find SUPPORT for it, then generate a QUESTION it raises.",
+        example: "After a science experiment: 'My claim is X, supported by Y data, which makes me wonder Z.'",
+        purpose: "Develops evidence-based reasoning and conceptual thinking." },
+      { name: "Connect-Extend-Challenge", phases: ["Making Connections","Reflecting"], time: "10-15 min",
+        desc: "How does this CONNECT to what you know? How does it EXTEND your thinking? What does it CHALLENGE or complicate?",
+        example: "After a case study on ecosystems: students write one connection, one extension, one challenge.",
+        purpose: "Links new learning to prior knowledge, deepens synthesis." },
+      { name: "I Used to Think... Now I Think", phases: ["Reflecting"], time: "10 min",
+        desc: "Students reflect on how their thinking has changed: 'I used to think ___ but now I think ___'",
+        example: "End of unit reflection on any concept that was counter-intuitive.",
+        purpose: "Metacognition — makes conceptual change visible." },
+      { name: "What Makes You Say That?", phases: ["Finding Out","Sorting Out"], time: "10-15 min",
+        desc: "When a student makes a claim, teacher/peers ask 'What makes you say that?' pushing for evidence and reasoning.",
+        example: "During a class discussion: student says 'wolves are important' — 'What makes you say that?'",
+        purpose: "Builds reasoning skills and evidence-based thinking." },
+      { name: "Chalk Talk", phases: ["Tuning In","Sorting Out"], time: "15-20 min",
+        desc: "Silent written discussion on large paper. Students write thoughts and respond to each other in writing.",
+        example: "Post the SOI on paper. Students circulate and write responses, questions, connections silently.",
+        purpose: "Inclusive — gives all students voice, creates a visible record of thinking." },
+      { name: "Sentence-Phrase-Word", phases: ["Finding Out","Sorting Out"], time: "10-15 min",
+        desc: "After a reading: choose one SENTENCE that captures a key idea, one PHRASE that moves you, one WORD that is most significant.",
+        example: "After reading a scientific article: students select and share their sentence, phrase and word.",
+        purpose: "Close reading, synthesis, highlights what students find meaningful." },
+    ]
+  },
+  "Cooperative Learning": {
+    color: "#2E7D32", bg: "#E8F5E9", icon: "🤝",
+    desc: "Structured group learning strategies where students work interdependently toward shared goals.",
+    strategies: [
+      { name: "Jigsaw", phases: ["Finding Out","Making Connections"], time: "30-40 min",
+        desc: "Each student becomes an 'expert' on one topic, then teaches it to their group. Two rounds: expert groups then home groups.",
+        example: "4 groups each research one human impact on ecosystems → regroup to teach each other.",
+        purpose: "Every student becomes both teacher and learner. Builds deep expertise." },
+      { name: "Gallery Walk", phases: ["Sorting Out","Making Connections"], time: "20-30 min",
+        desc: "Student work or prompts are posted around the room. Students circulate, read, and leave written responses (sticky notes).",
+        example: "Post 6 food webs around the room. Students circulate adding observations and questions.",
+        purpose: "Active consolidation, peer feedback, movement in the classroom." },
+      { name: "Fishbowl", phases: ["Making Connections","Going Further"], time: "20-30 min",
+        desc: "Small group discusses while others observe. Observers take notes, then swap. Creates meta-awareness of discussion quality.",
+        example: "Inner circle debates 'Should we reintroduce wolves?' while outer circle observes thinking strategies.",
+        purpose: "Models academic discussion, builds listening and analytical skills." },
+      { name: "Think-Aloud", phases: ["Finding Out"], time: "10-15 min",
+        desc: "Teacher models their own thinking process out loud while solving a problem or reading a text.",
+        example: "Teacher reads a data table aloud, narrating: 'I notice X, so I'm wondering Y, this reminds me of Z...'",
+        purpose: "Makes expert thinking visible — especially powerful for new skills." },
+      { name: "Expert Groups", phases: ["Finding Out","Going Further"], time: "25-35 min",
+        desc: "Students are assigned different aspects of a topic to research deeply, then share findings with the class.",
+        example: "Groups research: deforestation / ocean acidification / invasive species / climate change — then present.",
+        purpose: "Student agency, deep knowledge, peer teaching." },
+    ]
+  },
+  "Inquiry-Based Strategies": {
+    color: "#1565C0", bg: "#E3F2FD", icon: "🔍",
+    desc: "Strategies that position students as investigators, designers and problem-solvers.",
+    strategies: [
+      { name: "Concept Attainment", phases: ["Tuning In","Sorting Out"], time: "15-20 min",
+        desc: "Students identify a concept by examining YES and NO examples. They induce the rule without being told it.",
+        example: "Show cards: 'Science' (YES) vs 'Astrology' (NO). Students figure out what makes something scientific.",
+        purpose: "Deep conceptual understanding — students own the definition because they constructed it." },
+      { name: "Socratic Seminar", phases: ["Making Connections","Going Further"], time: "30-45 min",
+        desc: "Text-based collaborative discussion where students question each other using open-ended questions. Teacher facilitates minimally.",
+        example: "'Is it our duty or our choice to protect ecosystem balance?' Students discuss using evidence from the unit.",
+        purpose: "Critical thinking, multiple perspectives, genuine intellectual discussion." },
+      { name: "Provocation", phases: ["Tuning In"], time: "10-15 min",
+        desc: "An image, video, quote, artefact, or event that creates cognitive dissonance and sparks inquiry. No explanation given.",
+        example: "Play 30 seconds of flat-earth video silently. Ask: 'Is this science? What makes you say that?'",
+        purpose: "Creates genuine curiosity and emotional engagement with the inquiry." },
+      { name: "Guided Inquiry", phases: ["Finding Out","Going Further"], time: "Variable",
+        desc: "Teacher provides the question and materials; students design and conduct the investigation themselves.",
+        example: "Question given: 'What affects the rate of dissolving?' Students design their own method.",
+        purpose: "Bridges direct instruction and open inquiry — safe for new inquiry learners." },
+      { name: "Case Study", phases: ["Making Connections","Sorting Out"], time: "20-40 min",
+        desc: "Students analyse a real-world example in depth to draw generalisable conclusions.",
+        example: "Wolves of Yellowstone case: students analyse, then generalise to other ecosystems.",
+        purpose: "Connects abstract concepts to authentic contexts — develops transfer skills." },
+      { name: "Problem-Based Learning (PBL)", phases: ["Taking Action","Going Further"], time: "Multi-lesson",
+        desc: "Students work on an authentic, complex problem that has no single right answer. Develops over multiple lessons.",
+        example: "'Design a plan to restore balance to a local ecosystem that has been disrupted by invasive species.'",
+        purpose: "Authentic application, higher-order thinking, collaboration." },
+      { name: "Simulation / Role Play", phases: ["Making Connections","Taking Action"], time: "30-45 min",
+        desc: "Students take on roles (scientist, government, community member) to debate or solve a real issue.",
+        example: "UN debate: each student represents a country's position on climate action.",
+        purpose: "Empathy, multiple perspectives, authentic application of content." },
+      { name: "Design Thinking", phases: ["Going Further","Taking Action"], time: "Multi-lesson",
+        desc: "5-stage process: Empathise → Define → Ideate → Prototype → Test. Student-centred problem solving.",
+        example: "Design a device to separate a mixture. Students prototype, test and iterate.",
+        purpose: "Creative and critical thinking, real-world application, iteration mindset." },
+    ]
+  },
+  "Direct Instruction & Practice": {
+    color: "#E65100", bg: "#FFF3E0", icon: "📖",
+    desc: "Structured, teacher-led approaches that are highly effective when building new knowledge and skills.",
+    strategies: [
+      { name: "I Do, We Do, You Do", phases: ["Finding Out"], time: "20-30 min",
+        desc: "Teacher models (I do) → class practises together (We do) → students practise independently (You do).",
+        example: "Teacher writes a hypothesis. Class writes one together. Students write their own.",
+        purpose: "Gradual release of responsibility — essential for new and complex skills." },
+      { name: "Worked Examples", phases: ["Finding Out"], time: "15-20 min",
+        desc: "Teacher shows a fully worked solution, narrating each step. Students analyse before attempting similar problems.",
+        example: "Show a complete scientific investigation report. Annotate each section before students write their own.",
+        purpose: "Reduces cognitive load — lets students focus on understanding before production." },
+      { name: "Flipped Instruction", phases: ["Finding Out"], time: "Variable",
+        desc: "Students watch a short video or read before class. Class time is used for discussion, practice and application.",
+        example: "Students watch a 5-min video on food webs before class. Lesson focuses entirely on analysis and application.",
+        purpose: "Maximises class time for higher-order thinking and discussion." },
+      { name: "Structured Notes", phases: ["Finding Out","Sorting Out"], time: "20-30 min",
+        desc: "Partially completed notes that students fill in during instruction. More effective than copying.",
+        example: "Graphic organiser with headers pre-filled: students add definitions, examples and connections.",
+        purpose: "Focuses attention, reduces copying, builds organised knowledge." },
+    ]
+  },
+  "Making Learning Visible": {
+    color: "#00695C", bg: "#E0F2F1", icon: "✨",
+    desc: "Strategies for formative assessment and checking understanding in real time.",
+    strategies: [
+      { name: "Exit Ticket", phases: ["Finding Out","Sorting Out","Reflecting"], time: "5 min",
+        desc: "Students answer 1-3 quick questions on paper or digitally before leaving. Teacher reviews to plan next lesson.",
+        example: "Name one example of a biotic factor, one abiotic factor, and one question you still have.",
+        purpose: "Real-time data on understanding — drives responsive teaching." },
+      { name: "3-2-1", phases: ["Sorting Out","Reflecting"], time: "5-10 min",
+        desc: "Students write: 3 things they learned, 2 things they found interesting, 1 question they still have.",
+        example: "End of a lesson on chemical change. Students write 3-2-1 in their science journals.",
+        purpose: "Consolidation, self-assessment, generates questions for next lesson." },
+      { name: "Concept Mapping", phases: ["Sorting Out","Making Connections","Reflecting"], time: "15-25 min",
+        desc: "Students create a visual map showing connections between concepts using linking words.",
+        example: "Map the connections between: ecosystem, biotic, abiotic, food web, balance, human impact.",
+        purpose: "Makes conceptual understanding visible — reveals misconceptions and connections." },
+      { name: "Peer Review", phases: ["Going Further","Taking Action","Reflecting"], time: "15-20 min",
+        desc: "Students give structured written feedback on each other's work using a checklist or criteria.",
+        example: "Partner reviews hypothesis: Is the IV named? DV named? Scientific reason given? Specific feedback written.",
+        purpose: "Deepens understanding — teaching is the best way to learn." },
+    ]
+  },
+  "Technology-Enhanced": {
+    color: "#AD1457", bg: "#FCE4EC", icon: "💻",
+    desc: "Digital tools and strategies that enhance inquiry, collaboration and visible thinking.",
+    strategies: [
+      { name: "Padlet / Jamboard", phases: ["Tuning In","Sorting Out"], time: "10-20 min",
+        desc: "Digital collaborative whiteboard where students post ideas, images, links and responses in real time.",
+        example: "Post the SOI on Padlet. Students add: what they know, questions, images, real-world connections.",
+        purpose: "Inclusive, asynchronous collaboration — all voices heard simultaneously." },
+      { name: "Flipgrid / Video Reflection", phases: ["Reflecting","Taking Action"], time: "15-20 min",
+        desc: "Students record short video responses to a prompt. Classmates watch and respond.",
+        example: "Students record a 60-second explanation of their mesocosm results and what they would change.",
+        purpose: "Authentic audience, oracy development, creative expression." },
+      { name: "Digital Concept Mapping", phases: ["Sorting Out","Making Connections"], time: "20-30 min",
+        desc: "Students use tools like Canva, Miro or MindMeister to create and share visual knowledge maps.",
+        example: "Groups create a shared digital map of ecosystem interactions with images and links.",
+        purpose: "Visual thinking, real-time collaboration, shareable output." },
+      { name: "QR Code Gallery Walk", phases: ["Sorting Out","Making Connections"], time: "20-30 min",
+        desc: "QR codes posted around room link to videos, articles or data. Students scan and respond on devices.",
+        example: "6 QR codes around the room link to different conservation case studies. Students scan and annotate.",
+        purpose: "Differentiated — students choose their path, technology adds depth to gallery walk." },
+      { name: "Live Polling (Mentimeter / Slido)", phases: ["Tuning In","Reflecting"], time: "5-10 min",
+        desc: "Real-time anonymous polls, word clouds and quizzes that show class-wide thinking on screen.",
+        example: "Start of unit: 'What do you think a scientist looks like?' — word cloud appears instantly.",
+        purpose: "Instant formative data, surfaces misconceptions, high engagement." },
+      { name: "OneNote Collaboration Space", phases: ["Finding Out","Sorting Out"], time: "Variable",
+        desc: "Shared OneNote page where students contribute notes, questions and responses during or after lessons.",
+        example: "Students add their observations, questions and reflections to a shared class notebook after each lab.",
+        purpose: "Persistent thinking record, teacher can monitor and respond asynchronously." },
+    ]
+  },
+};
+
+
+// ═══ TEACHING STRATEGIES REFERENCE TAB ══════════════════
+let tsCategory = Object.keys(TEACHING_STRATEGIES)[0];
+let tsSearch = '';
+let tsExpanded = {};
+
+function sTS() {
+  const cats = Object.entries(TEACHING_STRATEGIES);
+  const filtered = tsSearch.trim().toLowerCase();
+
+  // Filter strategies by search
+  function getStrategies(cat, info) {
+    if (!filtered) return info.strategies;
+    return info.strategies.filter(s =>
+      s.name.toLowerCase().includes(filtered) ||
+      s.desc.toLowerCase().includes(filtered) ||
+      s.purpose.toLowerCase().includes(filtered) ||
+      s.phases.some(p => p.toLowerCase().includes(filtered))
+    );
+  }
+
+  // Strategy card
+  function stratCard(s, color, bg) {
+    const key = s.name;
+    const isExp = tsExpanded[key];
+    const phaseColors = {"Tuning In":"#2E7D32","Finding Out":"#1565C0","Sorting Out":"#6A1B9A","Making Connections":"#E65100","Going Further":"#AD1457","Taking Action":"#00695C","Reflecting":"#4527A0"};
+
+    return div("ts-card", {css: `border-left:4px solid ${color};`},
+      div("ts-card-header", {onClick: () => { tsExpanded[key] = !isExp; render(); }},
+        div("",
+          el("div", {css: `font-weight:700;font-size:14px;color:${color};`}, s.name),
+          div("ts-phases",
+            ...s.phases.map(p => el("span", {cls: "ts-phase-tag", css: `background:${phaseColors[p]||'#757575'}18;color:${phaseColors[p]||'#757575'};border:1px solid ${phaseColors[p]||'#757575'}44;`}, p)),
+            el("span", {cls: "ts-phase-tag", css: "background:#F5F5F5;color:#757575;"}, "⏱ " + s.time)
+          ),
+          el("div", {css: "font-size:12px;color:#757575;margin-top:4px;line-height:1.5;"}, s.desc)
+        ),
+        el("span", {css: `font-size:18px;color:${color};flex-shrink:0;`}, isExp ? "▲" : "▼")
+      ),
+      isExp ? div("ts-card-body",
+        div("ts-detail-row",
+          el("div", {cls: "ts-detail-label"}, "📌 Classroom Example"),
+          el("div", {cls: "ts-detail-text"}, s.example)
+        ),
+        div("ts-detail-row",
+          el("div", {cls: "ts-detail-label"}, "🎯 Purpose"),
+          el("div", {cls: "ts-detail-text"}, s.purpose)
+        ),
+        div("ts-detail-row",
+          el("div", {cls: "ts-detail-label"}, "🌱 Best used in"),
+          div("ts-phases", ...s.phases.map(p => el("span", {cls: "ts-phase-tag", css: `background:${phaseColors[p]||'#757575'}18;color:${phaseColors[p]||'#757575'};border:1px solid ${phaseColors[p]||'#757575'}44;`}, "Murdoch: " + p)))
+        )
+      ) : null
+    );
+  }
+
+  return div("",
+    div("card",
+      el("h2", {}, "🎓 Teaching Strategies Reference Guide"),
+      el("p", {css: "font-size:13px;color:#757575;margin-bottom:16px;line-height:1.6;"}, "A comprehensive guide to inquiry-based teaching strategies for MYP classrooms. Each strategy is linked to the Murdoch Inquiry Cycle phase where it works best. Click any strategy to see a classroom example and how to use it."),
+
+      // Search
+      div("field", {css: "margin-bottom:16px;"},
+        el("input", {type: "text", placeholder: "🔍  Search strategies by name, phase or purpose...",
+          css: "width:100%;border:1.5px solid #E0E0E0;border-radius:8px;padding:10px 14px;font-size:13px;",
+          onInput: e => { tsSearch = e.target.value; render(); }})
+      ),
+
+      // Category tabs
+      div("ts-cat-tabs",
+        ...cats.map(([cat, info]) => {
+          const strats = getStrategies(cat, info);
+          return el("button", {cls: "ts-cat-tab" + (tsCategory === cat ? " active" : ""),
+            css: tsCategory === cat ? `border-color:${info.color};background:${info.bg};color:${info.color};` : "",
+            onClick: () => { tsCategory = cat; render(); }},
+            el("span", {}, info.icon + " " + cat),
+            strats.length < info.strategies.length ? el("span", {css: "font-size:10px;margin-left:4px;background:#1A5C38;color:#fff;padding:1px 5px;border-radius:8px;"}, strats.length) : null
+          );
+        })
+      ),
+
+      // Selected category
+      ...cats.filter(([cat]) => cat === tsCategory || tsSearch.trim()).map(([cat, info]) => {
+        if (tsSearch.trim() && cat !== tsCategory) return null;
+        const strats = getStrategies(cat, info);
+        if (strats.length === 0) return null;
+        return div("",
+          div("ts-cat-header", {css: `background:${info.bg};border-left:4px solid ${info.color};`},
+            el("span", {css: "font-size:20px;"}, info.icon),
+            div("",
+              el("div", {css: `font-weight:700;font-size:15px;color:${info.color};`}, cat),
+              el("div", {css: "font-size:12px;color:#757575;margin-top:2px;"}, info.desc)
+            )
+          ),
+          ...strats.map(s => stratCard(s, info.color, info.bg))
+        );
+      }),
+
+      // Show all when searching
+      tsSearch.trim() ? div("",
+        ...cats.filter(([cat]) => cat !== tsCategory).map(([cat, info]) => {
+          const strats = getStrategies(cat, info);
+          if (strats.length === 0) return null;
+          return div("",
+            div("ts-cat-header", {css: `background:${info.bg};border-left:4px solid ${info.color};margin-top:12px;`},
+              el("span", {css: "font-size:18px;"}, info.icon),
+              el("div", {css: `font-weight:700;font-size:14px;color:${info.color};`}, cat + " (" + strats.length + " results)")
+            ),
+            ...strats.map(s => stratCard(s, info.color, info.bg))
+          );
+        })
+      ) : null
+    )
+  );
+}
+
+// ═══ STRATEGY PICKER POPUP (for week cards) ══════════════
+let stratPickerOpen = null; // week index or null
+let stratPickerCat = Object.keys(TEACHING_STRATEGIES)[0];
+
+function openStratPicker(weekIdx) {
+  stratPickerOpen = weekIdx;
+  stratPickerCat = Object.keys(TEACHING_STRATEGIES)[0];
+  render();
+}
+
+function stratPickerOverlay() {
+  if (stratPickerOpen === null) return null;
+  const weekIdx = stratPickerOpen;
+  const cats = Object.entries(TEACHING_STRATEGIES);
+
+  return div("strat-overlay", {onClick: e => { if (e.target.className === 'strat-overlay') { stratPickerOpen = null; render(); }}},
+    div("strat-picker-box",
+      div("strat-picker-header",
+        el("h3", {css: "font-size:16px;color:#1A5C38;margin:0;"}, "🎓 Choose a Teaching Strategy"),
+        el("p", {css: "font-size:12px;color:#757575;margin:4px 0 0;"}, "Click any strategy to add it to Week " + (weekIdx + 1)),
+        el("button", {css: "position:absolute;top:16px;right:16px;background:none;border:none;font-size:20px;cursor:pointer;color:#757575;", onClick: () => { stratPickerOpen = null; render(); }}, "✕")
+      ),
+      // Category tabs
+      div("ts-cat-tabs", {css: "padding:0 16px;border-bottom:1px solid #E0E0E0;"},
+        ...cats.map(([cat, info]) => el("button", {
+          cls: "ts-cat-tab" + (stratPickerCat === cat ? " active" : ""),
+          css: stratPickerCat === cat ? `border-color:${info.color};background:${info.bg};color:${info.color};` : "",
+          onClick: () => { stratPickerCat = cat; render(); }},
+          info.icon + " " + cat.split(" ")[0]
+        ))
+      ),
+      // Strategy list
+      div("strat-picker-list",
+        ...cats.filter(([cat]) => cat === stratPickerCat).map(([cat, info]) =>
+          div("",
+            ...info.strategies.map(s => {
+              const phaseColors = {"Tuning In":"#2E7D32","Finding Out":"#1565C0","Sorting Out":"#6A1B9A","Making Connections":"#E65100","Going Further":"#AD1457","Taking Action":"#00695C","Reflecting":"#4527A0"};
+              return div("strat-pick-item", {
+                onClick: () => {
+                  const existing = D.weeks[weekIdx].strategy || '';
+                  D.weeks[weekIdx].strategy = existing ? existing + '\n' + s.name + ': ' + s.desc : s.name + ': ' + s.desc;
+                  stratPickerOpen = null;
+                  render();
+                }
+              },
+                el("div", {css: `font-weight:700;font-size:13px;color:${info.color};`}, s.name),
+                div("ts-phases", {css: "margin:3px 0;"},
+                  ...s.phases.map(p => el("span", {cls: "ts-phase-tag", css: `background:${phaseColors[p]||'#757575'}18;color:${phaseColors[p]||'#757575'};font-size:10px;`}, p))
+                ),
+                el("div", {css: "font-size:12px;color:#757575;line-height:1.4;"}, s.desc)
+              );
+            })
+          )
+        )
+      )
+    )
+  );
+}
+
+// ═══ ASSESSMENT BANK DATA ════════════════════════════════
+const ASSESSMENT_BANK = {
+  "Sciences": {
+    summative: {
+      "A": {
+        label: "Knowing & Understanding",
+        strands: {
+          "i": { desc: "Explain scientific knowledge", tasks: [
+            { title: "Structured Knowledge Test", type: "Written", time: "45-60 min", desc: "Short-answer and extended-response questions requiring students to explain scientific concepts, define terms, and describe processes.", example: "Explain the difference between physical and chemical change. Use particle theory to support your answer.", tips: "Include command terms: explain, describe, state, outline. Avoid pure recall — ask students to apply knowledge to unfamiliar contexts." },
+            { title: "Annotated Diagram", type: "Visual/Written", time: "20-30 min", desc: "Students annotate a scientific diagram explaining the process or concept it shows.", example: "Annotate this diagram of a food web. Explain the role of each organism and predict what would happen if the top predator was removed.", tips: "Provide the diagram — this tests explanation not drawing. Ask for cause-and-effect reasoning." },
+          ]},
+          "ii": { desc: "Apply scientific knowledge to solve problems", tasks: [
+            { title: "Problem-Solving Questions", type: "Written", time: "30-45 min", desc: "Scenario-based questions where students apply scientific knowledge to solve real or novel problems.", example: "A scientist observes that fish in a local river are dying. Using your knowledge of ecosystems, identify three possible causes and explain the science behind each.", tips: "Use unfamiliar contexts — students should apply knowledge, not recall memorised answers." },
+            { title: "Data Interpretation Task", type: "Written", time: "25-35 min", desc: "Students are given a dataset and asked to apply scientific knowledge to interpret, explain and evaluate it.", example: "The table shows water temperature and dissolved oxygen levels over 6 months. Using your knowledge of ecosystems, explain the relationship shown.", tips: "Provide data students haven't seen. Ask them to connect patterns to scientific principles." },
+          ]},
+          "iii": { desc: "Analyse and evaluate information to make scientifically supported judgements", tasks: [
+            { title: "Source Analysis Task", type: "Written", time: "30-40 min", desc: "Students read 2-3 sources (articles, data sets, graphs) and evaluate the quality of evidence, identifying assumptions, limitations and scientific validity.", example: "Read these two articles about the health effects of a food additive. Evaluate which source provides stronger scientific evidence. Justify your reasoning.", tips: "Choose sources with genuine differences in quality — one peer-reviewed, one popular press." },
+          ]},
+        },
+        formative: [
+          { title: "Vocabulary Exit Ticket", time: "5 min", desc: "Students define 3 key terms in their own words and give one real-world example of each.", when: "End of introducing new content" },
+          { title: "Concept Check Quiz", time: "10 min", desc: "5-8 short questions testing key facts and concepts from recent lessons. Self-marked using answer key.", when: "After 2-3 lessons of new content" },
+          { title: "3-2-1 Knowledge Check", time: "5 min", desc: "3 things I now understand, 2 things I'm still unsure about, 1 question I have.", when: "Mid-unit consolidation" },
+        ]
+      },
+      "B": {
+        label: "Inquiring & Designing",
+        strands: {
+          "i": { desc: "Explain a problem or question to be tested", tasks: [
+            { title: "Investigation Proposal", type: "Written", time: "30-40 min", desc: "Students write a clear, focused research question for a scientific investigation, explaining the problem in context and why it is worth investigating.", example: "Write a research question to investigate one factor that affects the rate of photosynthesis. Explain why this is an interesting scientific question and what it could help us understand.", tips: "Research question must be measurable and testable. Avoid 'Does X affect Y?' — push for 'How does X affect Y?'" },
+          ]},
+          "ii": { desc: "Formulate a testable hypothesis using scientific reasoning", tasks: [
+            { title: "Hypothesis Writing Task", type: "Written", time: "20-30 min", desc: "Students write a formal hypothesis with scientific reasoning, identifying the expected relationship between IV and DV.", example: "Write a hypothesis for your investigation. Use the format: If [IV], then [DV], because [scientific reason from your knowledge].", tips: "Assess quality of scientific reasoning, not just the format. Does the 'because' show real understanding?" },
+          ]},
+          "iii": { desc: "Explain how to manipulate variables and collect data", tasks: [
+            { title: "Variables Identification Task", type: "Written", time: "20-25 min", desc: "Students identify and justify the IV, DV, and at least 3 controlled variables for an investigation, explaining how each will be measured.", example: "For your investigation into how light intensity affects plant growth: identify IV, DV and 3 CVs. Explain how you will measure each and why controlling them matters.", tips: "Award marks for justification — not just listing variables, but explaining WHY they are controlled." },
+          ]},
+          "iv": { desc: "Design scientific investigations", tasks: [
+            { title: "Full Investigation Design", type: "Written", time: "45-60 min", desc: "Students write a complete method including: materials list, step-by-step procedure, safety considerations, and a data collection table.", example: "Design an investigation to test how temperature affects the rate of enzyme activity. Include: hypothesis, variables, materials, method (minimum 8 steps), safety and a blank data table.", tips: "Method must be reproducible — another student should be able to follow it. Check: Are steps numbered? Are quantities specified? Is safety addressed?" },
+            { title: "Mesocosm Investigation Design", type: "Project", time: "Multi-lesson", desc: "Students design an investigation into one variable affecting the health and balance of a self-contained ecosystem (mesocosm). They set up their mesocosm and collect real data.", example: "Design an investigation to test how [light/water volume/number of organisms] affects the balance of your mesocosm. Submit: research question, hypothesis, variables, method, materials, safety.", tips: "This is an authentic, extended Criterion B task. Pairs well with Criterion C data collection over 3-4 weeks." },
+          ]},
+        },
+        formative: [
+          { title: "Hypothesis Peer Review", time: "15 min", desc: "Students write a hypothesis then swap with a partner who checks: Is the IV named? Is the DV named? Is there a scientific reason? Written feedback given.", when: "Before submitting the Criterion B task" },
+          { title: "Variables Sort Activity", time: "10 min", desc: "Given a scenario, students sort a list of 10 factors into: IV / DV / Controlled / Irrelevant. Class discusses disagreements.", when: "After teaching variables" },
+          { title: "Broken Method Fix", time: "20 min", desc: "Teacher provides a flawed investigation method. Students identify problems and explain how to fix them.", when: "Before students write their own method" },
+        ]
+      },
+      "C": {
+        label: "Processing & Evaluating",
+        strands: {
+          "i": { desc: "Present collected and transformed data", tasks: [
+            { title: "Data Processing Task", type: "Written/Practical", time: "30-40 min", desc: "Students process raw data: calculate means, identify anomalies, draw an appropriate graph with correctly labelled axes, scale and title.", example: "Using your raw data from the experiment, calculate the mean result for each trial, identify any anomalous results, and present your data as an appropriate graph.", tips: "Assess: correct graph type chosen (bar/line/scatter), axes labelled with units, appropriate scale, anomalies identified." },
+          ]},
+          "ii": { desc: "Interpret data and explain results using scientific reasoning", tasks: [
+            { title: "Results Interpretation Essay", type: "Written", time: "30-40 min", desc: "Students describe the pattern in their data, explain the results using scientific theory, and connect findings to their original hypothesis.", example: "Describe the pattern shown in your graph. Explain your results using particle theory/ecosystem principles/[relevant science]. Does your data support your hypothesis? Use specific data values in your answer.", tips: "Look for: specific data cited (not just 'the results went up'), correct scientific explanation, clear link back to hypothesis." },
+          ]},
+          "iii-iv": { desc: "Evaluate hypothesis and method", tasks: [
+            { title: "Investigation Evaluation", type: "Written", time: "30-40 min", desc: "Students evaluate whether their hypothesis was supported, assess the validity and reliability of their method, identify specific limitations and suggest improvements.", example: "Was your hypothesis supported? Evaluate your method: identify two specific limitations and explain how each affected your results. Suggest one specific improvement and explain how it would increase validity.", tips: "Improvements must be specific and feasible. 'Repeat more times' is not enough — students must explain WHY and HOW MANY." },
+          ]},
+          "v": { desc: "Explain improvements or extensions", tasks: [
+            { title: "Extension Question Response", type: "Written", time: "15-20 min", desc: "Students propose a related investigation that would extend their findings or a real-world application of their results.", example: "Propose one extension investigation that would build on your results. Explain what you would change and what new understanding it would generate.", tips: "This shows depth of thinking — good responses connect to bigger scientific ideas or real-world significance." },
+          ]},
+        },
+        formative: [
+          { title: "Graph Check", time: "10 min", desc: "Students draw a practice graph from provided data. Teacher checks: graph type, axes, units, scale, title. Feedback before the summative.", when: "After teaching graphing skills" },
+          { title: "Results Sentence Starters", time: "15 min", desc: "Students use sentence starters: 'My results show that...', 'This is because...', 'This supports/does not support my hypothesis because...', 'One limitation was...'", when: "Scaffolding for written evaluation" },
+          { title: "Data Table Peer Check", time: "10 min", desc: "Students swap data tables and check: Are columns labelled? Are units included? Are anomalies circled? Written feedback.", when: "Before processing data" },
+        ]
+      },
+      "D": {
+        label: "Reflecting on Impacts",
+        strands: {
+          "i-ii": { desc: "Discuss and evaluate implications of science", tasks: [
+            { title: "Scientific Issue Essay", type: "Written", time: "40-50 min", desc: "Students research and write about a real-world scientific issue, discussing the science behind it and evaluating its societal, environmental or ethical implications.", example: "Discuss how genetic modification of crops affects food security. Evaluate the benefits and risks from scientific, environmental and ethical perspectives.", tips: "Look for: balanced perspectives, scientific accuracy, personal judgement supported by evidence." },
+            { title: "Debate or Discussion Task", type: "Oral/Written", time: "30-40 min", desc: "Students argue a position on a scientific or ethical issue using evidence. Can be written argument or structured class debate.", example: "'Scientists should always share their research publicly, even if it could be misused.' Argue for or against using scientific evidence.", tips: "Pair with TOK connections for MYP 4-5. Assess quality of evidence use, not the position taken." },
+          ]},
+          "iii-iv": { desc: "Apply scientific language and document sources", tasks: [
+            { title: "Annotated Bibliography", type: "Written", time: "30 min", desc: "Students find 3-4 sources on a scientific topic and write an annotation for each: summary, credibility evaluation, how it supports their argument.", example: "Find 3 sources about the effects of plastic pollution on marine ecosystems. For each source: summarise the key finding, evaluate its credibility, and explain how you would use it.", tips: "Teach the CRAAP test or CARS checklist first. This directly develops ATL research skills." },
+          ]},
+        },
+        formative: [
+          { title: "News Article Analysis", time: "15 min", desc: "Students read a science news article and identify: the scientific claim, evidence provided, possible bias, and one question they would ask the scientist.", when: "Building critical analysis skills" },
+          { title: "Perspective Cards", time: "15 min", desc: "Students are given a card (scientist / government / local community / industry) and must argue a position on a scientific issue from that perspective.", when: "Before writing a balanced essay" },
+        ]
+      }
+    }
+  },
+  "Mathematics": {
+    summative: {
+      "A": { label: "Knowing & Understanding", strands: {
+        "i-iii": { desc: "Select and apply mathematics correctly", tasks: [
+          { title: "Tiered Problem Set", type: "Written", time: "45-60 min", desc: "A set of problems increasing in complexity — from routine to non-routine, familiar to unfamiliar contexts. Tests selecting appropriate methods and applying them correctly.", example: "Section A: Routine calculations. Section B: Multi-step problems. Section C: Unfamiliar context problems where students choose their method.", tips: "Section C should require students to decide WHICH mathematics to use, not just how to apply a given method." },
+          { title: "Mathematics Test", type: "Written", time: "45-60 min", desc: "Structured test with clear sections for each strand. Includes both procedural and conceptual questions.", example: "Mixed problem set covering the unit's key concepts with a final section requiring mathematical justification.", tips: "Include at least one question that requires students to explain their reasoning or check reasonableness of their answer." },
+        ]},
+      }, formative: [
+        { title: "Mini Whiteboard Check", time: "5 min", desc: "Students solve a problem on mini whiteboards and hold up simultaneously. Teacher scans for errors.", when: "Checking procedural skills mid-lesson" },
+        { title: "Error Analysis", time: "15 min", desc: "Teacher shows worked examples with deliberate mistakes. Students identify and explain the error.", when: "After introducing a new procedure" },
+      ]},
+      "B": { label: "Investigating Patterns", strands: {
+        "i-iii": { desc: "Investigate, describe and verify patterns", tasks: [
+          { title: "Pattern Investigation Task", type: "Written/Practical", time: "45-60 min", desc: "Students investigate a mathematical pattern, describe it as a relationship or general rule, and verify/justify their rule.", example: "Investigate the relationship between the number of sides of a polygon and the sum of its interior angles. Describe any pattern you find as a general rule and verify it works for all cases.", tips: "Assess: systematic approach, clear description, algebraic generalisation, proof or verification attempt." },
+          { title: "Open Investigation", type: "Extended", time: "Multi-lesson", desc: "Students choose their own investigation within a topic area, collect data, identify patterns and generalise.", example: "Investigate a mathematical pattern of your choice related to our current unit. You must: collect data systematically, identify a pattern, express as a general rule, and verify.", tips: "Good for differentiation — all students can access at their own level of generalisation." },
+        ]},
+      }, formative: [
+        { title: "Predict the Pattern", time: "10 min", desc: "Students are shown the first 4 terms of a sequence and must predict and justify the next 3 terms and the general rule.", when: "Introducing pattern investigation" },
+        { title: "What's My Rule?", time: "10 min", desc: "Teacher inputs numbers into a function machine. Students identify the rule and express it algebraically.", when: "Building generalisation skills" },
+      ]},
+      "C": { label: "Communicating", strands: {
+        "i-iii": { desc: "Use mathematical language and representations", tasks: [
+          { title: "Mathematical Explanation Task", type: "Written/Oral", time: "30-40 min", desc: "Students explain their mathematical thinking in writing or as a presentation, using correct notation and multiple representations.", example: "Explain to a student who missed class how to solve a system of equations. Use algebra, a table and a graph to represent the same solution.", tips: "Assess: correct terminology, notation, multiple representations used appropriately, logical structure." },
+          { title: "Poster or Infographic", type: "Visual", time: "Multi-lesson", desc: "Students create a visual representation of a mathematical concept showing multiple representations and connections.", example: "Create a poster showing the concept of linear functions — include equation, table, graph, real-world example and key vocabulary.", tips: "Good for consolidation and display. Peer teaching element adds depth." },
+        ]},
+      }, formative: [
+        { title: "Symbol Matching", time: "10 min", desc: "Match mathematical notation to its meaning in words. Then use each correctly in a sentence.", when: "Building mathematical vocabulary" },
+      ]},
+      "D": { label: "Applying in Real Life", strands: {
+        "i-iv": { desc: "Apply mathematics to authentic real-life situations", tasks: [
+          { title: "Real-World Problem Task", type: "Written/Project", time: "45-60 min", desc: "Students identify relevant mathematics in an authentic scenario, apply it correctly and evaluate the reasonableness of their solution.", example: "You are planning a school garden. The budget is $500. Design the garden, calculate costs, and justify your choices mathematically. Does your solution make sense in context?", tips: "Key strand iv: Does the student check if the answer makes sense? This is often omitted — build it into the task requirement." },
+        ]},
+      }, formative: [
+        { title: "Real-World Spotting", time: "10 min", desc: "Show 5 real photos/scenarios. Students identify the mathematics being used in each.", when: "Connecting maths to real contexts" },
+      ]},
+    }
+  },
+  "Language & Literature": {
+    summative: {
+      "A": { label: "Analysing", strands: {
+        "i-iii": { desc: "Analyse content, structure, language and effect", tasks: [
+          { title: "Comparative Essay", type: "Written", time: "60-90 min", desc: "Students compare how two texts explore a shared theme or concept, analysing language, structure, technique and effect on the reader.", example: "Compare how the authors of [Text A] and [Text B] use language to portray the theme of [concept]. Evaluate the effectiveness of each author's choices.", tips: "Teach the PEEL or TEEL paragraph structure. Assess: specific textual evidence, analysis of effect (not just identification of technique), comparative language used." },
+          { title: "Unseen Text Analysis", type: "Written", time: "45-60 min", desc: "Students analyse an unseen text, examining how the creator uses language, structure and technique to achieve a purpose.", example: "Read the following unseen poem/speech/article. Analyse how the author uses language and structure to convey their message to the audience.", tips: "Use genuinely unseen texts. Tests real analytical skill, not memorised responses." },
+        ]},
+      }, formative: [
+        { title: "Annotation Task", time: "15 min", desc: "Students annotate a short extract, identifying 5 language features and writing one word about the effect of each.", when: "Building analytical skills" },
+        { title: "PEEL Paragraph Practice", time: "20 min", desc: "Students write one analytical paragraph on a given technique. Teacher checks: Point, Evidence, Explanation, Link.", when: "Before a full essay" },
+      ]},
+      "B": { label: "Organising", strands: {
+        "i-iii": { desc: "Organise ideas logically with appropriate format", tasks: [
+          { title: "Structured Essay Under Exam Conditions", type: "Written", time: "60 min", desc: "Students write a structured essay with clear introduction, developed body paragraphs and a conclusion. Assessed on organisation, coherence and appropriate format.", example: "Using a plan, write a structured essay responding to the following question. You will be assessed on how you organise your ideas, not just what you say.", tips: "Teach and model the planning process. Assess: paragraph structure, linking language, introduction and conclusion quality." },
+        ]},
+      }, formative: [
+        { title: "Essay Plan Peer Review", time: "15 min", desc: "Students write a detailed essay plan and swap with a partner who checks: Is the argument clear? Are points in a logical order? Is evidence identified?", when: "Before writing a summative essay" },
+      ]},
+      "C": { label: "Producing Text", strands: {
+        "i-iii": { desc: "Produce text showing insight, style and audience awareness", tasks: [
+          { title: "Creative Writing Task", type: "Written", time: "45-60 min", desc: "Students produce an original text (short story, poem, script, personal essay) demonstrating insight, stylistic choices and audience awareness.", example: "Write a short story that explores the theme of [concept from the unit]. Show awareness of your reader through your stylistic choices.", tips: "Students should write a brief artist's statement explaining their choices — this evidences deliberate decision-making." },
+          { title: "Multimodal Text", type: "Creative", time: "Multi-lesson", desc: "Students create a text that combines image, language and layout (blog post, magazine spread, digital story) with a clear purpose and audience.", example: "Create a blog post/magazine article for a specific audience about [topic]. Your choices of language, image and layout should clearly reflect your intended audience and purpose.", tips: "Assess the reflection on choices, not just the product. 'I chose this image because...' shows awareness of effect." },
+        ]},
+      }, formative: [
+        { title: "Stylistic Choices Journal", time: "15 min", desc: "Students draft one paragraph of creative writing then annotate it: 'I chose [word/technique] because [effect on reader].'", when: "Building awareness of stylistic choices" },
+      ]},
+      "D": { label: "Using Language", strands: {
+        "i-v": { desc: "Use vocabulary, grammar and register appropriately", tasks: [
+          { title: "Oral Presentation or Speech", type: "Oral", time: "5-8 min per student", desc: "Students deliver a prepared speech or presentation demonstrating command of language, register appropriate to audience, and varied vocabulary and sentence structure.", example: "Deliver a 5-minute persuasive speech on [topic] to a specific audience. You will be assessed on your language accuracy, vocabulary range and register.", tips: "Video record if possible — allows teacher to assess carefully and students to self-evaluate." },
+        ]},
+      }, formative: [
+        { title: "Register Rewrite", time: "15 min", desc: "Students rewrite the same paragraph for two different audiences (e.g. child vs academic). Discuss the language choices made.", when: "Teaching register and audience" },
+      ]},
+    }
+  },
+  "Individuals & Societies": {
+    summative: {
+      "A": { label: "Knowing & Understanding", strands: {
+        "i-ii": { desc: "Use terminology and demonstrate knowledge with examples", tasks: [
+          { title: "Knowledge and Understanding Test", type: "Written", time: "45-60 min", desc: "Structured questions using key command terms: define, describe, explain, examine. Students demonstrate knowledge through accurate use of subject-specific terminology.", example: "Describe the causes of [historical event/geographical process]. Use subject-specific terminology accurately in your response.", tips: "Use the IB command terms consistently. 'Describe' requires more than listing — students must say what it is AND what it involves." },
+        ]},
+      }, formative: [
+        { title: "Terminology Quiz", time: "10 min", desc: "Students match 10 key terms to definitions, then use 5 in sentences. Self-marked.", when: "After introducing new content" },
+        { title: "Case Study Exit Card", time: "5 min", desc: "Name the case study, state 2 key facts, and explain 1 way it connects to the unit's key concept.", when: "After teaching a case study" },
+      ]},
+      "B": { label: "Investigating", strands: {
+        "i-iv": { desc: "Design and carry out an investigation", tasks: [
+          { title: "Research Investigation", type: "Extended Written", time: "Multi-lesson", desc: "Students formulate a clear research question, follow an action plan, collect and evaluate sources, and present findings with a bibliography.", example: "Investigate the following question: [student-selected or teacher-given question]. Your investigation should include: a clear question, an action plan, 4+ evaluated sources, processed findings and a bibliography.", tips: "Teach source evaluation (CRAAP/SIFT) before the investigation. Assess the process, not just the product." },
+        ]},
+      }, formative: [
+        { title: "Research Question Refinement", time: "15 min", desc: "Students draft a research question. Peers check: Is it specific? Is it answerable? Does it require analysis, not just description?", when: "Before starting a research investigation" },
+        { title: "Source Evaluation Practice", time: "20 min", desc: "Students evaluate 3 given sources using CRAAP/SIFT criteria. Class discusses which are most reliable and why.", when: "Before independent research" },
+      ]},
+      "C": { label: "Communicating", strands: {
+        "i-iii": { desc: "Communicate effectively for audience and purpose", tasks: [
+          { title: "Structured Academic Essay", type: "Written", time: "60-75 min", desc: "Students write a structured essay for a specific purpose (argue, discuss, evaluate) with correctly cited sources.", example: "To what extent did [cause] lead to [event/outcome]? Write a structured academic essay. Cite your sources correctly using [MLA/Chicago].", tips: "Require a bibliography even for in-class essays — builds the habit. Assess communication AND content." },
+          { title: "Multimedia Presentation", type: "Oral/Visual", time: "Multi-lesson", desc: "Students create and deliver a presentation on a geographical, historical or social issue for a specific audience.", example: "Create a 7-minute presentation for [audience] explaining [issue] and evaluating possible responses. Include visual evidence.", tips: "Assess the communication, not the slides. Too many text-heavy slides = low Criterion C." },
+        ]},
+      }, formative: [
+        { title: "Citation Practice", time: "15 min", desc: "Students cite 3 given sources correctly using the school's referencing style. Peer-check against a model.", when: "Before any research task" },
+      ]},
+      "D": { label: "Thinking Critically", strands: {
+        "i-iv": { desc: "Discuss, synthesise, evaluate and interpret", tasks: [
+          { title: "Analytical Discussion Essay", type: "Written", time: "60-75 min", desc: "Students synthesise multiple sources to construct and support an argument, evaluate perspectives and reach a reasoned conclusion.", example: "Discuss the view that [statement about a concept/event/issue]. Use evidence from your research to support, challenge and evaluate different perspectives.", tips: "Distinguish from Criterion A: this requires synthesis and evaluation, not just knowledge recall. The student should reach their own reasoned judgement." },
+          { title: "Document/Source Analysis", type: "Written", time: "30-45 min", desc: "Students analyse a primary or secondary source — evaluating its origin, purpose, value and limitations.", example: "Analyse the following source [image/speech/data]. Discuss its origin, purpose, and evaluate its value and limitations for a historian/geographer studying [topic].", tips: "OPVL framework (Origin, Purpose, Value, Limitations) works well here. Teach it explicitly as an ATL skill." },
+        ]},
+      }, formative: [
+        { title: "Devil's Advocate Discussion", time: "15 min", desc: "Students argue the position OPPOSITE to their own. This forces engagement with counter-arguments.", when: "Before writing a discussion essay" },
+        { title: "Claim-Evidence-Reasoning", time: "15 min", desc: "Students write: CLAIM (what I think), EVIDENCE (what supports this), REASONING (why the evidence supports my claim). One paragraph, then peer-reviewed.", when: "Building analytical paragraph skills" },
+      ]},
+    }
+  },
+  "Arts": {
+    summative: {
+      "A": { label: "Investigating", strands: {
+        "i-ii": { desc: "Investigate genre/movement and analyse artworks", tasks: [
+          { title: "Artist/Artwork Analysis", type: "Written", time: "40-50 min", desc: "Students research and analyse an artwork or artist, examining how context, technique and intention come together to create meaning.", example: "Choose one artist whose work connects to our unit theme. Analyse one specific work: describe the techniques used, examine the context in which it was created, and evaluate its effectiveness.", tips: "Push beyond description — 'the artist used red' needs to become 'the use of red creates urgency because...'." },
+          { title: "Process Journal", type: "Ongoing", time: "Throughout unit", desc: "Students maintain a process journal documenting their artistic investigation, inspiration, experimentation and reflection throughout the unit.", example: "Your process journal should show: research into at least 2 artists/styles, your responses to their work, experiments you tried, what worked and what you changed, and your developing artistic intention.", tips: "Journal entries should show thinking, not just pretty pages. Regular formative feedback on journal is essential." },
+        ]},
+      }, formative: [
+        { title: "Artwork Response", time: "15 min", desc: "Students view an artwork and write: one observation, one interpretation, one question. Class shares and discusses.", when: "Introducing a new style or movement" },
+        { title: "Artist Research Card", time: "20 min", desc: "Students complete a structured card for one artist: name, period, key works, technique, how it connects to the unit theme.", when: "Building the investigation foundation" },
+      ]},
+      "B": { label: "Developing", strands: {
+        "i-ii": { desc: "Explore ideas and present artistic intention", tasks: [
+          { title: "Experimentation Documentation", type: "Practical/Written", time: "Multi-lesson", desc: "Students document their practical exploration of ideas — showing experiments, attempts, changes and developing intention.", example: "Document at least 3 experiments you tried in developing your work. For each: show what you tried, evaluate what worked, and explain how it influenced your next decision.", tips: "Evidence of PROCESS matters as much as product. Photograph experiments. Written reflection should explain reasoning, not just describe." },
+        ]},
+      }, formative: [
+        { title: "Intention Statement", time: "10 min", desc: "Students write a 2-sentence artistic intention: what they plan to create and why this connects to the unit's concept.", when: "Before beginning practical work" },
+      ]},
+      "C": { label: "Creating/Performing", strands: {
+        "i": { desc: "Create or perform demonstrating skills and techniques", tasks: [
+          { title: "Final Artwork/Performance", type: "Practical", time: "Multi-lesson", desc: "Students create a final artwork, performance or product that demonstrates technical skill, personal intention and connection to the unit's concept.", example: "Create a final [artwork/musical performance/drama piece/dance] that communicates your chosen theme. Your work should demonstrate [specific techniques taught in the unit].", tips: "Assess against specific technical criteria defined at the start of the unit. Students should know exactly what skills they are being assessed on." },
+        ]},
+      }, formative: [
+        { title: "Skills Practice Task", time: "20-30 min", desc: "Isolated practice of one specific technique before applying it in the final work. Teacher gives targeted feedback.", when: "Building technical skills mid-unit" },
+        { title: "Peer Critique", time: "20 min", desc: "Students present work-in-progress to a small group. Peers give structured feedback: 'I see... I notice... I wonder...'", when: "Mid-unit, before final production stage" },
+      ]},
+      "D": { label: "Evaluating", strands: {
+        "i-ii": { desc: "Appraise own work and reflect on development as an artist", tasks: [
+          { title: "Artist Statement and Self-Evaluation", type: "Written", time: "30-40 min", desc: "Students write an artist's statement explaining their work and a self-evaluation appraising its strengths, challenges and what they would do differently.", example: "Write an artist's statement: explain your artistic intention and evaluate how successfully your final work achieves it. Reflect on your development as an artist across this unit.", tips: "Teach students to use specific vocabulary from the unit. Vague statements ('I think it looks good') earn low marks — require reference to specific technical and conceptual decisions." },
+        ]},
+      }, formative: [
+        { title: "Two Stars and a Wish", time: "10 min", desc: "Students self-evaluate their work in progress: two things that are working well, one thing they would change.", when: "Mid-way through practical work" },
+      ]},
+    }
+  },
+  "Physical & Health Education": {
+    summative: {
+      "A": { label: "Knowing & Understanding", strands: {
+        "i-iii": { desc: "Explain knowledge and apply terminology", tasks: [
+          { title: "Knowledge Assessment", type: "Written", time: "30-45 min", desc: "Students demonstrate knowledge of PHE concepts, principles and strategies through structured questions.", example: "Explain how [training principle/health concept/tactical strategy] applies to performance in [activity]. Use subject-specific terminology accurately.", tips: "Focus on application — 'explain how this applies to performance' is more valid than pure recall." },
+          { title: "Tactical Analysis", type: "Written/Video", time: "30-40 min", desc: "Students analyse a performance (live or video) applying PHE knowledge to evaluate tactical and technical effectiveness.", example: "Watch the following clip. Identify three tactical decisions made by the team. Explain whether each was effective and why, using PHE terminology.", tips: "Video analysis works well for MYP 4-5. Builds connection between theory and practice." },
+        ]},
+      }, formative: [
+        { title: "PHE Vocabulary Check", time: "5 min", desc: "Quick oral or written check: define 3 terms from recent lessons in your own words and give a practical example.", when: "After introducing new theory" },
+      ]},
+      "B": { label: "Planning for Performance", strands: {
+        "i-ii": { desc: "Set goals and design a performance improvement plan", tasks: [
+          { title: "Personal Performance Improvement Plan", type: "Written/Project", time: "Multi-lesson", desc: "Students identify personal performance goals, design a training/improvement plan based on PHE principles, and justify their choices.", example: "Design a 4-week training plan to improve your [fitness component/technical skill]. Set SMART goals, describe each session, justify using training principles, and include how you will track progress.", tips: "SMART goals are essential here. Assess: specificity of plan, application of training principles, realistic progressions." },
+        ]},
+      }, formative: [
+        { title: "Goal Setting Practice", time: "15 min", desc: "Students write one SMART goal for the unit. Peer-check: Is it Specific? Measurable? Achievable? Relevant? Time-bound?", when: "At the start of a unit" },
+      ]},
+      "C": { label: "Applying & Performing", strands: {
+        "i-iii": { desc: "Demonstrate skills, strategies and movement concepts", tasks: [
+          { title: "Observed Performance Assessment", type: "Practical", time: "Per unit", desc: "Teacher observes and records student performance against specific criteria: technical skills, tactical awareness, application of strategies.", example: "Students are assessed during [activity] against: [specific technical skills checklist] and [tactical decision-making criteria]. Assessment is over 2-3 observed sessions.", tips: "Use a clear rubric aligned to the MYP achievement levels. Observe multiple times — one performance is not enough for valid assessment." },
+          { title: "Skills Application Game", type: "Practical", time: "30-40 min", desc: "A modified game or activity specifically designed to assess application of targeted skills and strategies in context.", example: "Modified game condition that isolates the skill being assessed — e.g. 3v3 to assess defensive positioning, or a rally count to assess consistency.", tips: "Design the game condition so the assessed skill is genuinely required. Random games favour athleticism over skill." },
+        ]},
+      }, formative: [
+        { title: "Skill Video Self-Review", time: "15 min", desc: "Students are filmed performing a skill, then watch it back against a checklist: what are they doing well? What needs work?", when: "Mid-unit skills development" },
+        { title: "Peer Coaching", time: "20 min", desc: "In pairs, one student performs while the other observes using a simple checklist. Roles then swap. Structured verbal feedback given.", when: "Practising technical skills" },
+      ]},
+      "D": { label: "Reflecting & Improving", strands: {
+        "i-iii": { desc: "Analyse performance and evaluate plans", tasks: [
+          { title: "Performance Reflection Portfolio", type: "Written/Multimodal", time: "Multi-lesson", desc: "Students document their performance across the unit, evaluate their improvement against goals, and reflect on interpersonal skills and strategies used.", example: "Review your performance plan and evidence collected across the unit. Evaluate: Did you achieve your goals? What improved? What would you change in your training plan? How did you support others?", tips: "Compare evidence from start and end of unit. Require specific data (times, scores, peer feedback) not vague claims." },
+        ]},
+      }, formative: [
+        { title: "Post-Performance Reflection", time: "10 min", desc: "After each lesson: What went well? What would I do differently? What is my goal for next lesson?", when: "After every practical lesson" },
+      ]},
+    }
+  },
+  "Design": {
+    summative: {
+      "A": { label: "Inquiring & Analysing", strands: {
+        "i-iv": { desc: "Justify need, research, analyse existing products, develop design brief", tasks: [
+          { title: "Design Brief and Research Report", type: "Written, Multi-lesson", time: "3-4 lessons", desc: "Students justify the need for a solution, conduct primary and secondary research, analyse existing products, and synthesise findings into a design brief.", example: "You have been asked to design [product]. Justify why a new solution is needed, research the target user and existing solutions, analyse 2 existing products, and write a detailed design brief summarising your findings.", tips: "The design brief must show synthesis — not just a list of research, but conclusions drawn from it. What does the research TELL you about what your design should do?" },
+        ]},
+      }, formative: [
+        { title: "User Empathy Interview", time: "20 min", desc: "Students interview a potential user (classmate) about their needs and frustrations. Then synthesise findings into 3 design requirements.", when: "Beginning of Criterion A investigation" },
+        { title: "Existing Product Analysis", time: "20 min", desc: "Students analyse one existing product using a structured grid: What does it do well? What are its limitations? What would users want changed?", when: "Building product analysis skills" },
+      ]},
+      "B": { label: "Developing Ideas", strands: {
+        "i-iv": { desc: "Develop design specification, generate and present ideas", tasks: [
+          { title: "Design Development Portfolio", type: "Visual/Written", time: "Multi-lesson", desc: "Students develop multiple design ideas (minimum 3), present the final chosen design with detailed drawings/models and justify the selection against their specification.", example: "Develop at least 3 different design ideas. For each: sketch or model it, evaluate it against your design specification. Select and justify your best idea with a fully detailed final design.", tips: "'Detailed' means dimensions, materials, colours, labels — not just a rough sketch. Justification must reference the specification criteria." },
+        ]},
+      }, formative: [
+        { title: "Design Specification Checklist", time: "15 min", desc: "Students write their design specification with clear, measurable success criteria. Peer check: Can each criterion be tested? Is it specific enough?", when: "Before generating design ideas" },
+      ]},
+      "C": { label: "Creating the Solution", strands: {
+        "i-iv": { desc: "Plan, create and justify changes to the solution", tasks: [
+          { title: "Making Process Documentation", type: "Practical/Portfolio", time: "Multi-lesson", desc: "Students follow their plan to create their solution, documenting the process with photos and annotations, and justifying any changes made to the original plan.", example: "Document your making process: photograph each stage, annotate what you did and why, and justify any changes you made to your original plan or design.", tips: "Changes are expected and positive — students should explain WHY they changed, not apologise for it. This shows Design thinking in action." },
+        ]},
+      }, formative: [
+        { title: "Making Checklist Progress Check", time: "10 min", desc: "Students check their progress against their original plan: What have I completed? What is behind schedule? What will I do differently?", when: "Mid-way through the making phase" },
+      ]},
+      "D": { label: "Evaluating", strands: {
+        "i-iii": { desc: "Test, evaluate success, and explain improvements", tasks: [
+          { title: "Product Evaluation and Testing Report", type: "Written", time: "30-40 min", desc: "Students test their solution against each specification criterion, evaluate its success, identify limitations and propose specific improvements.", example: "Test your product against each criterion in your design specification. For each: does it meet the criterion? Use evidence (measurements, user feedback, observations). Identify two limitations and propose specific improvements.", tips: "Testing must be against the SPECIFICATION — not just 'I think it looks good'. Require measurable evidence for each criterion." },
+        ]},
+      }, formative: [
+        { title: "Peer Product Testing", time: "20 min", desc: "Students test a classmate's product against the design specification criteria. Written feedback using: 'It meets [criterion] because... It does not meet [criterion] because... A suggestion is...'", when: "Before writing the final evaluation" },
+      ]},
+    }
+  },
+  "Language Acquisition": {
+    summative: {
+      "A": { label: "Listening", strands: {
+        "i-iii": { desc: "Identify information, analyse conventions, compare texts", tasks: [
+          { title: "Listening Comprehension Task", type: "Oral/Written", time: "20-30 min", desc: "Students listen to an audio or video in the target language and respond to comprehension, inference and analysis questions.", example: "Listen to the following interview/news report/conversation. Answer: factual questions (what/who/when), inference questions (why/how), and one analysis question about the speaker's purpose or tone.", tips: "Include questions at different levels: recall, inference, and analysis. Phase 1-2: mostly recall. Phase 4-5: more analysis." },
+        ]},
+      }, formative: [
+        { title: "Listen and Sketch", time: "10 min", desc: "Students listen to a description or narration and draw what they hear. Compare drawings to check comprehension.", when: "Building listening comprehension" },
+      ]},
+      "B": { label: "Reading", strands: {
+        "i-iii": { desc: "Identify information, analyse conventions, compare texts", tasks: [
+          { title: "Reading Comprehension and Analysis", type: "Written", time: "30-40 min", desc: "Students read an authentic or adapted text in the target language and respond to comprehension, inference and text-type analysis questions.", example: "Read the following [article/story/email/advertisement]. Answer comprehension questions, then: identify the text type and explain 2 features that show this, and compare the author's purpose to [second text].", tips: "Texts should be at or just above phase level. Authentic texts (adapted) are more motivating than artificial ones." },
+        ]},
+      }, formative: [
+        { title: "Text Type Feature Hunt", time: "15 min", desc: "Students identify 5 features that indicate the text type (headline, greeting, layout, register etc.). Share findings.", when: "Introducing a new text type" },
+      ]},
+      "C": { label: "Speaking", strands: {
+        "i-iv": { desc: "Use vocabulary, grammar, pronunciation and communicate effectively", tasks: [
+          { title: "Oral Presentation or Interview", type: "Oral", time: "3-5 min", desc: "Students deliver a prepared or spontaneous oral response on a topic, demonstrating vocabulary range, grammatical accuracy and communicative effectiveness.", example: "Prepare and deliver a 3-minute presentation on [topic connected to global context]. Then respond to 2 unprepared questions from the teacher.", tips: "Assess spontaneous questions separately — they test real communicative competence. Video record for accuracy of assessment." },
+          { title: "Role Play or Conversation", type: "Oral", time: "3-5 min pairs", desc: "Paired or small group conversation in the target language on a given scenario or topic.", example: "Role play: you are [scenario]. Use the language we have studied to communicate [specific purpose]. You will be assessed on vocabulary, grammar and how well you communicate your message.", tips: "Brief preparation time is fine — this is not a memorised script. Students should be able to respond to unexpected elements." },
+        ]},
+      }, formative: [
+        { title: "Sentence Expansion", time: "10 min", desc: "Students start with a simple sentence and expand it 4 times by adding detail: vocabulary, adjectives, connectives, clauses.", when: "Building spoken complexity" },
+      ]},
+      "D": { label: "Writing", strands: {
+        "i-iv": { desc: "Use vocabulary, grammar, organisation and communicate effectively", tasks: [
+          { title: "Text Type Writing Task", type: "Written", time: "30-45 min", desc: "Students produce a piece of writing in a specific text type (email, blog post, narrative, formal letter) demonstrating vocabulary range, grammatical accuracy and text-type conventions.", example: "Write a [blog post/email/story/report] about [topic connected to global context]. Your writing should be aimed at [specific audience] and include [specific text-type features].", tips: "Always specify the audience — it drives register and vocabulary choices. Assess against 4 strands separately." },
+        ]},
+      }, formative: [
+        { title: "Vocabulary in Context", time: "10 min", desc: "Students use 8 target vocabulary words in original sentences that show they understand the meaning in context.", when: "After introducing new vocabulary" },
+        { title: "Error Correction Activity", time: "15 min", desc: "Teacher selects (anonymised) common errors from student work. Class identifies errors and discusses corrections.", when: "After a writing task" },
+      ]},
+    }
+  }
+};
+
+// Generic formative assessments that work across all subjects
+const GENERIC_FORMATIVE = [
+  { title: "Exit Ticket", time: "5 min", desc: "Students answer 1-3 quick questions before leaving — what they learned, what they're unsure about, one question they have.", best_for: "End of any lesson" },
+  { title: "3-2-1 Reflection", time: "5-8 min", desc: "3 things learned, 2 things interesting, 1 question remaining.", best_for: "End of a topic or lesson block" },
+  { title: "Think-Pair-Share", time: "5-10 min", desc: "Individual thinking → pair discussion → class share. Low-risk participation for all students.", best_for: "Checking understanding mid-lesson" },
+  { title: "Muddiest Point", time: "3-5 min", desc: "Students write: 'The muddiest point for me is...' Teacher collects and addresses most common confusions next lesson.", best_for: "After complex content" },
+  { title: "Concept Map", time: "15-20 min", desc: "Students draw connections between key concepts using arrows and linking words.", best_for: "Consolidating a unit of work" },
+  { title: "Peer Teaching", time: "15-20 min", desc: "Students explain a concept to a partner without notes. Partner asks questions.", best_for: "Consolidation and retention" },
+  { title: "Quick Write", time: "5 min", desc: "Students write continuously for 3-5 minutes on a prompt. No stopping, no editing. Shows raw thinking.", best_for: "Activating prior knowledge or checking current understanding" },
+  { title: "Visible Thinking: See-Think-Wonder", time: "10 min", desc: "Students observe an image/artefact: What do you SEE? What do you THINK? What do you WONDER?", best_for: "Tuning In / activating inquiry" },
+];
+
+
+// ═══ ASSESSMENT BANK TAB ════════════════════════════════
+let abSubject = '';
+let abCriterion = '';
+let abType = 'both'; // 'summative' | 'formative' | 'both'
+let abExpanded = {};
+
+function sAB() {
+  const subjectData = abSubject ? ASSESSMENT_BANK[abSubject] : null;
+  const criteriaList = subjectData ? Object.entries(subjectData.summative) : [];
+  const phColors = {"A":"#1565C0","B":"#2E7D32","C":"#6A1B9A","D":"#AD1457"};
+
+  function taskCard(task, critColor, type) {
+    const key = task.title + type;
+    const isExp = abExpanded[key];
+    const typeColor = type === 'Summative' ? '#1A5C38' : '#1A7A6E';
+    return div("ab-task-card",
+      div("ab-task-header", {onClick: () => { abExpanded[key] = !isExp; render(); }},
+        div("",
+          div("",{css:"display:flex;align-items:center;gap:8px;margin-bottom:4px;"},
+            el("span",{css:`font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px;background:${typeColor}18;color:${typeColor};`}, type),
+            task.type ? el("span",{css:"font-size:11px;color:#757575;background:#F5F5F5;padding:2px 7px;border-radius:5px;"}, task.type) : null,
+            task.time ? el("span",{css:"font-size:11px;color:#757575;background:#F5F5F5;padding:2px 7px;border-radius:5px;"},"⏱ "+task.time) : null,
+          ),
+          el("div",{css:`font-weight:700;font-size:14px;color:${critColor};`}, task.title),
+          el("div",{css:"font-size:12px;color:#757575;margin-top:3px;line-height:1.5;"}, task.desc || task.when || ""),
+        ),
+        el("span",{css:`font-size:16px;color:${critColor};flex-shrink:0;`}, isExp?"▲":"▼")
+      ),
+      isExp ? div("ab-task-body",
+        task.example ? div("ab-detail",
+          el("div",{cls:"ab-detail-label"},"📌 Example"),
+          el("div",{cls:"ab-detail-text"}, task.example)
+        ) : null,
+        task.tips ? div("ab-detail",
+          el("div",{cls:"ab-detail-label"},"💡 Planning tips"),
+          el("div",{cls:"ab-detail-text"}, task.tips)
+        ) : null,
+        task.best_for ? div("ab-detail",
+          el("div",{cls:"ab-detail-label"},"✅ Best used"),
+          el("div",{cls:"ab-detail-text"}, task.best_for)
+        ) : null,
+      ) : null
+    );
+  }
+
+  return div("",
+    div("card",
+      el("h2",{},"📊 Assessment Bank"),
+      el("p",{css:"font-size:13px;color:#757575;margin-bottom:16px;line-height:1.6;"}, "Subject-specific summative task templates and formative assessment ideas, aligned to MYP criteria and strands. Select your subject to see relevant assessment tasks."),
+
+      // Subject selector
+      div("ab-subject-grid",
+        ...Object.keys(ASSESSMENT_BANK).map(subj => {
+          const isActive = abSubject === subj;
+          const subjectIcons = {"Sciences":"🔬","Mathematics":"📐","Language & Literature":"📖","Language Acquisition":"🗣️","Individuals & Societies":"🌍","Arts":"🎨","Physical & Health Education":"⚽","Design":"⚙️"};
+          return el("button",{cls:"ab-subj-btn"+(isActive?" active":""),
+            css: isActive ? "border-color:#1A5C38;background:#E8F5EE;color:#1A5C38;" : "",
+            onClick:()=>{abSubject=isActive?'':subj; abCriterion=''; render();}},
+            el("span",{css:"font-size:18px;display:block;margin-bottom:3px;"},subjectIcons[subj]||"📚"),
+            el("span",{css:"font-size:11px;font-weight:700;"},subj.split(" ")[0])
+          );
+        })
+      ),
+
+      !abSubject ? div("",{css:"padding:24px;text-align:center;background:#F5F5F5;border-radius:10px;margin-top:16px;"},
+        el("div",{css:"font-size:32px;margin-bottom:8px;"},"📊"),
+        el("div",{css:"font-size:14px;color:#757575;"},"Select a subject above to see assessment ideas")
+      ) : null,
+
+      subjectData ? div("",
+        // Type filter + Criterion selector
+        div("",{css:"display:flex;gap:8px;margin:14px 0;flex-wrap:wrap;align-items:center;"},
+          el("span",{css:"font-size:12px;font-weight:700;color:#757575;"},"Show:"),
+          ...["both","summative","formative"].map(t =>
+            el("button",{cls:"ab-filter-btn"+(abType===t?" active":""),
+              css: abType===t?"border-color:#1A5C38;background:#E8F5EE;color:#1A5C38;":"",
+              onClick:()=>{abType=t;render();}},
+              t==="both"?"All":t==="summative"?"Summative Tasks":"Formative Ideas")
+          )
+        ),
+        // Criteria tabs
+        div("ts-cat-tabs",
+          el("button",{cls:"ts-cat-tab"+(abCriterion===''?" active":""),
+            css:abCriterion===''?"border-color:#1A5C38;background:#E8F5EE;color:#1A5C38;":"",
+            onClick:()=>{abCriterion='';render();}},"All Criteria"),
+          ...criteriaList.map(([crit,info]) =>
+            el("button",{cls:"ts-cat-tab"+(abCriterion===crit?" active":""),
+              css:abCriterion===crit?`border-color:${phColors[crit]};background:${phColors[crit]}18;color:${phColors[crit]};`:"",
+              onClick:()=>{abCriterion=abCriterion===crit?'':crit;render();}},
+              "Criterion "+crit+": "+info.label)
+          )
+        ),
+
+        // Content
+        ...criteriaList.filter(([crit])=>!abCriterion||abCriterion===crit).map(([crit,info]) => {
+          const cc = phColors[crit]||"#1A5C38";
+          return div("",
+            div("ab-crit-header",{css:`border-left:4px solid ${cc};background:${cc}0D;`},
+              el("div",{css:`font-weight:700;font-size:15px;color:${cc};`},"Criterion "+crit+": "+info.label),
+            ),
+            // Summative tasks
+            ...(abType!=='formative' ? Object.entries(info.strands).map(([strand,strandInfo]) =>
+              div("",
+                div("ab-strand-label",{css:`color:${cc};`},"Strand "+strand+" — "+strandInfo.desc),
+                ...strandInfo.tasks.map(task => taskCard(task, cc, 'Summative'))
+              )
+            ) : []),
+            // Formative ideas
+            ...(abType!=='summative' && info.formative ? [
+              div("ab-formative-header","Formative Assessment Ideas for Criterion "+crit),
+              ...info.formative.map(task => taskCard(task, "#1A7A6E", 'Formative'))
+            ] : [])
+          );
+        }),
+
+        // Generic formative at the end
+        (abType!=='summative' && !abCriterion) ? div("",
+          div("ab-crit-header",{css:"border-left:4px solid #1A7A6E;background:#E5F4F2;"},
+            el("div",{css:"font-weight:700;font-size:15px;color:#1A7A6E;"},"Generic Formative Assessment Ideas (any subject)"),
+          ),
+          ...GENERIC_FORMATIVE.map(task => taskCard(task, "#1A7A6E", 'Formative'))
+        ) : null
+      ) : null
+    )
+  );
+}
+
+// ═══ AUTO-SUGGESTIONS IN STEP 4 ═════════════════════════
+function assessmentSuggestions(subject, criteria) {
+  if (!subject || !criteria || criteria.length === 0) return null;
+  const subjectData = ASSESSMENT_BANK[subject];
+  if (!subjectData) return null;
+  const phColors = {"A":"#1565C0","B":"#2E7D32","C":"#6A1B9A","D":"#AD1457"};
+
+  const relevantCriteria = criteria.filter(c => subjectData.summative[c]);
+  if (relevantCriteria.length === 0) return null;
+
+  return div("",{css:"margin-top:16px;border:1.5px solid #1A5C38;border-radius:10px;overflow:hidden;"},
+    div("",{css:"background:#1A5C38;padding:10px 14px;"},
+      el("div",{css:"font-weight:700;font-size:13px;color:#fff;"},"💡 Assessment Ideas for "+subject),
+      el("div",{css:"font-size:11px;color:#AADDC0;margin-top:2px;"},"Based on your selected criteria — click any task to add it to your summative tasks")
+    ),
+    div("",{css:"padding:12px;background:#F9F9F9;"},
+      ...relevantCriteria.slice(0,2).map(crit => {
+        const critData = subjectData.summative[crit];
+        const cc = phColors[crit]||"#1A5C38";
+        const allTasks = Object.values(critData.strands).flatMap(s=>s.tasks).slice(0,2);
+        return div("",{css:"margin-bottom:10px;"},
+          el("div",{css:`font-size:11px;font-weight:700;color:${cc};margin-bottom:6px;`},"Criterion "+crit+": "+critData.label),
+          ...allTasks.map((task,idx) => {
+            const taskNum = idx+1;
+            return div("",{css:`display:flex;justify-content:space-between;align-items:flex-start;padding:8px 10px;background:#fff;border:1px solid #E0E0E0;border-radius:7px;margin-bottom:5px;gap:10px;`},
+              div("",{css:"flex:1;"},
+                el("div",{css:`font-size:12px;font-weight:700;color:${cc};`},task.title),
+                el("div",{css:"font-size:11px;color:#757575;margin-top:2px;line-height:1.4;"},task.desc.slice(0,80)+"...")
+              ),
+              el("button",{css:`font-size:11px;padding:5px 10px;background:${cc}18;border:1px solid ${cc};color:${cc};border-radius:6px;cursor:pointer;font-weight:700;white-space:nowrap;flex-shrink:0;`,
+                onClick:()=>{
+                  const taskField = idx===0?'task1':'task2';
+                  if(!D[taskField+'Title']){
+                    D[taskField+'Title']=task.title+' (Criterion '+crit+')';
+                    D[taskField+'Desc']=task.desc+(task.example?'\n\nExample: '+task.example:'');
+                    render();
+                  }
+                }},"+ Use This")
+            );
+          })
+        );
+      }),
+      el("button",{css:"font-size:12px;color:#1A5C38;background:none;border:none;cursor:pointer;padding:4px;font-weight:700;",
+        onClick:()=>{
+          // Navigate to assessment bank tab
+          abSubject=subject;
+          step=STEPS.findIndex(s=>s.l==="📊 Assessment Bank");
+          render();
+        }},"Browse full assessment bank for "+subject+" →")
+    )
+  );
+}
+
 // ═══ RENDER ENGINE ═══════════════════════════════════════
 const STEPS=[
   {l:"✨ Quick Start (AI Draft)",i:"🚀"},{l:"Unit Identity",i:"🏫"},{l:"Concepts & Context",i:"💡"},
   {l:"Inquiry Design",i:"🔬"},{l:"Assessment",i:"📊"},{l:"ATL Skills",i:"🎯"},
-  {l:"Teaching, FA & Diff",i:"📅"},{l:"Reflect & Download",i:"⬇️"}
+  {l:"Teaching, FA & Diff",i:"📅"},{l:"🎓 Strategy Guide",i:"🎓"},{l:"📊 Assessment Bank",i:"📊"},{l:"Reflect & Download",i:"⬇️"}
 ];
-const RENDERERS=[s0,s1,s2,s3,s4,s5,s6,s7];
+const RENDERERS=[s0,s1,s2,s3,s4,s5,s6,sTS,sAB,s7];
 let step=0;
 function nav(d){step=Math.max(0,Math.min(STEPS.length-1,step+d));window.scrollTo(0,0);render();}
 function render(){
@@ -1808,7 +2788,14 @@ function render(){
   // content
   const sc=document.getElementById("sc"); sc.innerHTML="";
   try {
-    const el=RENDERERS[step](); 
+    // Render strategy picker overlay if open
+  const existing = sc.parentNode;
+  let overlayEl = document.getElementById('stratPickerOverlay');
+  if(!overlayEl){ overlayEl=document.createElement('div'); overlayEl.id='stratPickerOverlay'; document.body.appendChild(overlayEl); }
+  overlayEl.innerHTML='';
+  const pickerEl = stratPickerOverlay();
+  if(pickerEl) overlayEl.appendChild(pickerEl);
+  const el=RENDERERS[step](); 
     if(el)sc.appendChild(el);
   } catch(e) {
     const errDiv = document.createElement('div');
