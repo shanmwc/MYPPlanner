@@ -1892,6 +1892,37 @@ function s0() {
 
 // ═══ TEACHING STRATEGIES DATA ════════════════════════════
 const TEACHING_STRATEGIES = {
+  
+  "Conceptual Understanding": {
+    color: "#1A5C38", bg: "#E8F5EE", icon: "🧠",
+    desc: "IB-endorsed strategies for developing genuine conceptual understanding. From the IB Programme Standards and Practices: Designing Learning Experiences Around Strategies for Conceptual Understanding.",
+    strategies: [
+      { name: "Classification", phases: ["Tuning In","Sorting Out"], time: "15-25 min",
+        desc: "Students connect physical objects or phenomena to a conceptual category, explaining and justifying their reasoning. Often the first strategy used to build conceptual understanding.",
+        example: "Give students 20 cards with examples of living things and non-living things. Students sort and justify: 'This is not a mammal because...' Then discuss and resolve misconceptions as a class.",
+        purpose: "Helps students develop wider general understandings of similarities and differences. Works across all subjects and ages — especially powerful for surfacing misconceptions." },
+      { name: "Representation", phases: ["Finding Out","Sorting Out","Making Connections"], time: "20-30 min",
+        desc: "Students use multiple modes (graphs, diagrams, formulas, mind maps, models) to represent the same concept, then reflect on the similarities and differences between representations.",
+        example: "Show students that a food web, an energy pyramid, and a data table can all represent the same ecosystem. Ask: 'What does each representation show that the others don't?'",
+        purpose: "Deepens understanding by showing that the same concept can be imagined in different ways. Key strategy in Mathematics and problem-based learning across all subjects." },
+      { name: "Generalization", phases: ["Sorting Out","Making Connections","Reflecting"], time: "20-30 min",
+        desc: "Students move from specific facts → concepts → wider generalizations. They explore multiple examples and determine common causes, patterns or principles that apply across all of them.",
+        example: "Students study three case studies of ecosystem collapse (deforestation, ocean acidification, invasive species). They then write: 'In all three cases, human activity disrupted balance by...' — building a generalization.",
+        purpose: "Core IB strategy — directly builds the kind of conceptual understanding that the SOI and inquiry questions demand. Connects Facts → Topics → Concepts → Generalizations." },
+      { name: "Concepts-in-Use", phases: ["Sorting Out","Making Connections","Going Further"], time: "25-40 min",
+        desc: "Concepts are explicitly modelled, linked together in a concept map, and then applied in different contexts. Students explain how concepts connect and use the map to assess their own learning.",
+        example: "Teacher creates a concept map linking: Systems → Interaction → Balance → Human Impact → Innovation. Students add their own connections and examples from the unit, then use the map to explain the SOI.",
+        purpose: "Makes abstract conceptual thinking visible and assessable. Students can show what they learned, how it connects, and how it might apply elsewhere." },
+      { name: "Internalization", phases: ["Finding Out","Going Further","Taking Action"], time: "Variable",
+        desc: "Students transform a physical or procedural activity into deeper conceptual understanding by deconstructing their own practice and connecting the function to the broader purpose.",
+        example: "After practising hypothesis writing 10 times, students are asked: 'Why does a hypothesis need a scientific reason? What would happen to an investigation without one?' They connect the skill to the concept of validity.",
+        purpose: "Especially powerful in Sciences, PHE and Arts — connects drill/practice to conceptual meaning. Students stop doing things by rote and start understanding why." },
+      { name: "Near and Far Transfer", phases: ["Making Connections","Going Further","Taking Action"], time: "20-35 min",
+        desc: "Near transfer: students apply concepts across different problems within the same subject. Far transfer: students apply concepts across different subjects or real-world contexts. Both deepen conceptual understanding.",
+        example: "Near: 'We used the concept of balance in ecosystems — where else in science does balance appear?' Far: 'How does the concept of balance appear in mathematics? In your own daily life? In a historical event?'",
+        purpose: "The highest level of conceptual understanding — students can transfer concepts beyond the unit. Directly supports the MYP goal of developing internationally-minded, transferable thinkers." },
+    ]
+  },
   "Visible Thinking Routines": {
     color: "#5B2D8E", bg: "#F3E8FF", icon: "👁️",
     desc: "Protocols that make student thinking visible, discussable and transferable. Developed by Project Zero, Harvard.",
