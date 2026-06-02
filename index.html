@@ -159,6 +159,11 @@ textarea{resize:vertical;}
 .ab-detail-text{font-size:12px;color:#1A1A1A;line-height:1.6;}
 @media(max-width:600px){.ab-subject-grid{grid-template-columns:repeat(4,1fr);}}
 
+
+/* Audit */
+.audit-score-ring{display:flex;flex-direction:column;align-items:center;justify-content:center;}
+@media(max-width:600px){.g2{grid-template-columns:1fr;}}
+
 </style>
 </head>
 <body>
@@ -1312,6 +1317,11 @@ function generateAndDownloadDoc(data) {
 .ab-detail-label{font-size:11px;font-weight:700;color:#1A5C38;margin-bottom:3px;}
 .ab-detail-text{font-size:12px;color:#1A1A1A;line-height:1.6;}
 @media(max-width:600px){.ab-subject-grid{grid-template-columns:repeat(4,1fr);}}
+
+
+/* Audit */
+.audit-score-ring{display:flex;flex-direction:column;align-items:center;justify-content:center;}
+@media(max-width:600px){.g2{grid-template-columns:1fr;}}
 
 </style>
 </head>
@@ -2764,13 +2774,316 @@ function assessmentSuggestions(subject, criteria) {
   );
 }
 
+
+// ═══ UNIT PLAN AUDIT ═════════════════════════════════════
+let auditRunning = false;
+let auditResults = null;
+let auditError = '';
+
+const AUDIT_CRITERIA = [
+  {
+    id: 'conceptual',
+    label: 'Conceptual Focus',
+    icon: '💡',
+    color: '#1565C0',
+    description: 'Does the unit drive genuine conceptual understanding beyond content knowledge?',
+    checks: [
+      { id: 'has_kc', label: 'Key Concept selected', points: 1, check: d => !!d.keyConcept },
+      { id: 'has_rc', label: 'Related Concept(s) defined', points: 1, check: d => !!d.relatedConcepts },
+      { id: 'has_cu', label: 'Conceptual Understanding written', points: 2, check: d => !!d.cu && d.cu.length > 20 },
+      { id: 'soi_length', label: 'SOI is substantive (not just a content statement)', points: 2, check: d => !!d.soi && d.soi.length > 30 },
+      { id: 'soi_gc', label: 'Global Context linked to SOI or unit', points: 1, check: d => !!d.globalContext },
+      { id: 'conceptual_iq', label: 'Conceptual inquiry questions present', points: 2, check: d => !!d.iqConceptual && d.iqConceptual.length > 20 },
+    ]
+  },
+  {
+    id: 'inquiry',
+    label: 'Inquiry Design',
+    icon: '🔬',
+    color: '#2E7D32',
+    description: 'Is the unit structured around genuine student inquiry using all three question types?',
+    checks: [
+      { id: 'factual_iq', label: 'Factual questions present', points: 1, check: d => !!d.iqFactual && d.iqFactual.length > 10 },
+      { id: 'debatable_iq', label: 'Debatable questions present', points: 2, check: d => !!d.iqDebatable && d.iqDebatable.length > 10 },
+      { id: 'murdoch_phases', label: 'Murdoch phases assigned to weekly plan', points: 2, check: d => !!(d.weeks && d.weeks.filter(w=>w.phase).length >= 3) },
+      { id: 'tuning_in', label: 'Unit begins with Tuning In phase', points: 1, check: d => !!(d.weeks && d.weeks.slice(0,2).some(w=>w.phase==='Tuning In')) },
+      { id: 'reflecting', label: 'Unit ends with Reflecting phase', points: 1, check: d => !!(d.weeks && d.weeks.slice(-2).some(w=>w.phase==='Reflecting')) },
+      { id: 'has_taking_action', label: 'Taking Action phase present (summative)', points: 1, check: d => !!(d.weeks && d.weeks.some(w=>w.phase==='Taking Action')) },
+    ]
+  },
+  {
+    id: 'assessment',
+    label: 'Assessment Design',
+    icon: '📊',
+    color: '#6A1B9A',
+    description: 'Are assessments authentic, criteria-referenced and linked to the SOI?',
+    checks: [
+      { id: 'has_criteria', label: 'Assessment criteria selected', points: 1, check: d => !!(d.criteria && d.criteria.length > 0) },
+      { id: 'has_strands', label: 'Specific strands identified', points: 1, check: d => !!(d.strands && Object.values(d.strands).some(s=>s.length>0)) },
+      { id: 'task1', label: 'Summative Task 1 described', points: 2, check: d => !!d.task1Title && !!d.task1Desc },
+      { id: 'soi_link', label: 'SOI connection to assessment explained', points: 2, check: d => !!d.saSOILink && d.saSOILink.length > 20 },
+      { id: 'formative1', label: 'At least one formative assessment planned', points: 2, check: d => !!d.fa1Title },
+      { id: 'formative2', label: 'Two or more formative assessments planned', points: 1, check: d => !!d.fa1Title && !!d.fa2Title },
+    ]
+  },
+  {
+    id: 'atl',
+    label: 'ATL Integration',
+    icon: '🎯',
+    color: '#B8860B',
+    description: 'Are ATL skills explicitly taught and assessed, not just mentioned?',
+    checks: [
+      { id: 'has_atl', label: 'ATL skills selected', points: 1, check: d => !!(d.atlSkills && d.atlSkills.length > 0) },
+      { id: 'atl_objective', label: 'ATL skills linked to specific objectives', points: 2, check: d => !!(d.atlSkills && d.atlSkills.some(a=>a.objective && a.objective.length > 5)) },
+      { id: 'atl_experience', label: 'Explicit teaching activity described for ATL', points: 2, check: d => !!(d.atlSkills && d.atlSkills.some(a=>a.experience && a.experience.length > 10)) },
+      { id: 'atl_formative', label: 'Formative assessment for ATL skill described', points: 2, check: d => !!(d.atlSkills && d.atlSkills.some(a=>a.formative && a.formative.length > 10)) },
+    ]
+  },
+  {
+    id: 'experiential',
+    label: 'Experiential & Active Learning',
+    icon: '🤝',
+    color: '#E65100',
+    description: 'Does the unit include hands-on, experiential and student-centred learning experiences?',
+    checks: [
+      { id: 'has_strategies', label: 'Teaching strategies described for each week', points: 2, check: d => !!(d.weeks && d.weeks.filter(w=>w.strategy && w.strategy.length>10).length >= Math.floor((d.weeks||[]).length*0.5)) },
+      { id: 'active_strategies', label: 'Active/inquiry strategies mentioned (not just direct instruction)', points: 2,
+        check: d => {
+          const activeKeywords = ['experiment','investigation','inquiry','jigsaw','gallery','simulation','debate','project','discussion','design','create','explore','analyse','socratic','case study','role','hands-on','practical','lab','fieldwork','problem'];
+          const allText = ((d.weeks||[]).map(w=>(w.strategy||'')+(w.experience||'')).join(' ')).toLowerCase();
+          return activeKeywords.filter(k=>allText.includes(k)).length >= 3;
+        }
+      },
+      { id: 'student_experiences', label: 'Learning experiences describe what STUDENTS do', points: 2, check: d => !!(d.weeks && d.weeks.filter(w=>w.experience && w.experience.length > 20).length >= Math.floor((d.weeks||[]).length*0.5)) },
+      { id: 'differentiation', label: 'Differentiation planned (scaffolding + extension)', points: 2, check: d => !!(d.diffScaffold && d.diffCore) },
+    ]
+  },
+  {
+    id: 'global',
+    label: 'Global & Real-World Connections',
+    icon: '🌍',
+    color: '#00695C',
+    description: 'Does the unit connect learning to real-world contexts and global issues?',
+    checks: [
+      { id: 'gc_focus', label: 'Global Context exploration focus specified', points: 1, check: d => !!d.globalContextFocus && d.globalContextFocus.length > 5 },
+      { id: 'debatable_global', label: 'Debatable question connects to real-world/global issue', points: 2, check: d => !!d.iqDebatable && d.iqDebatable.length > 15 },
+      { id: 'making_connections', label: 'Making Connections phase planned', points: 1, check: d => !!(d.weeks && d.weeks.some(w=>w.phase==='Making Connections')) },
+      { id: 'real_world_context', label: 'Real-world context evident in teaching/learning descriptions', points: 2,
+        check: d => {
+          const realWorldKeywords = ['real','world','society','community','environment','global','local','impact','case','current','issue','problem','challenge','context'];
+          const allText = ((d.weeks||[]).map(w=>(w.experience||'')).join(' ') + (d.iqDebatable||'')).toLowerCase();
+          return realWorldKeywords.filter(k=>allText.includes(k)).length >= 2;
+        }
+      },
+    ]
+  },
+  {
+    id: 'reflection',
+    label: 'Reflection & Metacognition',
+    icon: '🪞',
+    color: '#4527A0',
+    description: 'Are students and teachers regularly reflecting on learning and process?',
+    checks: [
+      { id: 'ref_before', label: 'Teacher reflection (prior to teaching) completed', points: 1, check: d => !!d.refBefore && d.refBefore.length > 20 },
+      { id: 'reflecting_phase', label: 'Reflecting phase in weekly plan', points: 1, check: d => !!(d.weeks && d.weeks.some(w=>w.phase==='Reflecting')) },
+      { id: 'journal_mention', label: 'Student reflection activity mentioned in learning experiences', points: 2,
+        check: d => {
+          const reflectKeywords = ['journal','reflect','metacog','portfolio','self-assess','review','evaluate own','think about','what did','how did'];
+          const allText = ((d.weeks||[]).map(w=>(w.experience||'')).join(' ')).toLowerCase();
+          return reflectKeywords.some(k=>allText.includes(k));
+        }
+      },
+    ]
+  },
+];
+
+function runAudit() {
+  auditRunning = false;
+  auditError = '';
+
+  const results = AUDIT_CRITERIA.map(cat => {
+    const checks = cat.checks.map(check => {
+      let passed = false;
+      try { passed = check.check(D); } catch(e) { passed = false; }
+      return { ...check, passed };
+    });
+    const earned = checks.filter(c=>c.passed).reduce((s,c)=>s+c.points,0);
+    const total = checks.reduce((s,c)=>s+c.points,0);
+    const pct = Math.round((earned/total)*100);
+    return { ...cat, checks, earned, total, pct };
+  });
+
+  const totalEarned = results.reduce((s,r)=>s+r.earned,0);
+  const totalMax = results.reduce((s,r)=>s+r.total,0);
+  const overallPct = Math.round((totalEarned/totalMax)*100);
+
+  auditResults = { results, totalEarned, totalMax, overallPct };
+  render();
+}
+
+async function runAIAudit() {
+  const key = window.__KEY__ || localStorage.getItem("anthropic_key");
+  if (!key) { alert("Please add your API key in ⚙️ API Settings to use AI audit."); return; }
+
+  auditRunning = true;
+  render();
+
+  const summary = `
+Unit: "${D.title}" | Subject: ${D.subject} | MYP Year: ${D.myp}
+Key Concept: ${D.keyConcept} | Related Concepts: ${D.relatedConcepts}
+Global Context: ${D.globalContext} — ${D.globalContextFocus}
+SOI: "${D.soi}"
+Inquiry Questions: Factual: ${D.iqFactual} | Conceptual: ${D.iqConceptual} | Debatable: ${D.iqDebatable}
+Criteria: ${(D.criteria||[]).join(', ')} | Task 1: ${D.task1Title} | Task 2: ${D.task2Title}
+ATL Skills: ${(D.atlSkills||[]).map(a=>a.code+' '+a.desc).join('; ')}
+Weekly plan: ${(D.weeks||[]).filter(w=>w.phase).map(w=>`Week ${w.week}: ${w.phase} — ${w.topic}`).join(' | ')}
+Differentiation: Scaffold: ${D.diffScaffold||'not filled'} | Extension: ${D.diffExtension||'not filled'}
+`.trim();
+
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+      body: JSON.stringify({
+        model: "claude-sonnet-4-20250514", max_tokens: 900,
+        system: "You are an experienced IB MYP curriculum coordinator auditing a unit plan. Be specific, constructive and practical. Plain text only.",
+        messages: [{ role: "user", content: `Audit this MYP unit plan and give specific, actionable feedback on:
+1. STRENGTHS: 2-3 things done well (be specific)
+2. CONCEPTUAL TEACHING: Is the unit genuinely concept-driven or content-driven? What would strengthen it?
+3. INQUIRY: Does the unit structure support genuine inquiry? What is missing?
+4. ASSESSMENT: Are the tasks authentic and linked to the SOI? Any concerns?
+5. EXPERIENTIAL LEARNING: Is there evidence of hands-on, student-centred approaches?
+6. ONE PRIORITY: The single most important change that would most improve this unit.
+
+Unit plan summary:
+${summary}
+
+Be specific — refer to actual content of the unit, not generic advice.` }]
+      })
+    });
+    const d = await res.json();
+    if (d.error) throw new Error(d.error.message);
+    auditResults = { ...auditResults, aiAnalysis: d.content?.map(b=>b.text||"").join("") };
+  } catch(e) {
+    auditError = "AI audit error: " + e.message;
+  }
+  auditRunning = false;
+  render();
+}
+
+function sAudit() {
+  const scoreColor = (pct) => pct >= 80 ? '#1A5C38' : pct >= 60 ? '#B8860B' : pct >= 40 ? '#E65100' : '#B91C1C';
+  const scoreLabel = (pct) => pct >= 80 ? 'Strong' : pct >= 60 ? 'Good — some areas to develop' : pct >= 40 ? 'Developing — significant gaps' : 'Needs substantial work';
+  const scoreBg = (pct) => pct >= 80 ? '#E8F5EE' : pct >= 60 ? '#FFF8E7' : pct >= 40 ? '#FFF3E0' : '#FEE2E2';
+
+  // Check if enough data to audit
+  const hasEnoughData = D.title && D.soi && D.keyConcept && (D.weeks||[]).some(w=>w.phase);
+
+  return div("",
+    div("card",
+      el("h2", {}, "🔍 Unit Plan Audit"),
+      el("p", {css:"font-size:13px;color:#757575;margin-bottom:16px;line-height:1.6;"},
+        "A structured audit of your unit plan against key MYP and inquiry-based teaching principles. Complete the unit plan first for the most meaningful results."),
+
+      !hasEnoughData ? div("",{css:"padding:20px;background:#FFF8E7;border:1.5px solid #B8860B;border-radius:10px;margin-bottom:16px;"},
+        el("div",{css:"font-weight:700;color:#B8860B;margin-bottom:6px;"},"⚠️ Unit plan incomplete"),
+        el("div",{css:"font-size:13px;color:#757575;"},"Please complete at least: Unit title, Key Concept, SOI, and at least 3 weeks with Murdoch phases before auditing. You can still run a partial audit below.")
+      ) : null,
+
+      // Run buttons
+      div("",{css:"display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;"},
+        el("button",{cls:"btn btn-green",css:"font-size:14px;padding:12px 24px;",
+          onClick:runAudit},"🔍 Run Checklist Audit"),
+        el("button",{cls:"btn",css:"font-size:14px;padding:12px 24px;background:linear-gradient(135deg,#5B2D8E,#1A7A6E);color:#fff;border:none;cursor:pointer;border-radius:8px;",
+          onClick:runAIAudit, disabled:auditRunning},
+          auditRunning ? "⏳ AI is analysing your unit..." : "✨ Run AI Deep Analysis"),
+      ),
+
+      auditError ? div("",{css:"padding:12px;background:#FEE2E2;border-radius:8px;color:#B91C1C;font-size:13px;margin-bottom:12px;"},auditError) : null,
+
+      // Results
+      auditResults ? div("",
+
+        // Overall score
+        div("",{css:`background:${scoreBg(auditResults.overallPct)};border-radius:12px;padding:20px;margin-bottom:20px;text-align:center;border:2px solid ${scoreColor(auditResults.overallPct)}33;`},
+          el("div",{css:`font-size:48px;font-weight:900;color:${scoreColor(auditResults.overallPct)};line-height:1;`},
+            auditResults.overallPct+"%"),
+          el("div",{css:`font-size:16px;font-weight:700;color:${scoreColor(auditResults.overallPct)};margin-top:6px;`},
+            scoreLabel(auditResults.overallPct)),
+          el("div",{css:"font-size:13px;color:#757575;margin-top:4px;"},
+            auditResults.totalEarned+" / "+auditResults.totalMax+" points across all criteria")
+        ),
+
+        // Category results
+        div("",{css:"display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:20px;"},
+          ...auditResults.results.map(cat => {
+            const cc = cat.color;
+            const passed = cat.checks.filter(c=>c.passed);
+            const failed = cat.checks.filter(c=>!c.passed);
+            return div("",{css:`border:1.5px solid ${cc}33;border-radius:10px;padding:14px;background:${cat.pct>=70?cc+'08':'#fff'};`},
+              div("",{css:"display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;"},
+                div("",
+                  el("div",{css:`font-size:14px;font-weight:700;color:${cc};`},cat.icon+" "+cat.label),
+                  el("div",{css:"font-size:11px;color:#757575;margin-top:2px;"},cat.description)
+                ),
+                div("",{css:`text-align:center;background:${scoreBg(cat.pct)};border-radius:8px;padding:6px 10px;flex-shrink:0;margin-left:8px;`},
+                  el("div",{css:`font-size:20px;font-weight:900;color:${scoreColor(cat.pct)};line-height:1;`},cat.pct+"%"),
+                  el("div",{css:"font-size:10px;color:#757575;"},cat.earned+"/"+cat.total)
+                )
+              ),
+              // Passed checks
+              ...passed.map(c => div("",{css:"display:flex;align-items:flex-start;gap:6px;padding:4px 0;font-size:12px;color:#1A5C38;"},
+                el("span",{css:"flex-shrink:0;"},"✅"),el("span",{},c.label))),
+              // Failed checks
+              ...failed.map(c => div("",{css:"display:flex;align-items:flex-start;gap:6px;padding:4px 0;font-size:12px;color:#B91C1C;"},
+                el("span",{css:"flex-shrink:0;"},"⬜"),el("span",{},c.label)))
+            );
+          })
+        ),
+
+        // AI Analysis
+        auditResults.aiAnalysis ? div("",{css:"background:linear-gradient(135deg,#F3E8FF,#EBF2FA);border:1.5px solid #5B2D8E;border-radius:12px;padding:20px;margin-bottom:16px;"},
+          div("",{css:"display:flex;align-items:center;gap:8px;margin-bottom:14px;"},
+            el("span",{css:"font-size:20px;"},"✨"),
+            el("h3",{css:"font-size:16px;color:#5B2D8E;margin:0;"},"AI Deep Analysis")
+          ),
+          el("div",{css:"font-size:13px;color:#1A1A1A;line-height:1.8;white-space:pre-wrap;"},auditResults.aiAnalysis)
+        ) : null,
+
+        // Priority improvements
+        div("",{css:"background:#E8F5EE;border:1.5px solid #1A5C38;border-radius:10px;padding:16px;"},
+          el("div",{css:"font-weight:700;color:#1A5C38;margin-bottom:10px;font-size:14px;"},"📋 Priority Improvements"),
+          ...auditResults.results.filter(r=>r.pct<70).sort((a,b)=>a.pct-b.pct).slice(0,3).map(r =>
+            div("",{css:"display:flex;align-items:flex-start;gap:8px;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid #C8E6D4;"},
+              el("span",{css:`font-size:14px;color:${r.color};`},r.icon),
+              div("",
+                el("div",{css:`font-size:13px;font-weight:700;color:${r.color};`},r.label+" — "+r.pct+"%"),
+                el("div",{css:"font-size:12px;color:#757575;margin-top:2px;"},
+                  "Not yet met: "+r.checks.filter(c=>!c.passed).map(c=>c.label).join(" · ")
+                )
+              )
+            )
+          ),
+          auditResults.results.every(r=>r.pct>=70) ?
+            el("div",{css:"font-size:13px;color:#1A5C38;font-weight:700;"},"🎉 All areas are scoring 70% or above — excellent unit plan!") : null
+        )
+
+      ) : div("",{css:"padding:30px;text-align:center;background:#F5F5F5;border-radius:10px;"},
+        el("div",{css:"font-size:36px;margin-bottom:8px;"},"🔍"),
+        el("div",{css:"font-size:14px;color:#757575;"},"Click 'Run Checklist Audit' to evaluate your unit plan")
+      )
+    )
+  );
+}
+
 // ═══ RENDER ENGINE ═══════════════════════════════════════
 const STEPS=[
   {l:"✨ Quick Start (AI Draft)",i:"🚀"},{l:"Unit Identity",i:"🏫"},{l:"Concepts & Context",i:"💡"},
   {l:"Inquiry Design",i:"🔬"},{l:"Assessment",i:"📊"},{l:"ATL Skills",i:"🎯"},
-  {l:"Teaching, FA & Diff",i:"📅"},{l:"🎓 Strategy Guide",i:"🎓"},{l:"📊 Assessment Bank",i:"📊"},{l:"Reflect & Download",i:"⬇️"}
+  {l:"Teaching, FA & Diff",i:"📅"},{l:"🎓 Strategy Guide",i:"🎓"},{l:"📊 Assessment Bank",i:"📊"},
+  {l:"🔍 Audit",i:"🔍"},{l:"Reflect & Download",i:"⬇️"}
 ];
-const RENDERERS=[s0,s1,s2,s3,s4,s5,s6,sTS,sAB,s7];
+const RENDERERS=[s0,s1,s2,s3,s4,s5,s6,sTS,sAB,sAudit,s7];
 let step=0;
 function nav(d){step=Math.max(0,Math.min(STEPS.length-1,step+d));window.scrollTo(0,0);render();}
 function render(){
