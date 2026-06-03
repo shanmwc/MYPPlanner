@@ -410,6 +410,26 @@ const ATL_SKILLS = {
   },
 };
 
+
+const KC_DEFINITIONS = {
+  "Aesthetics": "The branch of philosophy dealing with beauty and artistic taste — how and why we create and appreciate the world.",
+  "Change": "A variation in size, amount or behaviour. Considers causes and effects across time.",
+  "Communication": "The exchange or transfer of signals, facts, ideas and symbols between a sender and receiver.",
+  "Communities": "Groups defined by shared space, identity or culture — local, global, real or virtual.",
+  "Connections": "Links, bonds and relationships among people, objects, organisms or ideas.",
+  "Creativity": "Generating novel ideas and considering existing ideas from new perspectives.",
+  "Culture": "The beliefs, values, behaviours and material objects that constitute a people's way of life.",
+  "Development": "A process of growth, progress or positive change from simpler to more complex states.",
+  "Form": "The shape and underlying structure of an entity — its organisation, essential nature and external appearance.",
+  "Global Interactions": "Connections and exchanges between individuals, communities, organizations and states worldwide.",
+  "Identity": "The defining characteristics by which something is recognisable — personal, cultural, national.",
+  "Logic": "A method of reasoning leading to a conclusion based on given premises.",
+  "Perspective": "The position from which we observe situations, ideas and opinions — individual or collective.",
+  "Relationships": "The connections and associations between properties, objects, people and ideas.",
+  "Systems": "Interacting or interdependent components that form unified wholes in human, natural and built environments.",
+  "Time, Place & Space": "The framework of existence — interacting concepts that describe when, where and how things occur.",
+};
+
 const KEY_CONCEPTS = ["Aesthetics","Change","Communication","Communities","Connections","Creativity","Culture","Development","Form","Global Interactions","Identity","Logic","Perspective","Relationships","Systems","Time, Place & Space"];
 const GLOBAL_CONTEXTS = [
   "Identities & Relationships","Orientation in Space & Time","Personal & Cultural Expression",
@@ -568,6 +588,198 @@ const SUBJECT_ATL_MAP = {
     }
   },
 };
+
+const GLOBAL_CONTEXT_DATA = {
+  "Identities & Relationships": {
+    icon: "👤", color: "#1565C0", bg: "#EBF2FA",
+    desc: "Who am I? Who are we?",
+    explores: [
+      "Identity: Personal, physical, mental, social and spiritual health",
+      "Beliefs and values",
+      "Personal, physical, mental, social and spiritual health",
+      "Human relationships including families, friends, communities and cultures",
+      "What it means to be human",
+      "Adolescence, friendship, love and sexuality",
+      "Character, morality and conscience",
+    ]
+  },
+  "Orientation in Space & Time": {
+    icon: "🌐", color: "#2E7D32", bg: "#E8F5EE",
+    desc: "What is the meaning of 'when' and 'where'?",
+    explores: [
+      "Personal histories: family, ancestry, origins and migrations",
+      "History, heritage and archaeology",
+      "Turning points in humankind",
+      "Civilizations and social histories",
+      "Trade routes, journeys and exploration",
+      "The universe and its origins",
+      "The cultural landscape: natural and human-made environments",
+    ]
+  },
+  "Personal & Cultural Expression": {
+    icon: "🎨", color: "#6A1B9A", bg: "#F3E8FF",
+    desc: "What is the nature and purpose of creative expression?",
+    explores: [
+      "Artistry, craft, creation, beauty",
+      "Products, systems and institutions",
+      "Social constructions of reality",
+      "Philosophies and ways of life",
+      "Customs, practices and traditions",
+      "Art, architecture and music",
+      "Language and linguistics",
+    ]
+  },
+  "Scientific & Technical Innovation": {
+    icon: "🔬", color: "#E65100", bg: "#FFF3E0",
+    desc: "How do we understand the world in which we live?",
+    explores: [
+      "The natural world and its laws",
+      "Adaptation, ingenuity and progress",
+      "Opportunities and risks of scientific and technological advances",
+      "The impact of scientific and technological advances on communities",
+      "Biological and chemical processes",
+      "Digital transformation: access, inclusion and participation",
+      "The relationship between science, technology, arts and society",
+    ]
+  },
+  "Globalization & Sustainability": {
+    icon: "🌍", color: "#00695C", bg: "#E0F2F1",
+    desc: "How is everything connected?",
+    explores: [
+      "Interconnected systems and communities: human, natural and designed",
+      "The interplay of local and global processes",
+      "Markets and commodities",
+      "Human impact on the environment",
+      "Biodiversity and ecosystem health",
+      "Resource allocation, energy and food security",
+      "Climate change and global solutions",
+    ]
+  },
+  "Fairness & Development": {
+    icon: "⚖️", color: "#AD1457", bg: "#FCE4EC",
+    desc: "What are the consequences of our common humanity?",
+    explores: [
+      "Rights, law, civic responsibility",
+      "Power, politics and government",
+      "Social justice and human rights",
+      "Peace and conflict resolution",
+      "Equality, equity and inclusion",
+      "Poverty and development",
+      "Access to education, health and resources",
+    ]
+  },
+};
+
+// ═══ SUBJECT-SPECIFIC RELATED CONCEPTS ═══════════════════════════════════════
+const SUBJECT_RELATED_CONCEPTS = {
+  "Sciences": [
+    { concept: "Balance", def: "A state of equilibrium in which opposing forces or processes within a system offset each other." },
+    { concept: "Consequences", def: "The results or effects of scientific phenomena, processes, or human actions on living and non-living systems." },
+    { concept: "Evidence", def: "Data and information that support or refute a hypothesis or model." },
+    { concept: "Form", def: "The observable properties of an object or organism: shape, structure, colour, size, weight." },
+    { concept: "Function", def: "The contribution that a structure, organ, process or behaviour makes to the working of a living system." },
+    { concept: "Interaction", def: "The mutual or reciprocal actions and influences between organisms, systems and their environments." },
+    { concept: "Model", def: "A simplified description of a complex entity or process, used to explain observable phenomena." },
+    { concept: "Movement", def: "A change in position, orientation, or place of an organism or object." },
+    { concept: "Patterns", def: "Sets of observable events or processes that repeat in predictable ways." },
+    { concept: "Processes", def: "Series of changes that are interdependent or have a common goal." },
+    { concept: "Transformation", def: "A change from one form, state or phase to another." },
+  ],
+  "Mathematics": [
+    { concept: "Change", def: "A variation in size, amount or behaviour of quantities or measurements over time." },
+    { concept: "Equivalence", def: "The state of being equal in value, function or meaning." },
+    { concept: "Generalization", def: "A broad statement or rule derived from specific cases." },
+    { concept: "Justification", def: "Valid reasons or evidence that support a claim or conclusion." },
+    { concept: "Measurement", def: "A method of determining quantity, capacity or dimension using a defined unit." },
+    { concept: "Model", def: "A description of a mathematical relationship, represented using diagrams, symbols, or equations." },
+    { concept: "Patterns", def: "Sets of numbers or shapes that follow a rule." },
+    { concept: "Quantity", def: "The size, measure or number of something." },
+    { concept: "Representation", def: "The use of signs, symbols, diagrams or models to convey mathematical ideas." },
+    { concept: "Space", def: "The frame of geometrical dimensions describing an entity." },
+    { concept: "Systems", def: "Groups of interrelated elements and their properties." },
+  ],
+  "Language & Literature": [
+    { concept: "Character", def: "A construction of a person, place, object or entity within a text." },
+    { concept: "Context", def: "The circumstances surrounding a text that influence its creation and interpretation." },
+    { concept: "Intertextuality", def: "The relationship between texts, including influences, borrowings and adaptations." },
+    { concept: "Point of View", def: "The position or perspective from which a text is narrated or focalized." },
+    { concept: "Purpose", def: "The goal or intention behind the creation of a text." },
+    { concept: "Setting", def: "The time and place in which events in a text occur." },
+    { concept: "Structure", def: "The way a text is organized, including elements of form, sequence and narrative arc." },
+    { concept: "Style", def: "The manner in which language is used in a text, including diction, syntax and tone." },
+    { concept: "Theme", def: "The central subject or idea explored in a text." },
+    { concept: "Voice", def: "The distinctive personality and tone of a narrator or author." },
+  ],
+  "Language Acquisition": [
+    { concept: "Audience", def: "The people for whom a spoken or written text is intended." },
+    { concept: "Context", def: "The circumstances surrounding a communication that shape meaning." },
+    { concept: "Meaning", def: "The ideas and information conveyed through language." },
+    { concept: "Message", def: "The information, ideas or feelings a text conveys." },
+    { concept: "Pattern", def: "The systematic features of language including grammar, syntax and discourse." },
+    { concept: "Purpose", def: "The reason a text has been created." },
+    { concept: "Structure", def: "The organization of a text: introduction, development and conclusion." },
+    { concept: "Word choice", def: "The deliberate selection of words to convey precise meaning or effect." },
+  ],
+  "Individuals & Societies": [
+    { concept: "Change", def: "A variation or shift from one state to another in human societies or environments." },
+    { concept: "Choice", def: "The opportunity to select from a range of alternatives." },
+    { concept: "Conflict", def: "Tension between opposing forces, values or people." },
+    { concept: "Culture", def: "The beliefs, values, behaviours and material objects that constitute a people's way of life." },
+    { concept: "Development", def: "The process of change from a simpler to a more complex or advanced state." },
+    { concept: "Environment", def: "The physical and human-made surroundings that influence living conditions." },
+    { concept: "Identity", def: "The defining characteristics of individuals, groups, institutions, contexts or events." },
+    { concept: "Interaction", def: "The communication, cooperation and conflict between people and groups." },
+    { concept: "Movement", def: "The displacement of people, objects, ideas or information." },
+    { concept: "Power", def: "The capacity to influence, direct or control individuals, groups or institutions." },
+    { concept: "Resources", def: "Human or natural assets that can be used to generate wealth or meet needs." },
+    { concept: "Systems", def: "Sets of interacting or interdependent components forming integrated wholes." },
+    { concept: "Time, Place & Space", def: "The relationships between historical events, their locations and the dimensions of context." },
+  ],
+  "Arts": [
+    { concept: "Aesthetics", def: "The set of principles concerned with the nature and appreciation of beauty." },
+    { concept: "Audience", def: "The people who receive and respond to an artwork or performance." },
+    { concept: "Boundaries", def: "The real or metaphorical limits that define the creator, the artwork and the audience." },
+    { concept: "Communication", def: "The exchange of ideas, information and feelings through artistic forms." },
+    { concept: "Composition", def: "The arrangement of elements within an artwork." },
+    { concept: "Creative Process", def: "The exploration, experimentation and development of ideas to create an artwork." },
+    { concept: "Expression", def: "The conveying of thoughts, feelings or meaning through an artistic medium." },
+    { concept: "Genre", def: "A category of artistic work characterized by particular forms, styles or subject matter." },
+    { concept: "Interpretation", def: "The meanings derived from an artwork, which may vary between creators and audiences." },
+    { concept: "Play", def: "Spontaneous or organized exploration of ideas or activities." },
+    { concept: "Presentation", def: "The way in which an artwork is shared with an audience." },
+    { concept: "Structure", def: "The organization of the elements of an artwork to create a whole." },
+    { concept: "Style", def: "The distinctive manner in which an artwork is created." },
+  ],
+  "Physical & Health Education": [
+    { concept: "Balance", def: "The ability to maintain a controlled body position during movement or when stationary." },
+    { concept: "Change", def: "Variation in training, technique or performance over time." },
+    { concept: "Choice", def: "Decisions about participation, strategies, lifestyles and values." },
+    { concept: "Communication", def: "The exchange of information and ideas between individuals during physical activity." },
+    { concept: "Development", def: "Progress toward mastery of skills, fitness and health." },
+    { concept: "Interaction", def: "Engagement between individuals, groups and environments in physical contexts." },
+    { concept: "Movement", def: "The act of changing position or performing a physical skill." },
+    { concept: "Perspective", def: "A particular attitude or view about physical activity, health or sport." },
+    { concept: "Relationships", def: "The connections between physical activity, well-being and identity." },
+    { concept: "Space", def: "The use of area, depth and direction in physical performance." },
+    { concept: "Systems", def: "The body systems and their roles in physical performance." },
+    { concept: "Time", def: "The use of rhythm, tempo, duration and sequencing in physical activity." },
+  ],
+  "Design": [
+    { concept: "Adaptation", def: "Modifications to an existing product, system or environment to better suit its purpose." },
+    { concept: "Collaboration", def: "Working with others to achieve a shared design goal." },
+    { concept: "Ergonomics", def: "The study of how designs interact with the human body and cognitive capabilities." },
+    { concept: "Function", def: "The purpose or practical use of a designed product or system." },
+    { concept: "Innovation", def: "A new or improved product, system or process that meets a need." },
+    { concept: "Iteration", def: "The cyclical process of prototyping, testing, analysing and refining a design." },
+    { concept: "Perspective", def: "The point of view from which a design problem is identified and solved." },
+    { concept: "Responsibility", def: "The obligation of designers to consider the impact of their work." },
+    { concept: "Sustainability", def: "Meeting the needs of the present without compromising future generations." },
+    { concept: "Systems thinking", def: "A holistic approach to understanding how a system's components interrelate." },
+    { concept: "User-centred design", def: "Design approaches that prioritise the needs, preferences and limitations of end users." },
+  ],
+};
+
+
 
 const CLUSTER_COLORS = {
   "Communication":"#1565C0","Social":"#2E7D32","Self-Management":"#E65100",
@@ -787,17 +999,90 @@ function s2(){
     div("card",
       el("h2",{},"💡 Concepts & Context"),
       div("g3",
+
+        // Key Concept with definition
         div("",
-          fld("Key Concept",sel(D.keyConcept,KEY_CONCEPTS,v=>set("keyConcept",v))),
-          fld("KC Definition / relevance",inp(D.keyConceptDef,v=>set("keyConceptDef",v),"How does this KC drive your unit?",3)),
+          div("field", el("label",{},"Key Concept"),
+            sel(D.keyConcept,KEY_CONCEPTS,v=>set("keyConcept",v))),
+          D.keyConcept ? div("",{css:"background:#E8F5EE;border-radius:8px;padding:10px;margin:6px 0;font-size:12px;line-height:1.6;"},
+            el("div",{css:"font-weight:700;color:#1A5C38;margin-bottom:3px;"},D.keyConcept),
+            el("div",{css:"color:#1A1A1A;"},KC_DEFINITIONS[D.keyConcept]||"")
+          ) : null,
+          fld("How this KC drives your unit",inp(D.keyConceptDef,v=>set("keyConceptDef",v),"How does this key concept connect to your unit content and SOI?",2)),
         ),
+
+        // Related Concepts with subject-specific picker
         div("",
-          fld("Related Concepts",inp(D.relatedConcepts,v=>set("relatedConcepts",v),"e.g. Balance, Interaction",2)),
-          fld("RC Definitions",inp(D.relatedConceptsDef,v=>set("relatedConceptsDef",v),"Definitions from subject guide",2)),
+          div("field", el("label",{},"Related Concepts"),
+            D.subject && SUBJECT_RELATED_CONCEPTS[D.subject] ?
+              div("",
+                el("div",{css:"font-size:11px;color:#1A7A6E;font-weight:700;margin-bottom:6px;"},"📚 "+D.subject+" — click to select (choose 1-2):"),
+                div("",{css:"display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px;"},
+                  ...(SUBJECT_RELATED_CONCEPTS[D.subject]||[]).map(rc=>{
+                    const isSel=(D.relatedConcepts||"").split(", ").filter(x=>x).includes(rc.concept);
+                    return el("button",{
+                      css:"font-size:12px;padding:5px 11px;border-radius:20px;border:1.5px solid "+(isSel?"#1A7A6E":"#C8E6D4")+";background:"+(isSel?"#1A7A6E":"#fff")+";color:"+(isSel?"#fff":"#1A1A1A")+";cursor:pointer;font-weight:"+(isSel?700:400)+";transition:all .15s;",
+                      onClick:()=>{
+                        const parts=(D.relatedConcepts||"").split(", ").filter(x=>x);
+                        const defParts=(D.relatedConceptsDef||"").split(" | ").filter(x=>x);
+                        if(isSel){
+                          D.relatedConcepts=parts.filter(x=>x!==rc.concept).join(", ");
+                          D.relatedConceptsDef=defParts.filter(x=>!x.startsWith(rc.concept+":")).join(" | ");
+                        } else {
+                          D.relatedConcepts=[...parts,rc.concept].join(", ");
+                          D.relatedConceptsDef=[...defParts,rc.concept+": "+rc.def].join(" | ");
+                        }
+                        render();
+                      }},rc.concept);
+                  })
+                ),
+                // Show definitions of selected concepts
+                ...(D.relatedConcepts||"").split(", ").filter(x=>x).map(name=>{
+                  const rc=(SUBJECT_RELATED_CONCEPTS[D.subject]||[]).find(r=>r.concept===name);
+                  return rc ? div("",{css:"display:flex;align-items:flex-start;gap:8px;padding:7px 10px;background:#E5F4F2;border-radius:8px;margin-bottom:5px;"},
+                    el("span",{css:"font-weight:700;color:#1A7A6E;font-size:12px;flex-shrink:0;"},rc.concept+":"),
+                    el("span",{css:"font-size:12px;color:#1A1A1A;line-height:1.5;"},rc.def)
+                  ) : null;
+                })
+              ) :
+              div("",
+                el("div",{css:"font-size:12px;color:#B8860B;background:#FFF8E7;border-radius:7px;padding:8px 10px;margin-bottom:6px;"},"💡 Select your subject in Step 1 to see subject-specific related concepts"),
+                inp(D.relatedConcepts,v=>set("relatedConcepts",v),"Type related concepts manually…",2)
+              )
+          ),
+          D.relatedConcepts ? div("field",{css:"margin-top:6px;"},
+            el("label",{css:"font-size:11px;color:#757575;"},"RC Definitions (auto-filled — edit if needed)"),
+            inp(D.relatedConceptsDef,v=>set("relatedConceptsDef",v),"Definitions auto-filled from subject guide…",2)
+          ) : null,
         ),
+        // Global Context with prescribed exploration focuses
         div("",
-          fld("Global Context",sel(D.globalContext,GLOBAL_CONTEXTS,v=>set("globalContext",v))),
-          fld("Exploration Focus",inp(D.globalContextFocus,v=>set("globalContextFocus",v),"e.g. Adaptation, Ingenuity and Progress",2)),
+          div("field", el("label",{},"Global Context"),
+            el("select",{onChange:e=>{D.globalContext=e.target.value;D.globalContextFocus="";render();}},
+              el("option",{value:""},"Select Global Context…"),
+              ...Object.entries(GLOBAL_CONTEXT_DATA).map(([gc,info])=>{
+                const op=el("option",{value:gc},info.icon+" "+gc);
+                if(gc===D.globalContext)op.selected=true; return op;
+              })
+            )
+          ),
+          D.globalContext&&GLOBAL_CONTEXT_DATA[D.globalContext] ? div("",
+            div("",{css:"background:"+(GLOBAL_CONTEXT_DATA[D.globalContext].bg||"#F5F5F5")+";border-left:3px solid "+GLOBAL_CONTEXT_DATA[D.globalContext].color+";border-radius:0 7px 7px 0;padding:7px 10px;margin:5px 0;font-size:12px;"},
+              el("span",{css:"font-weight:700;color:"+GLOBAL_CONTEXT_DATA[D.globalContext].color+";"},GLOBAL_CONTEXT_DATA[D.globalContext].desc)
+            ),
+            div("field", el("label",{},"IB Prescribed Exploration Focus"),
+              el("select",{onChange:e=>set("globalContextFocus",e.target.value)},
+                el("option",{value:""},"Select exploration focus…"),
+                ...GLOBAL_CONTEXT_DATA[D.globalContext].explores.map(exp=>{
+                  const op=el("option",{value:exp},exp);
+                  if(exp===D.globalContextFocus)op.selected=true; return op;
+                }),
+                el("option",{value:"_custom_"},"✏️ Type my own exploration focus…")
+              )
+            ),
+            D.globalContextFocus==="_custom_"||D.globalContextFocus&&!GLOBAL_CONTEXT_DATA[D.globalContext].explores.includes(D.globalContextFocus)&&D.globalContextFocus!=="_custom_"?
+              fld("Custom exploration focus",inp(D.globalContextFocus==="_custom_"?"":D.globalContextFocus,v=>set("globalContextFocus",v),"Type your own exploration focus…")) : null,
+          ) : fld("Exploration Focus",inp(D.globalContextFocus,v=>set("globalContextFocus",v),"Select a Global Context first…",1)),
         ),
       ),
       aiBtn("Get AI Suggestions","c2ai",prompt),
@@ -881,19 +1166,33 @@ function s4(){
         div("crit-grid",...critCards)
       ):el("div",{css:"padding:10px;background:#F5F5F5;border-radius:7px;font-size:12px;color:#757575;margin-bottom:10px;"},"Select your subject in Step 1 to see subject-specific criteria."),
       fld("Additional notes on strands",inp(D.objectives,v=>set("objectives",v),"Any additional strand notes…",1)),
-      div("g2",
-        div("",{css:"border:1.5px solid #E0E0E0;border-radius:9px;padding:12px;"},
-          fld("Summative Task 1",inp(D.task1Title,v=>set("task1Title",v),"Task 1 — Criterion __ (Week __)",""),"#1C4E7A"),
-          fld("Description",inp(D.task1Desc,v=>set("task1Desc",v),"What students produce and how it connects to the SOI…",4)),
-        ),
-        div("",{css:"border:1.5px solid #E0E0E0;border-radius:9px;padding:12px;"},
-          fld("Summative Task 2",inp(D.task2Title,v=>set("task2Title",v),"Task 2 — Criterion __ (Week __)",""),"#1C4E7A"),
-          fld("Description",inp(D.task2Desc,v=>set("task2Desc",v),"What students produce and how it connects to the SOI…",4)),
-        ),
+      // Dynamic summative tasks
+      div("",{css:"margin-bottom:12px;"},
+        ...((D.tasks||[{title:D.task1Title||"",desc:D.task1Desc||""},{title:D.task2Title||"",desc:D.task2Desc||""}])).map((task,i)=>{
+          const tasks = D.tasks||[{title:D.task1Title||"",desc:D.task1Desc||""},{title:D.task2Title||"",desc:D.task2Desc||""}];
+          return div("",{css:"border:1.5px solid #E0E0E0;border-radius:9px;padding:12px;margin-bottom:10px;"},
+            div("",{css:"display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"},
+              el("div",{css:"font-weight:700;font-size:13px;color:#1C4E7A;"},"Summative Task "+(i+1)),
+              tasks.length>1?el("button",{css:"background:none;border:none;color:#B91C1C;cursor:pointer;font-size:13px;font-weight:700;",
+                onClick:()=>{const t=[...tasks];t.splice(i,1);D.tasks=t;D.task1Title=t[0]?.title||"";D.task1Desc=t[0]?.desc||"";D.task2Title=t[1]?.title||"";D.task2Desc=t[1]?.desc||"";render();}},"✕ Remove"):null,
+            ),
+            fld("Title",inp(task.title,v=>{const t=[...(D.tasks||[{title:D.task1Title||"",desc:D.task1Desc||""},{title:D.task2Title||"",desc:D.task2Desc||""}])];t[i]={...t[i],title:v};D.tasks=t;if(i===0)D.task1Title=v;if(i===1)D.task2Title=v;render();},"Task "+(i+1)+" — Criterion __ (Week __)",""),"#1C4E7A"),
+            fld("Description",inp(task.desc,v=>{const t=[...(D.tasks||[{title:D.task1Title||"",desc:D.task1Desc||""},{title:D.task2Title||"",desc:D.task2Desc||""}])];t[i]={...t[i],desc:v};D.tasks=t;if(i===0)D.task1Desc=v;if(i===1)D.task2Desc=v;render();},"What students produce and how it connects to the SOI…",4)),
+          );
+        }),
+        el("button",{cls:"btn btn-out",css:"width:100%;margin-top:4px;border-style:dashed;color:#1C4E7A;border-color:#1C4E7A;",
+          onClick:()=>{
+            const cur=D.tasks||[{title:D.task1Title||"",desc:D.task1Desc||""},{title:D.task2Title||"",desc:D.task2Desc||""}];
+            D.tasks=[...cur,{title:"",desc:""}];render();
+          }},"+ Add Summative Task"),
       ),
       fld("Connection to Statement of Inquiry",inp(D.saSOILink,v=>set("saSOILink",v),"How does completing the task require students to demonstrate the conceptual understanding in the SOI?",3)),
       assessmentSuggestions(D.subject, D.criteria||[]),
-      aiBtn("Suggest Summative Tasks","tasks",taskP),
+      div("",{css:"display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-top:8px;"},
+        aiBtn("Suggest Summative Tasks","tasks",taskP),
+        el("button",{cls:"btn btn-out",css:"font-size:12px;",
+          onClick:()=>{abSubject=D.subject||'';abType='summative';step=STEPS.findIndex(s=>s.l==="📊 Assessment Bank");render();}},"📊 Browse Summative Task Bank"),
+      ),
       aiBox("tasks",v=>set("aiTaskNotes",v)),
     )
   );
@@ -1115,45 +1414,128 @@ function s6(){
     // Formative Assessment
     div("card",
       el("h2",{css:"color:#1C4E7A;"},"📊 Formative Assessment"),
-      div("",{css:"background:#EBF2FA;border:1.5px solid #1C4E7A;border-radius:7px;padding:10px;margin-bottom:12px;font-size:12px;"},
-        el("strong",{css:"color:#1C4E7A;"},"IB Guidance: "),"Plan formative tasks from the start. They should rehearse the summative and provide specific ATL skill feedback."),
-      ...[1,2,3].map(n=>div("",{css:"border:1.5px solid #E0E0E0;border-radius:9px;padding:12px;margin-bottom:8px;"},
-        el("div",{css:"font-weight:700;color:#1C4E7A;font-size:12px;margin-bottom:8px;"},"Formative Assessment "+n),
-        div("g3",
-          fld("Title & Week",inp(D["fa"+n+"Title"],v=>set("fa"+n+"Title",v),"e.g. Variables quiz — Week 2")),
-          fld("Criterion / ATL Targeted",inp(D["fa"+n+"Criteria"],v=>set("fa"+n+"Criteria",v),"e.g. Criterion B (ii) · ATL 3.1.8")),
-          fld("Feedback Method",inp(D["fa"+n+"Feedback"],v=>set("fa"+n+"Feedback",v),"e.g. Written comments, exit ticket…")),
-        )
-      ))
+      div("",{css:"display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px;flex-wrap:wrap;"},
+        div("",{css:"background:#EBF2FA;border:1.5px solid #1C4E7A;border-radius:7px;padding:10px;font-size:12px;flex:1;"},
+          el("strong",{css:"color:#1C4E7A;"},"IB Guidance: "),"Plan formative tasks from the start. They should rehearse the summative and provide specific ATL skill feedback."),
+        el("button",{cls:"btn btn-out",css:"font-size:12px;white-space:nowrap;flex-shrink:0;",
+          onClick:()=>{abSubject=D.subject||"";abType="formative";step=STEPS.findIndex(s=>s.l==="📊 Assessment Bank");render();}},"📋 Browse Formative Ideas"),
+      ),
+      ...((D.faItems)||[
+        {title:D.fa1Title||"",criteria:D.fa1Criteria||"",feedback:D.fa1Feedback||""},
+        {title:D.fa2Title||"",criteria:D.fa2Criteria||"",feedback:D.fa2Feedback||""},
+        {title:D.fa3Title||"",criteria:D.fa3Criteria||"",feedback:D.fa3Feedback||""},
+      ]).map((fa,i)=>{
+        const items = D.faItems||[
+          {title:D.fa1Title||"",criteria:D.fa1Criteria||"",feedback:D.fa1Feedback||""},
+          {title:D.fa2Title||"",criteria:D.fa2Criteria||"",feedback:D.fa2Feedback||""},
+          {title:D.fa3Title||"",criteria:D.fa3Criteria||"",feedback:D.fa3Feedback||""},
+        ];
+        function updFA(field,val){
+          const t=[...items]; t[i]={...t[i],[field]:val};
+          D.faItems=t;
+          // keep legacy fields in sync
+          if(i===0)D["fa1"+field.charAt(0).toUpperCase()+field.slice(1)]=val;
+          if(i===1)D["fa2"+field.charAt(0).toUpperCase()+field.slice(1)]=val;
+          if(i===2)D["fa3"+field.charAt(0).toUpperCase()+field.slice(1)]=val;
+          render();
+        }
+        return div("",{css:"border:1.5px solid #E0E0E0;border-radius:9px;padding:12px;margin-bottom:8px;"},
+          div("",{css:"display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"},
+            el("div",{css:"font-weight:700;color:#1C4E7A;font-size:12px;"},"Formative Assessment "+(i+1)),
+            items.length>1?el("button",{css:"background:none;border:none;color:#B91C1C;cursor:pointer;font-size:13px;font-weight:700;",
+              onClick:()=>{
+                const t=[...items]; t.splice(i,1); D.faItems=t;
+                D.fa1Title=t[0]?.title||""; D.fa1Criteria=t[0]?.criteria||""; D.fa1Feedback=t[0]?.feedback||"";
+                D.fa2Title=t[1]?.title||""; D.fa2Criteria=t[1]?.criteria||""; D.fa2Feedback=t[1]?.feedback||"";
+                D.fa3Title=t[2]?.title||""; D.fa3Criteria=t[2]?.criteria||""; D.fa3Feedback=t[2]?.feedback||"";
+                render();
+              }},"✕ Remove"):null,
+          ),
+          div("g3",
+            fld("Title & Week",inp(fa.title,v=>updFA("title",v),"e.g. Variables quiz — Week 2")),
+            fld("Criterion / ATL Targeted",inp(fa.criteria,v=>updFA("criteria",v),"e.g. Criterion B (ii) · ATL 3.1.8")),
+            fld("Feedback Method",inp(fa.feedback,v=>updFA("feedback",v),"e.g. Written comments, exit ticket…")),
+          )
+        );
+      }),
+      el("button",{cls:"btn btn-out",css:"width:100%;margin-top:4px;border-style:dashed;color:#1C4E7A;border-color:#1C4E7A;",
+        onClick:()=>{
+          const cur=D.faItems||[
+            {title:D.fa1Title||"",criteria:D.fa1Criteria||"",feedback:D.fa1Feedback||""},
+            {title:D.fa2Title||"",criteria:D.fa2Criteria||"",feedback:D.fa2Feedback||""},
+            {title:D.fa3Title||"",criteria:D.fa3Criteria||"",feedback:D.fa3Feedback||""},
+          ];
+          D.faItems=[...cur,{title:"",criteria:"",feedback:""}];
+          render();
+        }},"+ Add Formative Assessment")
     ),
 
     // Differentiation
     div("card",
       el("h2",{css:"color:#5B2D8E;"},"🌱 Differentiation"),
+      div("",{css:"background:#F3E8FF;border:1.5px solid #5B2D8E;border-radius:8px;padding:12px;margin-bottom:14px;font-size:12px;line-height:1.7;"},
+        el("strong",{css:"color:#5B2D8E;"},"What good differentiation looks like: "),
+        "Plan for ALL three levels from the start — don't wait until a student struggles. Scaffolding removes barriers without lowering expectations. Extension deepens inquiry, not just more of the same."
+      ),
       div("g3",
         ...[
-          {k:"diffScaffold",l:"🔵 Scaffolding (Support)",c:"#1C4E7A",bg:"#EBF2FA",p:"Sentence frames, pre-filled templates, graphic organisers, reduced tasks, visual aids, peer partnerships…"},
-          {k:"diffCore",l:"⚪ Core (All Students)",c:"#1A1A1A",bg:"#F5F5F5",p:"The non-negotiable learning experience all students engage with…"},
-          {k:"diffExtension",l:"🟡 Extension (Stretch)",c:"#B8860B",bg:"#FFF8E7",p:"TOK links, student-designed inquiry, additional experiments, cross-subject connections…"},
-        ].map(f=>div("",{css:`background:${f.bg};border-radius:9px;padding:12px;`},
-          el("div",{css:`font-weight:700;color:${f.c};font-size:12px;margin-bottom:7px;`},f.l),
-          inp(D[f.k],v=>set(f.k,v),f.p,5)
-        ))
+          {k:"diffScaffold",l:"🔵 Scaffolding (Support)",c:"#1C4E7A",bg:"#EBF2FA",
+           prompts:["Sentence frames and writing templates","Pre-filled graphic organisers","Vocabulary lists with definitions","Reduced task complexity (fewer variables, shorter texts)","Worked examples to reference","Peer partnership or reading buddy","Chunked instructions with visual steps","Native language support materials"],
+           p:"Describe the specific scaffolds you will provide — not just 'pair work' but HOW the pairing will support the learning…"},
+          {k:"diffCore",l:"⚪ Core (All Students)",c:"#1A1A1A",bg:"#F5F5F5",
+           prompts:["The main investigation or inquiry task","The key concept exploration all students engage with","The summative assessment task (same for all — differentiation is in HOW they get there)","The essential understanding you expect every student to demonstrate"],
+           p:"Describe the non-negotiable learning experience — what ALL students will do regardless of level…"},
+          {k:"diffExtension",l:"🟡 Extension (Stretch)",c:"#B8860B",bg:"#FFF8E7",
+           prompts:["Student-designed inquiry question","TOK connection or philosophical question","Cross-subject or interdisciplinary connection","Additional case study or research task","Create a resource to teach others","Real-world application or community connection","Design an improvement or solution"],
+           p:"Describe extension tasks that deepen inquiry — not just more of the same work…"},
+        ].map(f=>{
+          const [showPrompts,setShowPrompts]=[false,()=>{}]; // static — toggles handled via D
+          const promptKey='showPrompts_'+f.k;
+          return div("",{css:`background:${f.bg};border-radius:9px;padding:12px;`},
+            div("",{css:"display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;"},
+              el("div",{css:`font-weight:700;color:${f.c};font-size:12px;`},f.l),
+              el("button",{css:`font-size:10px;padding:3px 8px;border-radius:5px;background:${f.c}18;border:1px solid ${f.c}44;color:${f.c};cursor:pointer;font-weight:700;`,
+                onClick:()=>{D[promptKey]=!D[promptKey];render();}},"💡 "+(D[promptKey]?"Hide":"Show prompts"))
+            ),
+            D[promptKey]?div("",{css:`background:${f.c}0A;border-radius:7px;padding:10px;margin-bottom:8px;`},
+              el("div",{css:`font-size:11px;font-weight:700;color:${f.c};margin-bottom:6px;`},"Planning prompts — click any to add:"),
+              ...f.prompts.map(p=>el("button",{css:`display:block;width:100%;text-align:left;font-size:11px;padding:4px 8px;margin-bottom:3px;background:#fff;border:1px solid ${f.c}33;border-radius:5px;cursor:pointer;color:#1A1A1A;`,
+                onClick:()=>{D[f.k]=(D[f.k]?D[f.k]+String.fromCharCode(10):"")+p;render();}},"+ "+p))
+            ):null,
+            inp(D[f.k],v=>set(f.k,v),f.p,5)
+          );
+        })
       )
     ),
 
     // Reflection
     div("card",{css:"border-top:5px solid #5B2D8E;"},
       el("h2",{css:"color:#5B2D8E;"},"🪞 Reflection on the Unit"),
-      div("",{css:"background:#F3E8FF;border:1.5px solid #5B2D8E;border-radius:7px;padding:10px;margin-bottom:12px;font-size:12px;"},
-        el("strong",{css:"color:#5B2D8E;"},"IB Guidance: "),"Structured around three moments — before, during, and after teaching. Choose the most meaningful prompts for your context."),
+      div("",{css:"background:#F3E8FF;border:1.5px solid #5B2D8E;border-radius:7px;padding:10px;margin-bottom:14px;font-size:12px;line-height:1.7;"},
+        el("strong",{css:"color:#5B2D8E;"},"IB Guidance: "),"You don't need to answer every prompt — choose the most meaningful for your context. Click 💡 Show prompts under each section for specific guiding questions."
+      ),
       div("ref-grid",
         ...[
-          {k:"refBefore",l:"🌱 Prior to Teaching",c:"#1A5C38",bg:"#E8F5EE",p:"Why will this unit be interesting?\nWhat prior knowledge do you expect?\nWhat learner profile attributes does this develop?\nWhat interdisciplinary connections are possible?"},
-          {k:"refDuring",l:"⏳ During Teaching",c:"#1A7A6E",bg:"#E5F4F2",p:"What adjustments did you make and why?\nWhat student inquiries emerged?\nWhat surprised you?\nHow engaged were students with each Murdoch phase?"},
-          {k:"refAfter",l:"✅ After Teaching",c:"#5B2D8E",bg:"#F3E8FF",p:"Did students achieve the conceptual understanding?\nWhich strategies worked best?\nWas the summative task appropriately complex?\nWhat would you change next time?"},
+          {k:"refBefore",l:"🌱 Prior to Teaching",c:"#1A5C38",bg:"#E8F5EE",
+           prompts:["Why will this unit be interesting to students?","What prior knowledge do I expect students to have?","What misconceptions might students bring?","What learner profile attributes does this unit develop?","What interdisciplinary connections are possible?","Are there opportunities for service learning?","What do I know about my students' preferences and interaction patterns?","What aspects of this unit am I most uncertain about?"],
+           p:"Write your reflections before you begin teaching…"},
+          {k:"refDuring",l:"⏳ During Teaching",c:"#1A7A6E",bg:"#E5F4F2",
+           prompts:["What adjustments did I make and why?","What student inquiries emerged that I hadn't anticipated?","What surprised me about student responses?","How engaged were students with each Murdoch phase?","Which strategies worked better or worse than expected?","What skills needed more practice time?","What is happening in the world right now I could connect to this unit?","How well are learning experiences aligned with objectives?"],
+           p:"Write your reflections as you teach — during or between lessons…"},
+          {k:"refAfter",l:"✅ After Teaching",c:"#5B2D8E",bg:"#F3E8FF",
+           prompts:["Did students achieve the conceptual understanding?","How well did the summative task distinguish achievement levels?","Was the task sufficiently complex to reach the highest levels?","Which teaching strategies were most effective?","How effectively did the Murdoch Cycle structure the inquiry?","What would I change in the weekly plan next time?","What can students at this level do in the next unit?","What did I learn about assessment from this unit?"],
+           p:"Write your reflections after the unit is complete…"},
         ].map(f=>div("ref-card",{css:`background:${f.bg};`},
-          el("h3",{css:`color:${f.c};`},f.l),
+          div("",{css:"display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;"},
+            el("h3",{css:`color:${f.c};margin:0;`},f.l),
+            el("button",{css:`font-size:10px;padding:3px 8px;border-radius:5px;background:${f.c}18;border:1px solid ${f.c}44;color:${f.c};cursor:pointer;font-weight:700;`,
+              onClick:()=>{D['showRef_'+f.k]=!D['showRef_'+f.k];render();}},"💡 "+(D['showRef_'+f.k]?"Hide":"Prompts"))
+          ),
+          D['showRef_'+f.k]?div("",{css:`background:${f.c}0A;border-radius:7px;padding:10px;margin-bottom:8px;`},
+            el("div",{css:`font-size:11px;font-weight:700;color:${f.c};margin-bottom:6px;`},"Click any prompt to add it:"),
+            ...f.prompts.map(p=>el("button",{css:`display:block;width:100%;text-align:left;font-size:11px;padding:4px 8px;margin-bottom:3px;background:#fff;border:1px solid ${f.c}33;border-radius:5px;cursor:pointer;color:#1A1A1A;`,
+              onClick:()=>{D[f.k]=(D[f.k]?D[f.k]+String.fromCharCode(10):"")+p;render();}},"+ "+p))
+          ):null,
           inp(D[f.k],v=>set(f.k,v),f.p,8)
         ))
       )
@@ -3106,6 +3488,8 @@ function sAudit() {
     )
   );
 }
+
+// ═══ IB GLOBAL CONTEXTS WITH PRESCRIBED EXPLORATION FOCUSES ══════════════════
 
 // ═══ RENDER ENGINE ═══════════════════════════════════════
 const STEPS=[
