@@ -971,6 +971,226 @@ function aiBtn(label,id,prompt){
   return el("button",{cls:"btn btn-teal",css:"margin-top:8px;",onClick:()=>ask(prompt,id)},"✨ "+label);
 }
 
+// ═══ CROSS-DISCIPLINARY EXAMPLES DATA ════════════════════
+
+const CU_CROSS_EXAMPLES = [
+  { subject:"English / Lang & Lit", kc:"Communication", rc:"Voice / Style", gc:"Personal & Cultural Expression",
+    cu:"The voice and style a writer chooses communicates cultural identity and shapes how audiences construct personal meaning." },
+  { subject:"Mathematics", kc:"Logic", rc:"Generalisation / Pattern", gc:"Scientific & Technical Innovation",
+    cu:"Identifying patterns through logical reasoning enables mathematicians to generalise and innovate solutions to real-world problems." },
+  { subject:"History", kc:"Perspective", rc:"Causality / Conflict", gc:"Fairness & Development",
+    cu:"Understanding multiple perspectives on historical conflict reveals how causality is interpreted differently across cultures, influencing fairness." },
+  { subject:"Art / Visual Arts", kc:"Creativity", rc:"Composition / Expression", gc:"Personal & Cultural Expression",
+    cu:"Creative compositional choices express cultural identity and communicate meaning within and across relationships." },
+  { subject:"Physical & Health Ed", kc:"Development", rc:"Refinement / Balance", gc:"Identities & Relationships",
+    cu:"Refining physical skills and maintaining balance develops a healthy identity and sense of self within a team." },
+  { subject:"Design / Technology", kc:"Systems", rc:"Function / Sustainability", gc:"Globalization & Sustainability",
+    cu:"Designing systems that balance function with sustainability enables communities to respond innovatively to global challenges." },
+  { subject:"Geography / I&S", kc:"Global Interactions", rc:"Sustainability / Consequences", gc:"Globalization & Sustainability",
+    cu:"Human interactions with natural systems have consequences that determine the sustainability of our shared environments." },
+  { subject:"Drama / Performing Arts", kc:"Perspective", rc:"Character / Narrative", gc:"Identities & Relationships",
+    cu:"Exploring character perspectives through narrative reveals how identity is shaped by relationships and social context." },
+  { subject:"Music", kc:"Aesthetics", rc:"Style / Genre", gc:"Personal & Cultural Expression",
+    cu:"Stylistic choices within a genre reflect cultural aesthetics, enabling musicians to express personal and collective identity." },
+  { subject:"Science (Biology)", kc:"Systems", rc:"Balance / Interaction", gc:"Scientific & Technical Innovation",
+    cu:"Changing the interactions within a living system can disrupt or maintain balance, driving scientific investigation and innovation." },
+];
+
+const SOI_CROSS_EXAMPLES = [
+  { subject:"English / Lang & Lit", kc:"Communication", rc:"Voice", gc:"Personal & Cultural Expression",
+    soi:"The voice a writer chooses communicates cultural identity and shapes how audiences construct personal meaning.",
+    tip:"Link the related concept directly to the outcome it produces — voice → how identity is communicated." },
+  { subject:"Mathematics", kc:"Logic", rc:"Pattern / Generalisation", gc:"Scientific & Technical Innovation",
+    soi:"Identifying patterns through logical reasoning enables mathematicians to generalise and innovate real-world solutions.",
+    tip:"Show how the skill (logic) working on the RC (pattern) leads to a real-world outcome in the GC." },
+  { subject:"History", kc:"Perspective", rc:"Causality / Conflict", gc:"Fairness & Development",
+    soi:"Understanding multiple perspectives on historical conflict reveals how causality is interpreted differently, shaping fairness in development.",
+    tip:"Use a tension word ('differently', 'contested') — this makes the SOI arguable, not just factual." },
+  { subject:"Design", kc:"Systems", rc:"Function / Sustainability", gc:"Globalization & Sustainability",
+    soi:"Designing systems that balance function with sustainability enables communities to respond innovatively to global challenges.",
+    tip:"Connect the designer's role explicitly to the global context — who is affected by the design?" },
+  { subject:"Art / Visual Arts", kc:"Creativity", rc:"Composition / Expression", gc:"Identities & Relationships",
+    soi:"Creative compositional choices in art express identity and communicate meaning within and across relationships.",
+    tip:"Arts SOIs work best when they name both the process (composing) AND the effect (expressing, communicating)." },
+  { subject:"Physical & Health Ed", kc:"Change", rc:"Refinement / Collaboration", gc:"Identities & Relationships",
+    soi:"Refining physical skills through collaboration changes how individuals understand themselves as part of a team.",
+    tip:"In PE, anchor the SOI in both the physical and social dimensions — not just performance." },
+  { subject:"Science (Chemistry)", kc:"Form", rc:"Transformation / Conditions", gc:"Scientific & Technical Innovation",
+    soi:"Altering the conditions of a substance can transform its form, leading to new products and scientific understanding.",
+    tip:"Science SOIs are strongest when they link the observable (form) to the causal (conditions) and the outcome." },
+  { subject:"Geography", kc:"Global Interactions", rc:"Sustainability / Consequences", gc:"Globalization & Sustainability",
+    soi:"Human interactions with environments have consequences that challenge communities to develop sustainable global practices.",
+    tip:"Geography SOIs should make clear WHO is acting and WHO is affected — this gives the statement moral weight." },
+  { subject:"Drama", kc:"Perspective", rc:"Character / Narrative", gc:"Identities & Relationships",
+    soi:"Exploring a character's perspective through narrative reveals how identity is shaped by relationships and social context.",
+    tip:"Drama SOIs benefit from the word 'reveals' or 'challenges' — showing the investigative nature of the subject." },
+  { subject:"Music", kc:"Aesthetics", rc:"Style / Genre", gc:"Personal & Cultural Expression",
+    soi:"Stylistic choices within a genre reflect cultural aesthetics, enabling musicians to express personal and collective identity.",
+    tip:"Link 'aesthetic choice' to 'cultural reflection' — this is the core of most Performing Arts SOIs." },
+];
+
+const SOI_PITFALLS = [
+  { label:"Too factual", bad:"Ecosystems contain biotic and abiotic factors.", fix:"Add a tension or consequence: 'When human activity disrupts the interaction between biotic and abiotic factors, ecosystem balance is threatened.'" },
+  { label:"Too vague", bad:"Communication is important in our lives.", fix:"Name the specific relationship: 'The way we communicate shapes how identity is formed within communities.'" },
+  { label:"Just a definition", bad:"Change is a transformation over time.", fix:"Connect to a subject-specific insight: 'Recognising patterns of change in historical data enables societies to develop more equitable futures.'" },
+  { label:"Not transferable", bad:"Students will learn about food webs in this unit.", fix:"Remove content-specific language — make it apply beyond this unit: 'Understanding interactions within systems enables humans to investigate and maintain balance in the living world.'" },
+];
+
+const SOI_FORMULA_PROMPTS = [
+  "How does [KC] connect to [RC] to produce a meaningful outcome in the [GC]?",
+  "What happens when [RC] is disrupted, changed, or challenged in this context?",
+  "Who is affected by [KC] and [RC] in the global context of [GC]?",
+  "What can students DO with this understanding in a new, unfamiliar situation?",
+  "What tension, contradiction, or transformation does this unit explore?",
+];
+
+// Panel: cross-disciplinary CU examples (shown in Step 2 and Step 3)
+let cuPanelOpen = false;
+let soiPanelOpen = false;
+let soiPanelFilter = "All";
+
+function cuExamplesPanel() {
+  const subjColors = {
+    "English / Lang & Lit":["#fff3e0","#e65100"],
+    "Mathematics":["#e8f5e9","#1b5e20"],
+    "History":["#fce4ec","#880e4f"],
+    "Art / Visual Arts":["#f3e5f5","#4a148c"],
+    "Physical & Health Ed":["#e8eaf6","#1a237e"],
+    "Design / Technology":["#e0f2f1","#004d40"],
+    "Geography / I&S":["#e0f7fa","#006064"],
+    "Drama / Performing Arts":["#fff8e1","#f57f17"],
+    "Music":["#fbe9e7","#bf360c"],
+    "Science (Biology)":["#e1f5fe","#01579b"],
+    "Science (Chemistry)":["#e1f5fe","#01579b"],
+  };
+  const togBtn = el("button",{cls:"ib-toggle",onClick:()=>{cuPanelOpen=!cuPanelOpen;render();}},
+    "🌍 "+(cuPanelOpen?"Hide":"Show")+" Cross-Disciplinary Conceptual Understanding Examples");
+  if(!cuPanelOpen) return togBtn;
+  return div("",togBtn,
+    div("",{css:"background:#E8F5EE;border:1.5px solid #1A5C38;border-radius:9px;padding:14px;margin-bottom:8px;"},
+      el("div",{css:"font-size:13px;font-weight:700;color:#1A5C38;margin-bottom:6px;"},"📌 Formula for a strong Conceptual Understanding"),
+      el("div",{css:"background:#fff;border-radius:8px;padding:10px;font-size:13px;color:#1A1A1A;font-style:italic;border-left:3px solid #1A5C38;"},
+        "[KC in action] + [RC connection] → [how this produces meaning or change in the GC]"
+      ),
+      el("div",{css:"font-size:11px;color:#1A7A6E;margin-top:8px;line-height:1.6;"},
+        "The CU should be transferable — a student should be able to apply it to a new situation outside this unit."
+      )
+    ),
+    ...CU_CROSS_EXAMPLES.map(ex=>{
+      const [bg,color]=subjColors[ex.subject]||["#f5f5f5","#424242"];
+      return div("",{css:"background:#FAFAFA;border:1px solid #E0E0E0;border-radius:9px;padding:12px;margin-bottom:8px;"},
+        div("",{css:"display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;"},
+          el("span",{css:`background:${bg};color:${color};font-size:11px;font-weight:700;padding:2px 10px;border-radius:12px;`},ex.subject),
+          el("span",{css:"background:#E8F5EE;color:#1A5C38;font-size:11px;font-weight:700;padding:2px 10px;border-radius:12px;"},"KC: "+ex.kc),
+          el("span",{css:"background:#F3E8FF;color:#5B2D8E;font-size:11px;font-weight:700;padding:2px 10px;border-radius:12px;"},"RC: "+ex.rc)
+        ),
+        el("div",{css:"font-size:11px;color:#888;margin-bottom:5px;"},"Global Context: "+el("strong",{},ex.gc).outerHTML||"Global Context: "+ex.gc),
+        el("div",{css:"font-size:13px;color:#1A1A1A;line-height:1.65;font-style:italic;background:#fff;border-radius:7px;padding:10px;border-left:3px solid #1A7A6E;"},'"'+ex.cu+'"')
+      );
+    })
+  );
+}
+
+function soiGuidePanel() {
+  const subjects = ["All",...new Set(SOI_CROSS_EXAMPLES.map(e=>e.subject))];
+  const filtered = soiPanelFilter==="All" ? SOI_CROSS_EXAMPLES : SOI_CROSS_EXAMPLES.filter(e=>e.subject===soiPanelFilter);
+  const subjColors = {
+    "English / Lang & Lit":["#fff3e0","#e65100"],
+    "Mathematics":["#e8f5e9","#1b5e20"],
+    "History":["#fce4ec","#880e4f"],
+    "Art / Visual Arts":["#f3e5f5","#4a148c"],
+    "Physical & Health Ed":["#e8eaf6","#1a237e"],
+    "Design / Technology":["#e0f2f1","#004d40"],
+    "Geography":["#e0f7fa","#006064"],
+    "Drama":["#fff8e1","#f57f17"],
+    "Music":["#fbe9e7","#bf360c"],
+    "Science (Biology)":["#e1f5fe","#01579b"],
+    "Science (Chemistry)":["#e1f5fe","#01579b"],
+    "Science":["#e1f5fe","#01579b"],
+  };
+  function getColor(subj){
+    for(const k of Object.keys(subjColors)){if(subj.includes(k.split(" ")[0]))return subjColors[k];}
+    return ["#f5f5f5","#424242"];
+  }
+
+  const togBtn = el("button",{cls:"ib-toggle",onClick:()=>{soiPanelOpen=!soiPanelOpen;render();}},
+    "🌍 "+(soiPanelOpen?"Hide":"Show")+" SOI Writing Guide — Pitfalls, Formula & Cross-Disciplinary Examples");
+  if(!soiPanelOpen) return togBtn;
+
+  return div("",togBtn,
+    // What makes a strong SOI
+    div("",{css:"background:#EBF2FA;border:1.5px solid #1C4E7A;border-radius:9px;padding:14px;margin-bottom:10px;"},
+      el("div",{css:"font-size:13px;font-weight:700;color:#1C4E7A;margin-bottom:10px;"},"📌 What makes a strong Statement of Inquiry?"),
+      div("",{css:"display:grid;grid-template-columns:1fr 1fr;gap:8px;"},
+        ...([
+          ["✅ Arguable","It can be debated — not everyone automatically agrees with it."],
+          ["✅ Transferable","It applies beyond this unit to other contexts or subjects."],
+          ["✅ Connects KC + RC + GC","All three conceptual elements are visible in the sentence."],
+          ["✅ Implies inquiry","It poses an implicit question that drives the unit forward."],
+        ].map(([l,d])=>div("",{css:"background:#fff;border-radius:7px;padding:9px;border:1px solid #C5D8F0;"},
+          el("div",{css:"font-size:12px;font-weight:700;color:#1C4E7A;margin-bottom:3px;"},l),
+          el("div",{css:"font-size:12px;color:#555;"},d)
+        )))
+      )
+    ),
+
+    // Guiding questions
+    div("",{css:"background:#FFF8E7;border:1.5px solid #B8860B;border-radius:9px;padding:12px;margin-bottom:10px;"},
+      el("div",{css:"font-size:12px;font-weight:700;color:#B8860B;margin-bottom:8px;"},"🔑 Guiding questions to help you draft your SOI"),
+      ...SOI_FORMULA_PROMPTS.map(p=>div("",{css:"display:flex;gap:8px;padding:6px 0;border-bottom:1px solid #F0E0A0;font-size:12px;color:#5a4000;"},
+        el("span",{css:"flex-shrink:0;"},"→"),el("span",{},p)))
+    ),
+
+    // Pitfalls
+    div("",{css:"margin-bottom:10px;"},
+      el("div",{css:"font-size:12px;font-weight:700;color:#B91C1C;margin-bottom:8px;"},"⚠️ Common pitfalls — and how to fix them"),
+      ...SOI_PITFALLS.map(p=>div("",{css:"border:1px solid #E0E0E0;border-radius:8px;overflow:hidden;margin-bottom:7px;"},
+        div("",{css:"display:flex;align-items:center;padding:7px 12px;background:#FEE2E2;"},
+          el("span",{css:"font-size:11px;font-weight:700;color:#B91C1C;background:#fff;padding:2px 8px;border-radius:10px;margin-right:8px;"},p.label)
+        ),
+        div("",{css:"display:grid;grid-template-columns:1fr 1fr;"},
+          div("",{css:"padding:10px;background:#FFF5F5;border-right:1px solid #E0E0E0;"},
+            el("div",{css:"font-size:10px;font-weight:700;color:#B91C1C;margin-bottom:4px;"},"❌ WEAK"),
+            el("div",{css:"font-size:12px;color:#444;font-style:italic;"},'"'+p.bad+'"')
+          ),
+          div("",{css:"padding:10px;background:#F0FFF4;"},
+            el("div",{css:"font-size:10px;font-weight:700;color:#1A5C38;margin-bottom:4px;"},"✅ STRONGER"),
+            el("div",{css:"font-size:12px;color:#444;"},p.fix)
+          )
+        )
+      ))
+    ),
+
+    // Subject filter
+    div("",{css:"display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;"},
+      ...subjects.map(s=>el("button",{
+        css:`padding:4px 12px;border-radius:16px;font-size:11px;font-weight:700;cursor:pointer;border:1.5px solid ${soiPanelFilter===s?"#1A5C38":"#E0E0E0"};background:${soiPanelFilter===s?"#1A5C38":"#fff"};color:${soiPanelFilter===s?"#fff":"#555"};`,
+        onClick:()=>{soiPanelFilter=s;render();}},s))
+    ),
+
+    // SOI examples
+    el("div",{css:"font-size:12px;font-weight:700;color:#1A1A1A;margin-bottom:8px;"},"📚 SOI Examples Across Disciplines"),
+    ...filtered.map(ex=>{
+      const [bg,color]=getColor(ex.subject);
+      return div("",{css:"border:1px solid #E0E0E0;border-radius:9px;overflow:hidden;margin-bottom:8px;"},
+        div("",{css:`background:${bg};padding:9px 12px;display:flex;flex-wrap:wrap;gap:5px;align-items:center;`},
+          el("span",{css:`color:${color};font-size:11px;font-weight:700;`},ex.subject),
+          el("span",{css:"background:#fff;color:#1A5C38;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;"},"KC: "+ex.kc),
+          el("span",{css:"background:#fff;color:#5B2D8E;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;"},"RC: "+ex.rc),
+          el("span",{css:"font-size:10px;color:#666;"},"GC: "+ex.gc)
+        ),
+        div("",{css:"padding:10px 12px;"},
+          el("div",{css:"font-size:13px;color:#1A1A1A;font-style:italic;line-height:1.65;padding:8px;background:#F9FFFE;border-radius:7px;border-left:3px solid #1A5C38;margin-bottom:8px;"},'"'+ex.soi+'"'),
+          div("",{css:"background:#FFF8E7;border-radius:6px;padding:7px 10px;"},
+            el("span",{css:"font-size:11px;font-weight:700;color:#B8860B;"},"💡 Teacher tip: "),
+            el("span",{css:"font-size:12px;color:#5a4000;"},ex.tip)
+          )
+        )
+      );
+    })
+  );
+}
+
 // ═══ STEP 1: IDENTITY ════════════════════════════════════
 function s1(){
   return div("card",
@@ -1088,6 +1308,7 @@ function s2(){
       aiBtn("Get AI Suggestions","c2ai",prompt),
       aiBox("c2ai",v=>{set("aiConceptNotes",v);}),
       D.aiConceptNotes?el("div",{css:"margin-top:8px;font-size:12px;color:#1A5C38;background:#E8F5EE;padding:10px;border-radius:8px;"},"💡 Saved: "+D.aiConceptNotes):null,
+      el("div",{css:"margin-top:14px;"},cuExamplesPanel()),
     )
   );
 }
@@ -1109,6 +1330,7 @@ function s3(){
       fld("Statement of Inquiry",inp(D.soi,v=>set("soi",v),"Write or generate the SOI…",2)),
       aiBtn("Generate SOI","soi",soiP),
       aiBox("soi",v=>set("soi",v)),
+      el("div",{css:"margin-top:10px;"},soiGuidePanel()),
       el("div",{css:"height:12px;"}),
       div("g3",
         fld("Factual Questions",inp(D.iqFactual,v=>set("iqFactual",v),"What is...? How does...?",5),"#1C4E7A"),
@@ -2282,27 +2504,60 @@ const TEACHING_STRATEGIES = {
       { name: "Classification", phases: ["Tuning In","Sorting Out"], time: "15-25 min",
         desc: "Students connect physical objects or phenomena to a conceptual category, explaining and justifying their reasoning. Often the first strategy used to build conceptual understanding.",
         example: "Give students 20 cards with examples of living things and non-living things. Students sort and justify: 'This is not a mammal because...' Then discuss and resolve misconceptions as a class.",
-        purpose: "Helps students develop wider general understandings of similarities and differences. Works across all subjects and ages — especially powerful for surfacing misconceptions." },
+        purpose: "Helps students develop wider general understandings of similarities and differences. Works across all subjects and ages — especially powerful for surfacing misconceptions.",
+        crossExamples: [
+          {subject:"English", ex:"Students sort 12 text extracts — 'metaphor / not metaphor / unsure' — to build their own definition of figurative language before the teacher names it."},
+          {subject:"Mathematics", ex:"Students categorise 16 expressions as 'linear / non-linear / unsure', write their own rule, then compare with the teacher's definition."},
+          {subject:"History", ex:"Card sort of 15 events: 'primary cause / secondary cause / consequence' — students justify groupings before comparing with historians' interpretations."},
+          {subject:"Design", ex:"Students sort 16 product images into 'ergonomic / not ergonomic', derive their own criteria, then apply them to a new product."},
+        ]},
       { name: "Representation", phases: ["Finding Out","Sorting Out","Making Connections"], time: "20-30 min",
         desc: "Students use multiple modes (graphs, diagrams, formulas, mind maps, models) to represent the same concept, then reflect on the similarities and differences between representations.",
         example: "Show students that a food web, an energy pyramid, and a data table can all represent the same ecosystem. Ask: 'What does each representation show that the others don't?'",
-        purpose: "Deepens understanding by showing that the same concept can be imagined in different ways. Key strategy in Mathematics and problem-based learning across all subjects." },
+        purpose: "Deepens understanding by showing that the same concept can be imagined in different ways. Key strategy in Mathematics and problem-based learning across all subjects.",
+        crossExamples: [
+          {subject:"Mathematics", ex:"The same data set represented as a table, bar chart, line graph and pie chart — students discuss what each representation reveals and conceals."},
+          {subject:"History", ex:"The same historical event presented as a timeline, a map and a primary source account — students compare what each representation emphasises."},
+          {subject:"Music", ex:"A melody represented as sheet music, a waveform, and a verbal description — students explore what each mode communicates that the others cannot."},
+          {subject:"Language & Literature", ex:"The same story moment shown as prose, a poem and a visual image — students compare how each form shapes the reader's experience."},
+        ]},
       { name: "Generalization", phases: ["Sorting Out","Making Connections","Reflecting"], time: "20-30 min",
         desc: "Students move from specific facts → concepts → wider generalizations. They explore multiple examples and determine common causes, patterns or principles that apply across all of them.",
         example: "Students study three case studies of ecosystem collapse (deforestation, ocean acidification, invasive species). They then write: 'In all three cases, human activity disrupted balance by...' — building a generalization.",
-        purpose: "Core IB strategy — directly builds the kind of conceptual understanding that the SOI and inquiry questions demand. Connects Facts → Topics → Concepts → Generalizations." },
+        purpose: "Core IB strategy — directly builds the kind of conceptual understanding that the SOI and inquiry questions demand. Connects Facts → Topics → Concepts → Generalizations.",
+        crossExamples: [
+          {subject:"History", ex:"3 revolutions (French, American, Russian) — students examine conditions before each and write: 'Revolutions tend to occur when…'"},
+          {subject:"Mathematics", ex:"3 sequences (Fibonacci, triangular numbers, geometric) — students identify the rule in each and write: 'A sequence can always be defined by…'"},
+          {subject:"Language & Literature", ex:"3 dystopian novels (1984, Brave New World, The Handmaid's Tale) — students write: 'Dystopian fiction tends to be written when a society fears…'"},
+          {subject:"Geography / I&S", ex:"3 megacities (Tokyo, Lagos, São Paulo) — students write: 'When cities grow rapidly, communities experience… because…'"},
+        ]},
       { name: "Concepts-in-Use", phases: ["Sorting Out","Making Connections","Going Further"], time: "25-40 min",
         desc: "Concepts are explicitly modelled, linked together in a concept map, and then applied in different contexts. Students explain how concepts connect and use the map to assess their own learning.",
         example: "Teacher creates a concept map linking: Systems → Interaction → Balance → Human Impact → Innovation. Students add their own connections and examples from the unit, then use the map to explain the SOI.",
-        purpose: "Makes abstract conceptual thinking visible and assessable. Students can show what they learned, how it connects, and how it might apply elsewhere." },
+        purpose: "Makes abstract conceptual thinking visible and assessable. Students can show what they learned, how it connects, and how it might apply elsewhere.",
+        crossExamples: [
+          {subject:"Art", ex:"Concept map: Creativity → Composition → Expression → Audience → Meaning. Students add their own artworks and explain connections to the unit's key concept."},
+          {subject:"Mathematics", ex:"Concept map: Pattern → Generalisation → Proof → Application. Students link their own examples from the unit and explain how each step connects."},
+          {subject:"Drama", ex:"Concept map: Character → Perspective → Narrative → Identity → Relationship. Students use the map to explain how their performance work connects to the SOI."},
+        ]},
       { name: "Internalization", phases: ["Finding Out","Going Further","Taking Action"], time: "Variable",
         desc: "Students transform a physical or procedural activity into deeper conceptual understanding by deconstructing their own practice and connecting the function to the broader purpose.",
         example: "After practising hypothesis writing 10 times, students are asked: 'Why does a hypothesis need a scientific reason? What would happen to an investigation without one?' They connect the skill to the concept of validity.",
-        purpose: "Especially powerful in Sciences, PHE and Arts — connects drill/practice to conceptual meaning. Students stop doing things by rote and start understanding why." },
+        purpose: "Especially powerful in Sciences, PHE and Arts — connects drill/practice to conceptual meaning. Students stop doing things by rote and start understanding why.",
+        crossExamples: [
+          {subject:"Physical & Health Ed", ex:"After 8 sessions practising a badminton serve, students are asked: 'Why does technique matter? What would happen in a match if you ignored it?' Connects skill to strategy."},
+          {subject:"Music", ex:"After repeated scale practice, students are asked: 'Why are scales the foundation of composition? What does practising them teach you about musical structure?'"},
+          {subject:"English", ex:"After writing 5 topic sentences, students reflect: 'Why does a topic sentence need to make a claim? What happens to a paragraph without one?'"},
+        ]},
       { name: "Near and Far Transfer", phases: ["Making Connections","Going Further","Taking Action"], time: "20-35 min",
         desc: "Near transfer: students apply concepts across different problems within the same subject. Far transfer: students apply concepts across different subjects or real-world contexts. Both deepen conceptual understanding.",
         example: "Near: 'We used the concept of balance in ecosystems — where else in science does balance appear?' Far: 'How does the concept of balance appear in mathematics? In your own daily life? In a historical event?'",
-        purpose: "The highest level of conceptual understanding — students can transfer concepts beyond the unit. Directly supports the MYP goal of developing internationally-minded, transferable thinkers." },
+        purpose: "The highest level of conceptual understanding — students can transfer concepts beyond the unit. Directly supports the MYP goal of developing internationally-minded, transferable thinkers.",
+        crossExamples: [
+          {subject:"History", ex:"Near: 'We studied conflict in WWI — where else in this century did the same causes appear?' Far: 'How does the concept of conflict appear in a novel you have read? In your school community?'"},
+          {subject:"Mathematics", ex:"Near: 'We used proportional reasoning for recipes — where else in maths does this appear?' Far: 'How does proportional reasoning appear in geography? In music? In everyday life?'"},
+          {subject:"Art / Design", ex:"Near: 'We used composition in painting — how does it appear in photography?' Far: 'How does the concept of composition appear in music? In architecture? In how we arrange a presentation slide?'"},
+        ]},
     ]
   },
   "Visible Thinking Routines": {
@@ -2312,35 +2567,68 @@ const TEACHING_STRATEGIES = {
       { name: "See-Think-Wonder", phases: ["Tuning In"], time: "10-15 min",
         desc: "Students observe an image/object/text: What do you SEE? What do you THINK about that? What does it make you WONDER?",
         example: "Show a coral reef before/after photo. Students notice, interpret and generate inquiry questions.",
-        purpose: "Activates prior knowledge, generates curiosity, surfaces misconceptions." },
+        purpose: "Activates prior knowledge, generates curiosity, surfaces misconceptions.",
+        crossExamples: [
+          {subject:"Art", ex:"Students view an unfamiliar artwork: What do you see? What do you think this means? What does it make you wonder about the artist's intent?"},
+          {subject:"History", ex:"Students examine a political cartoon from WWI: What do you see? What message do you think it conveys? What does it make you wonder about its audience?"},
+          {subject:"Mathematics", ex:"Students view a complex graph with no labels: What do you see (patterns, shapes, relationships)? What do you think it represents? What would you need to know to interpret it?"},
+        ]},
       { name: "Think-Pair-Share", phases: ["Tuning In","Sorting Out"], time: "5-10 min",
         desc: "Individual thinking → pair discussion → share with class. Simple but powerful for checking understanding.",
         example: "After a reading: think 2 mins, discuss with partner, share one idea with class.",
-        purpose: "Low-risk participation, deepens understanding through talk." },
+        purpose: "Low-risk participation, deepens understanding through talk.",
+        crossExamples: [
+          {subject:"Physical & Health Ed", ex:"After watching a tactical clip: think about what went wrong, discuss with a partner, share one suggestion for improvement."},
+          {subject:"Design", ex:"After viewing a product: think about who it is designed for, discuss with a partner who might be excluded, share one redesign suggestion."},
+        ]},
       { name: "Claim-Support-Question", phases: ["Sorting Out","Making Connections"], time: "15-20 min",
         desc: "Students make a CLAIM based on evidence, find SUPPORT for it, then generate a QUESTION it raises.",
         example: "After a science experiment: 'My claim is X, supported by Y data, which makes me wonder Z.'",
-        purpose: "Develops evidence-based reasoning and conceptual thinking." },
+        purpose: "Develops evidence-based reasoning and conceptual thinking.",
+        crossExamples: [
+          {subject:"History / I&S", ex:"After reading a source: 'My claim is that [person/group] was motivated by [reason], supported by [quote/evidence], which makes me wonder [new question].'"},
+          {subject:"Language & Literature", ex:"After reading a poem: 'My claim is that the tone is [X], supported by [specific lines], which makes me wonder [what the poet intended].'"},
+        ]},
       { name: "Connect-Extend-Challenge", phases: ["Making Connections","Reflecting"], time: "10-15 min",
         desc: "How does this CONNECT to what you know? How does it EXTEND your thinking? What does it CHALLENGE or complicate?",
         example: "After a case study on ecosystems: students write one connection, one extension, one challenge.",
-        purpose: "Links new learning to prior knowledge, deepens synthesis." },
+        purpose: "Links new learning to prior knowledge, deepens synthesis.",
+        crossExamples: [
+          {subject:"Mathematics", ex:"After learning about irrational numbers: connect (how does this link to fractions?), extend (how does this change how you think about the number line?), challenge (what does this complicate about your earlier definition of 'number'?)."},
+          {subject:"English", ex:"After reading a new novel: connect to a previously read text, extend your thinking about the author's world view, challenge — what idea in this text is most difficult to accept?"},
+        ]},
       { name: "I Used to Think... Now I Think", phases: ["Reflecting"], time: "10 min",
         desc: "Students reflect on how their thinking has changed: 'I used to think ___ but now I think ___'",
         example: "End of unit reflection on any concept that was counter-intuitive.",
-        purpose: "Metacognition — makes conceptual change visible." },
+        purpose: "Metacognition — makes conceptual change visible.",
+        crossExamples: [
+          {subject:"Physical & Health Ed", ex:"I used to think strength was the most important fitness component, but now I think… because our unit showed me that…"},
+          {subject:"Drama", ex:"I used to think acting was about pretending to be someone else, but now I think… because exploring character perspective has taught me…"},
+        ]},
       { name: "What Makes You Say That?", phases: ["Finding Out","Sorting Out"], time: "10-15 min",
         desc: "When a student makes a claim, teacher/peers ask 'What makes you say that?' pushing for evidence and reasoning.",
         example: "During a class discussion: student says 'wolves are important' — 'What makes you say that?'",
-        purpose: "Builds reasoning skills and evidence-based thinking." },
+        purpose: "Builds reasoning skills and evidence-based thinking.",
+        crossExamples: [
+          {subject:"Art", ex:"Student says 'this artwork is sad' — 'What makes you say that?' pushes them to identify specific visual choices (colour, composition, line) that create the mood."},
+          {subject:"Mathematics", ex:"Student says 'this pattern will always work' — 'What makes you say that?' pushes them toward generalisation and proof thinking."},
+        ]},
       { name: "Chalk Talk", phases: ["Tuning In","Sorting Out"], time: "15-20 min",
         desc: "Silent written discussion on large paper. Students write thoughts and respond to each other in writing.",
         example: "Post the SOI on paper. Students circulate and write responses, questions, connections silently.",
-        purpose: "Inclusive — gives all students voice, creates a visible record of thinking." },
+        purpose: "Inclusive — gives all students voice, creates a visible record of thinking.",
+        crossExamples: [
+          {subject:"Language & Literature", ex:"Post a key quotation from the text. Students silently annotate: interpretations, connections, questions. Class then discusses the most interesting threads."},
+          {subject:"I&S / Geography", ex:"Post a map, photograph or data set at the centre. Students add observations, questions and connections. Discussion follows around the richest threads."},
+        ]},
       { name: "Sentence-Phrase-Word", phases: ["Finding Out","Sorting Out"], time: "10-15 min",
         desc: "After a reading: choose one SENTENCE that captures a key idea, one PHRASE that moves you, one WORD that is most significant.",
         example: "After reading a scientific article: students select and share their sentence, phrase and word.",
-        purpose: "Close reading, synthesis, highlights what students find meaningful." },
+        purpose: "Close reading, synthesis, highlights what students find meaningful.",
+        crossExamples: [
+          {subject:"History", ex:"After reading a historical speech (e.g. a declaration or manifesto): students select the sentence that best captures the author's argument, a phrase that reveals their values, and the single most powerful word."},
+          {subject:"Design", ex:"After reading a design brief or case study: sentence = the core problem, phrase = the key constraint, word = the design principle that matters most."},
+        ]},
     ]
   },
   "Cooperative Learning": {
@@ -2350,19 +2638,40 @@ const TEACHING_STRATEGIES = {
       { name: "Jigsaw", phases: ["Finding Out","Making Connections"], time: "30-40 min",
         desc: "Each student becomes an 'expert' on one topic, then teaches it to their group. Two rounds: expert groups then home groups.",
         example: "4 groups each research one human impact on ecosystems → regroup to teach each other.",
-        purpose: "Every student becomes both teacher and learner. Builds deep expertise." },
+        purpose: "Every student becomes both teacher and learner. Builds deep expertise.",
+        crossExamples: [
+          {subject:"History / I&S", ex:"4 groups each become experts on one perspective of WWI (soldier, politician, civilian, historian), then regroup to build a multi-perspective class narrative."},
+          {subject:"Mathematics", ex:"Expert groups each learn one proof of the Pythagorean theorem, then teach others — class compares which proof is most elegant and why."},
+          {subject:"Language & Literature", ex:"4 groups each analyse one literary device in a poem (imagery, tone, structure, voice), then reconvene to build a whole-poem analysis."},
+          {subject:"PE / Health", ex:"Groups research different fitness components (cardiovascular, strength, flexibility, balance), become experts, then jointly design a training programme."},
+        ]},
       { name: "Gallery Walk", phases: ["Sorting Out","Making Connections"], time: "20-30 min",
         desc: "Student work or prompts are posted around the room. Students circulate, read, and leave written responses (sticky notes).",
         example: "Post 6 food webs around the room. Students circulate adding observations and questions.",
-        purpose: "Active consolidation, peer feedback, movement in the classroom." },
+        purpose: "Active consolidation, peer feedback, movement in the classroom.",
+        crossExamples: [
+          {subject:"Art", ex:"Mid-process artworks displayed — students give 'one strength / one question' to each artist using sticky notes, generating peer feedback before revision."},
+          {subject:"Design", ex:"Rough product prototypes displayed — peers post sticky notes under 'Function / Aesthetics / Sustainability' with one improvement suggestion each."},
+          {subject:"Mathematics", ex:"6 different students' solutions to the same problem posted — class identifies which is most efficient, most elegant, and easiest to understand."},
+          {subject:"Science", ex:"Lab safety rules posted around the room — students write WHY each rule exists using systems thinking: 'If this rule is broken, the system fails because…'"},
+        ]},
       { name: "Fishbowl", phases: ["Making Connections","Going Further"], time: "20-30 min",
         desc: "Small group discusses while others observe. Observers take notes, then swap. Creates meta-awareness of discussion quality.",
         example: "Inner circle debates 'Should we reintroduce wolves?' while outer circle observes thinking strategies.",
-        purpose: "Models academic discussion, builds listening and analytical skills." },
+        purpose: "Models academic discussion, builds listening and analytical skills.",
+        crossExamples: [
+          {subject:"Language & Literature", ex:"Inner circle debates 'Is the narrator of this novel reliable?' using textual evidence. Outer circle notes: quality of evidence, strength of reasoning, how claims are challenged."},
+          {subject:"I&S / History", ex:"Inner circle debates 'Was [historical decision] justified?' Outer circle tracks: who provided the strongest evidence, who changed their position, and why."},
+        ]},
       { name: "Think-Aloud", phases: ["Finding Out"], time: "10-15 min",
         desc: "Teacher models their own thinking process out loud while solving a problem or reading a text.",
         example: "Teacher reads a data table aloud, narrating: 'I notice X, so I'm wondering Y, this reminds me of Z...'",
-        purpose: "Makes expert thinking visible — especially powerful for new skills." },
+        purpose: "Makes expert thinking visible — especially powerful for new skills.",
+        crossExamples: [
+          {subject:"English", ex:"Teacher annotates a poem aloud, narrating: 'I notice the word choice here… this makes me think… I'm now connecting to the tone…' — modelling close reading."},
+          {subject:"Mathematics", ex:"Teacher solves a multi-step problem aloud: 'I'm going to try this approach first… that didn't work because… so now I'll try…' — modelling productive struggle."},
+          {subject:"Design", ex:"Teacher works through a design brief aloud: 'I'm reading the constraints… my first instinct is X, but I notice the brief says Y… so I need to reconsider…'"},
+        ]},
       { name: "Expert Groups", phases: ["Finding Out","Going Further"], time: "25-35 min",
         desc: "Students are assigned different aspects of a topic to research deeply, then share findings with the class.",
         example: "Groups research: deforestation / ocean acidification / invasive species / climate change — then present.",
@@ -2524,13 +2833,35 @@ function sTS() {
       ),
       isExp ? div("ts-card-body",
         div("ts-detail-row",
-          el("div", {cls: "ts-detail-label"}, "📌 Classroom Example"),
+          el("div", {cls: "ts-detail-label"}, "📌 Classroom Example (Sciences/General)"),
           el("div", {cls: "ts-detail-text"}, s.example)
         ),
         div("ts-detail-row",
           el("div", {cls: "ts-detail-label"}, "🎯 Purpose"),
           el("div", {cls: "ts-detail-text"}, s.purpose)
         ),
+        s.crossExamples && s.crossExamples.length ? div("ts-detail-row",
+          el("div", {cls: "ts-detail-label"}, "🌍 Examples Across Disciplines"),
+          div("",
+            ...s.crossExamples.map(cx => {
+              const subjectColors = {
+                "English":["#fff3e0","#e65100"],"Mathematics":["#e8f5e9","#1b5e20"],
+                "History":["#fce4ec","#880e4f"],"History / I&S":["#fce4ec","#880e4f"],
+                "Art":["#f3e5f5","#4a148c"],"Art / Design":["#f3e5f5","#4a148c"],
+                "Physical & Health Ed":["#e8eaf6","#1a237e"],"PE / Health":["#e8eaf6","#1a237e"],
+                "Design":["#e0f2f1","#004d40"],"Drama":["#fff8e1","#f57f17"],
+                "Music":["#fbe9e7","#bf360c"],"Geography":["#e0f7fa","#006064"],
+                "Geography / I&S":["#e0f7fa","#006064"],"Language & Literature":["#f9fbe7","#33691e"],
+                "I&S / History":["#fce4ec","#880e4f"],
+              };
+              const [bg2,col2] = subjectColors[cx.subject]||["#f5f5f5","#424242"];
+              return div("",{css:"display:flex;align-items:flex-start;gap:8px;padding:7px 0;border-bottom:1px solid #F5F5F5;"},
+                el("span",{css:`background:${bg2};color:${col2};font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;white-space:nowrap;flex-shrink:0;`},cx.subject),
+                el("span",{css:"font-size:12px;color:#1A1A1A;line-height:1.55;"},cx.ex)
+              );
+            })
+          )
+        ) : null,
         div("ts-detail-row",
           el("div", {cls: "ts-detail-label"}, "🌱 Best used in"),
           div("ts-phases", ...s.phases.map(p => el("span", {cls: "ts-phase-tag", css: `background:${phaseColors[p]||'#757575'}18;color:${phaseColors[p]||'#757575'};border:1px solid ${phaseColors[p]||'#757575'}44;`}, "Murdoch: " + p)))
@@ -2542,7 +2873,7 @@ function sTS() {
   return div("",
     div("card",
       el("h2", {}, "🎓 Teaching Strategies Reference Guide"),
-      el("p", {css: "font-size:13px;color:#757575;margin-bottom:16px;line-height:1.6;"}, "A comprehensive guide to inquiry-based teaching strategies for MYP classrooms. Each strategy is linked to the Murdoch Inquiry Cycle phase where it works best. Click any strategy to see a classroom example and how to use it."),
+      el("p", {css: "font-size:13px;color:#757575;margin-bottom:16px;line-height:1.6;"}, "A comprehensive guide to inquiry-based teaching strategies for MYP classrooms. Each strategy is linked to the Murdoch Inquiry Cycle phase where it works best. Click any strategy to see the classroom example, purpose, and 🌍 cross-disciplinary examples from different subjects — so every teacher can connect to their own discipline."),
 
       // Search
       div("field", {css: "margin-bottom:16px;"},
